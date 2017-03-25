@@ -3,10 +3,13 @@ package com.forsrc.core.web.security;
 import com.forsrc.pojo.Role;
 import com.forsrc.pojo.UserPrivacy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.persistence.NoResultException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +29,16 @@ public class MyUserDetailsService implements UserDetailsService {
     }
 
     public UserPrivacy getUserByUsername(String username) throws UsernameNotFoundException {
-        UserPrivacy user = securityService.findByUsername(username);
+        UserPrivacy user = null;
+        try{
+            user = securityService.findByUsername(username);
+        } catch (RuntimeException e ){
+            user = null;
+        }
         if (user == null) {
             System.out.println(String.format("--> MyUserDetailsService.loadUserByUsername() --> User is not exist: %s", username));
             throw new UsernameNotFoundException(String.format("User is not exist: %s", username));
+            //throw new BadCredentialsException(String.format("User is not exist: %s", username));
         }
         return user;
     }
