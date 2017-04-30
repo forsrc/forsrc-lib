@@ -1,6 +1,5 @@
 package com.forsrc.tools;
 
-import com.forsrc.utils.LogUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.boot.MetadataSources;
@@ -8,6 +7,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 //import org.hibernate.service.ServiceRegistryBuilder;
+
+import com.forsrc.utils.LogUtils;
 
 /**
  * Configures and provides access to Hibernate sessions, tied to the current
@@ -34,14 +35,14 @@ public final class HibernateSessionFactory {
         try {
             configuration.configure(configFile);
             serviceRegistry = new StandardServiceRegistryBuilder().configure(configFile).build();
-            sessionFactory = new MetadataSources(serviceRegistry).buildMetadata()
-                    .buildSessionFactory();
-            //sessionFactory = configuration.buildSessionFactory();
-            //ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
-            //.applySettings(configuration.getProperties()).buildServiceRegistry();
-            //sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+            sessionFactory = new MetadataSources(serviceRegistry).buildMetadata().buildSessionFactory();
+            // sessionFactory = configuration.buildSessionFactory();
+            // ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+            // .applySettings(configuration.getProperties()).buildServiceRegistry();
+            // sessionFactory =
+            // configuration.buildSessionFactory(serviceRegistry);
         } catch (Exception e) {
-            //System.err.println("%%%% Error Creating SessionFactory %%%%");
+            // System.err.println("%%%% Error Creating SessionFactory %%%%");
             LogUtils.LOGGER.error(e.getMessage(), e);
         }
     }
@@ -52,7 +53,8 @@ public final class HibernateSessionFactory {
     /**
      * Close the single hibernate session instance.
      *
-     * @throws HibernateException the hibernate exception
+     * @throws HibernateException
+     *             the hibernate exception
      */
     public static void closeSession() throws HibernateException {
         Session session = threadLocal.get();
@@ -77,7 +79,8 @@ public final class HibernateSessionFactory {
      * <code>SessionFactory</code> if needed.
      *
      * @return Session session
-     * @throws HibernateException the hibernate exception
+     * @throws HibernateException
+     *             the hibernate exception
      */
     public static Session getSession() throws HibernateException {
         Session session = threadLocal.get();
@@ -86,8 +89,7 @@ public final class HibernateSessionFactory {
             if (sessionFactory == null) {
                 rebuildSessionFactory();
             }
-            session = (sessionFactory != null) ? sessionFactory.openSession()
-                    : null;
+            session = (sessionFactory != null) ? sessionFactory.openSession() : null;
             threadLocal.set(session);
         }
 
@@ -111,14 +113,14 @@ public final class HibernateSessionFactory {
             configuration.configure(configFile);
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
             serviceRegistry = new StandardServiceRegistryBuilder().configure(configFile).build();
-            sessionFactory = new MetadataSources(serviceRegistry).buildMetadata()
-                    .buildSessionFactory();
-            //sessionFactory = configuration.buildSessionFactory();
-            //ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
-            //.applySettings(configuration.getProperties()).buildServiceRegistry();
-            //sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+            sessionFactory = new MetadataSources(serviceRegistry).buildMetadata().buildSessionFactory();
+            // sessionFactory = configuration.buildSessionFactory();
+            // ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+            // .applySettings(configuration.getProperties()).buildServiceRegistry();
+            // sessionFactory =
+            // configuration.buildSessionFactory(serviceRegistry);
         } catch (Exception e) {
-            //System.err.println("%%%% Error Creating SessionFactory %%%%");
+            // System.err.println("%%%% Error Creating SessionFactory %%%%");
             LogUtils.LOGGER.error(e.getMessage(), e);
         }
     }
@@ -128,7 +130,8 @@ public final class HibernateSessionFactory {
      * <p/>
      * session factory will be rebuilded in the next call
      *
-     * @param configFile the config file
+     * @param configFile
+     *            the config file
      */
     public static void setConfigFile(String configFile) {
         HibernateSessionFactory.configFile = configFile;

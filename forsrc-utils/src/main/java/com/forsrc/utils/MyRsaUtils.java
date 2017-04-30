@@ -16,13 +16,13 @@
  */
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * The type My rsa utils.
@@ -39,8 +39,10 @@ public final class MyRsaUtils {
     /**
      * Decrypt big integer.
      *
-     * @param rsaKey    the rsa key
-     * @param encrypted the encrypted
+     * @param rsaKey
+     *            the rsa key
+     * @param encrypted
+     *            the encrypted
      * @return the big integer
      */
     public static BigInteger decrypt(RsaKey rsaKey, BigInteger encrypted) {
@@ -51,23 +53,26 @@ public final class MyRsaUtils {
     /**
      * Decrypt string.
      *
-     * @param rsaKey    the rsa key
-     * @param encrypted the encrypted
+     * @param rsaKey
+     *            the rsa key
+     * @param encrypted
+     *            the encrypted
      * @return the string
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public static String decrypt(RsaKey rsaKey, String encrypted)
-            throws IOException {
-        BigInteger encrypt = new BigInteger(
-                new String(new Base64().decode(encrypted)));
+    public static String decrypt(RsaKey rsaKey, String encrypted) throws IOException {
+        BigInteger encrypt = new BigInteger(new String(new Base64().decode(encrypted)));
         return bigInteger2String(decrypt(rsaKey, encrypt));
     }
 
     /**
      * Encrypt big integer.
      *
-     * @param rsaKey    the rsa key
-     * @param plaintext the plaintext
+     * @param rsaKey
+     *            the rsa key
+     * @param plaintext
+     *            the plaintext
      * @return the big integer
      */
     public static BigInteger encrypt(RsaKey rsaKey, BigInteger plaintext) {
@@ -78,8 +83,10 @@ public final class MyRsaUtils {
     /**
      * Encrypt string.
      *
-     * @param rsaKey    the rsa key
-     * @param plaintext the plaintext
+     * @param rsaKey
+     *            the rsa key
+     * @param plaintext
+     *            the plaintext
      * @return the string
      */
     public static String encrypt(RsaKey rsaKey, String plaintext) {
@@ -87,7 +94,6 @@ public final class MyRsaUtils {
         BigInteger encrypt = encrypt(rsaKey, plaintextNumber);
         return new String(new Base64().encode(encrypt.toString().getBytes()));
     }
-
 
     /**
      * Gets rsa key.
@@ -101,9 +107,11 @@ public final class MyRsaUtils {
     /**
      * Big integer 2 string string.
      *
-     * @param bigInteger the big integer
+     * @param bigInteger
+     *            the big integer
      * @return the string
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static String bigInteger2String(BigInteger bigInteger) throws IOException {
 
@@ -121,7 +129,8 @@ public final class MyRsaUtils {
     /**
      * String 2 big integer big integer.
      *
-     * @param plaintext the plaintext
+     * @param plaintext
+     *            the plaintext
      * @return the big integer
      */
     public static BigInteger string2BigInteger(String plaintext) {
@@ -130,13 +139,14 @@ public final class MyRsaUtils {
         return toBigInteger(msg);
     }
 
-
     /**
      * Big integers 2 string string.
      *
-     * @param bigIntegers the big integers
+     * @param bigIntegers
+     *            the big integers
      * @return the string
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static String bigIntegers2String(BigInteger[] bigIntegers) throws IOException {
 
@@ -168,7 +178,8 @@ public final class MyRsaUtils {
     /**
      * String 2 big integers big integer [ ].
      *
-     * @param plaintext the plaintext
+     * @param plaintext
+     *            the plaintext
      * @return the big integer [ ]
      */
     public static BigInteger[] string2BigIntegers(String plaintext) {
@@ -214,12 +225,13 @@ public final class MyRsaUtils {
         return new BigInteger(numberString.toString());
     }
 
-
     /**
      * Encrypt 2 string.
      *
-     * @param rsaKey    the rsa key
-     * @param plaintext the plaintext
+     * @param rsaKey
+     *            the rsa key
+     * @param plaintext
+     *            the plaintext
      * @return the string
      */
     public static String encrypt2(RsaKey rsaKey, String plaintext) {
@@ -238,13 +250,15 @@ public final class MyRsaUtils {
     /**
      * Decrypt 2 string.
      *
-     * @param rsaKey    the rsa key
-     * @param encrypted the encrypted
+     * @param rsaKey
+     *            the rsa key
+     * @param encrypted
+     *            the encrypted
      * @return the string
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public static String decrypt2(RsaKey rsaKey, String encrypted)
-            throws IOException {
+    public static String decrypt2(RsaKey rsaKey, String encrypted) throws IOException {
 
         String text = new String(new Base64().decode(encrypted));
         String[] texts = text.split("\\$");
@@ -262,6 +276,11 @@ public final class MyRsaUtils {
      * The type Rsa key.
      */
     public static class RsaKey implements Serializable {
+
+        /**
+         * serialVersionUID
+         */
+        private static final long serialVersionUID = -5817834019152198994L;
 
         /**
          * The constant DEF_E.
@@ -293,7 +312,7 @@ public final class MyRsaUtils {
         /**
          * @Fields e : public exponent; e = common prime = 2^16 + 1 = 65537
          */
-        transient private BigInteger e; //65537
+        transient private BigInteger e; // 65537
 
         /**
          * @Fields iqmp : q^-1 mod p
@@ -341,8 +360,10 @@ public final class MyRsaUtils {
         /**
          * Instantiates a new Rsa key.
          *
-         * @param p the p
-         * @param q the q
+         * @param p
+         *            the p
+         * @param q
+         *            the q
          */
         public RsaKey(BigInteger p, BigInteger q) {
 
@@ -352,9 +373,12 @@ public final class MyRsaUtils {
         /**
          * Instantiates a new Rsa key.
          *
-         * @param n the n
-         * @param e the e
-         * @param d the d
+         * @param n
+         *            the n
+         * @param e
+         *            the e
+         * @param d
+         *            the d
          */
         public RsaKey(BigInteger n, BigInteger e, BigInteger d) {
             this.n = n;
@@ -367,16 +391,17 @@ public final class MyRsaUtils {
         /**
          * Init.
          *
-         * @param p the p
-         * @param q the q
+         * @param p
+         *            the p
+         * @param q
+         *            the q
          */
         public void init(BigInteger p, BigInteger q) {
 
             this.p = p;
             this.q = q;
             // phi = (p -1)*(q - 1)
-            this.phi = (p.subtract(BigInteger.ONE)).multiply(q
-                    .subtract(BigInteger.ONE));
+            this.phi = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
             // n = p*q
             this.n = p.multiply(q);
             // e = common prime = 2^16 + 1
@@ -409,7 +434,8 @@ public final class MyRsaUtils {
         /**
          * Sets bits.
          *
-         * @param bits the bits
+         * @param bits
+         *            the bits
          */
         public void setBits(int bits) {
             this.bits = bits;
@@ -427,7 +453,8 @@ public final class MyRsaUtils {
         /**
          * Sets coeff.
          *
-         * @param coeff the coeff
+         * @param coeff
+         *            the coeff
          */
         public void setCoeff(BigInteger coeff) {
             this.coeff = coeff;
@@ -445,7 +472,8 @@ public final class MyRsaUtils {
         /**
          * Sets d.
          *
-         * @param d the d
+         * @param d
+         *            the d
          */
         public void setD(BigInteger d) {
             this.d = d;
@@ -463,7 +491,8 @@ public final class MyRsaUtils {
         /**
          * Sets dmp 1.
          *
-         * @param dmp1 the dmp 1
+         * @param dmp1
+         *            the dmp 1
          */
         public void setDmp1(BigInteger dmp1) {
             this.dmp1 = dmp1;
@@ -481,7 +510,8 @@ public final class MyRsaUtils {
         /**
          * Sets dmq 1.
          *
-         * @param dmq1 the dmq 1
+         * @param dmq1
+         *            the dmq 1
          */
         public void setDmq1(BigInteger dmq1) {
             this.dmq1 = dmq1;
@@ -499,7 +529,8 @@ public final class MyRsaUtils {
         /**
          * Sets e.
          *
-         * @param e the e
+         * @param e
+         *            the e
          */
         public void setE(BigInteger e) {
             this.e = e;
@@ -518,7 +549,8 @@ public final class MyRsaUtils {
         /**
          * Sets iqmp.
          *
-         * @param iqmp the iqmp
+         * @param iqmp
+         *            the iqmp
          */
         public void setIqmp(BigInteger iqmp) {
             this.iqmp = iqmp;
@@ -536,7 +568,8 @@ public final class MyRsaUtils {
         /**
          * Sets n.
          *
-         * @param n the n
+         * @param n
+         *            the n
          */
         public void setN(BigInteger n) {
             this.n = n;
@@ -554,7 +587,8 @@ public final class MyRsaUtils {
         /**
          * Sets p.
          *
-         * @param p the p
+         * @param p
+         *            the p
          */
         public void setP(BigInteger p) {
             this.p = p;
@@ -572,7 +606,8 @@ public final class MyRsaUtils {
         /**
          * Sets phi.
          *
-         * @param phi the phi
+         * @param phi
+         *            the phi
          */
         public void setPhi(BigInteger phi) {
             this.phi = phi;
@@ -590,7 +625,8 @@ public final class MyRsaUtils {
         /**
          * Sets private key.
          *
-         * @param privateKey the private key
+         * @param privateKey
+         *            the private key
          */
         public void setPrivateKey(BigInteger privateKey) {
             this.privateKey = privateKey;
@@ -609,7 +645,8 @@ public final class MyRsaUtils {
         /**
          * Sets public key.
          *
-         * @param publicKey the public key
+         * @param publicKey
+         *            the public key
          */
         public void setPublicKey(BigInteger publicKey) {
             this.publicKey = publicKey;
@@ -628,7 +665,8 @@ public final class MyRsaUtils {
         /**
          * Sets q.
          *
-         * @param q the q
+         * @param q
+         *            the q
          */
         public void setQ(BigInteger q) {
             this.q = q;
@@ -646,7 +684,8 @@ public final class MyRsaUtils {
         /**
          * Sets random.
          *
-         * @param random the random
+         * @param random
+         *            the random
          */
         public void setRandom(SecureRandom random) {
             this.random = random;
@@ -660,7 +699,6 @@ public final class MyRsaUtils {
         public SecureRandom getSecureRandom() {
             return new SecureRandom("forsrc@163.com".getBytes());
         }
-
 
     }
 }

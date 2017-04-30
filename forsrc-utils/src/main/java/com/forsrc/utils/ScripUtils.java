@@ -1,12 +1,13 @@
 package com.forsrc.utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 /**
  * The type Scrip utils.
@@ -15,14 +16,21 @@ public class ScripUtils {
     /**
      * Run rtn.
      *
-     * @param <RTN>   the type parameter
-     * @param name    the name
-     * @param src     the src
-     * @param adapter the adapter
+     * @param <RTN>
+     *            the type parameter
+     * @param name
+     *            the name
+     * @param src
+     *            the src
+     * @param adapter
+     *            the adapter
      * @return the rtn
-     * @throws IOException           the io exception
-     * @throws ScriptException       the script exception
-     * @throws NoSuchMethodException the no such method exception
+     * @throws IOException
+     *             the io exception
+     * @throws ScriptException
+     *             the script exception
+     * @throws NoSuchMethodException
+     *             the no such method exception
      */
     public static <RTN> RTN run(ScripName name, String src, ScripUtilsAdapter adapter)
             throws IOException, ScriptException, NoSuchMethodException {
@@ -42,14 +50,21 @@ public class ScripUtils {
     /**
      * Run rtn.
      *
-     * @param <RTN>   the type parameter
-     * @param name    the name
-     * @param src     the src
-     * @param adapter the adapter
+     * @param <RTN>
+     *            the type parameter
+     * @param name
+     *            the name
+     * @param src
+     *            the src
+     * @param adapter
+     *            the adapter
      * @return the rtn
-     * @throws IOException           the io exception
-     * @throws ScriptException       the script exception
-     * @throws NoSuchMethodException the no such method exception
+     * @throws IOException
+     *             the io exception
+     * @throws ScriptException
+     *             the script exception
+     * @throws NoSuchMethodException
+     *             the no such method exception
      */
     public static <RTN> RTN run(ScripName name, File src, ScripUtilsAdapter adapter)
             throws IOException, ScriptException, NoSuchMethodException {
@@ -59,30 +74,36 @@ public class ScripUtils {
     /**
      * Run rtn.
      *
-     * @param <RTN>    the type parameter
-     * @param name     the name
-     * @param src      the src
-     * @param funcName the func name
-     * @param args     the args
+     * @param <RTN>
+     *            the type parameter
+     * @param name
+     *            the name
+     * @param src
+     *            the src
+     * @param funcName
+     *            the func name
+     * @param args
+     *            the args
      * @return the rtn
-     * @throws IOException           the io exception
-     * @throws ScriptException       the script exception
-     * @throws NoSuchMethodException the no such method exception
+     * @throws IOException
+     *             the io exception
+     * @throws ScriptException
+     *             the script exception
+     * @throws NoSuchMethodException
+     *             the no such method exception
      */
     public static <RTN> RTN run(ScripName name, File src, final String funcName, final Object... args)
             throws IOException, ScriptException, NoSuchMethodException {
 
-        return ScripUtils.run(ScripName.JAVASCRIPT,
-                src,
-                new ScripUtilsAdapter() {
+        return ScripUtils.run(ScripName.JAVASCRIPT, src, new ScripUtilsAdapter() {
 
-                    @Override
-                    public void todo(ScriptEngine scriptEngine, ScripConfig config) {
-                        config.setFuncName(funcName);
-                        config.setArgs(args);
-                    }
+            @Override
+            public void todo(ScriptEngine scriptEngine, ScripConfig config) {
+                config.setFuncName(funcName);
+                config.setArgs(args);
+            }
 
-                });
+        });
     }
 
     /**
@@ -92,7 +113,8 @@ public class ScripUtils {
         /**
          * Javascript scrip name.
          */
-        JAVASCRIPT("javascript"), /**
+        JAVASCRIPT("javascript"),
+        /**
          * Groovy scrip name.
          */
         GROOVY("groovy");
@@ -114,7 +136,8 @@ public class ScripUtils {
         /**
          * Sets name.
          *
-         * @param name the name
+         * @param name
+         *            the name
          */
         public void setName(String name) {
             this.name = name;
@@ -124,14 +147,17 @@ public class ScripUtils {
     /**
      * The interface Scrip utils adapter.
      *
-     * @param <RTN> the type parameter
+     * @param <RTN>
+     *            the type parameter
      */
     public interface ScripUtilsAdapter<RTN> {
         /**
          * Todo.
          *
-         * @param scriptEngine the script engine
-         * @param config       the config
+         * @param scriptEngine
+         *            the script engine
+         * @param config
+         *            the config
          */
         void todo(ScriptEngine scriptEngine, ScripConfig config);
     }
@@ -153,8 +179,10 @@ public class ScripUtils {
         /**
          * Instantiates a new Scrip config.
          *
-         * @param funcName the func name
-         * @param args     the args
+         * @param funcName
+         *            the func name
+         * @param args
+         *            the args
          */
         public ScripConfig(String funcName, Object[] args) {
             super();
@@ -174,7 +202,8 @@ public class ScripUtils {
         /**
          * Sets func name.
          *
-         * @param funcName the func name
+         * @param funcName
+         *            the func name
          */
         public void setFuncName(String funcName) {
             this.funcName = funcName;
@@ -192,7 +221,8 @@ public class ScripUtils {
         /**
          * Sets args.
          *
-         * @param args the args
+         * @param args
+         *            the args
          */
         public void setArgs(Object[] args) {
             this.args = args;

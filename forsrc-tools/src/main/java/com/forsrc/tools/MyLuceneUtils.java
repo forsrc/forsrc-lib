@@ -1,5 +1,13 @@
 package com.forsrc.tools;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -9,14 +17,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.SimpleFSDirectory;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * The type My lucene utils.
@@ -49,7 +49,8 @@ public class MyLuceneUtils {
     /**
      * Create my lucene utils.
      *
-     * @param indexWriter the index writer
+     * @param indexWriter
+     *            the index writer
      * @return the my lucene utils
      */
     public static MyLuceneUtils create(IndexWriter indexWriter) {
@@ -62,8 +63,10 @@ public class MyLuceneUtils {
     /**
      * Create my lucene utils.
      *
-     * @param indexWriter the index writer
-     * @param analyzer    the analyzer
+     * @param indexWriter
+     *            the index writer
+     * @param analyzer
+     *            the analyzer
      * @return the my lucene utils
      */
     public static MyLuceneUtils create(IndexWriter indexWriter, Analyzer analyzer) {
@@ -76,8 +79,10 @@ public class MyLuceneUtils {
     /**
      * Create my lucene utils.
      *
-     * @param indexDir the index dir
-     * @param analyzer the analyzer
+     * @param indexDir
+     *            the index dir
+     * @param analyzer
+     *            the analyzer
      * @return the my lucene utils
      */
     public static MyLuceneUtils create(String indexDir, Analyzer analyzer) throws MyLuceneUtilsException {
@@ -108,7 +113,8 @@ public class MyLuceneUtils {
     /**
      * Sets index dir.
      *
-     * @param indexDir the index dir
+     * @param indexDir
+     *            the index dir
      * @return the index dir
      */
     public MyLuceneUtils setIndexDir(String indexDir) {
@@ -120,7 +126,8 @@ public class MyLuceneUtils {
      * Close my lucene utils.
      *
      * @return the my lucene utils
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public MyLuceneUtils close() throws IOException {
         _simpleHTMLFormatterPostTag.remove();
@@ -158,7 +165,8 @@ public class MyLuceneUtils {
     /**
      * Sets simple html formatter pre tag.
      *
-     * @param simpleHTMLFormatterPreTag the simple html formatter pre tag
+     * @param simpleHTMLFormatterPreTag
+     *            the simple html formatter pre tag
      * @return the simple html formatter pre tag
      */
     public MyLuceneUtils setSimpleHTMLFormatterPreTag(String simpleHTMLFormatterPreTag) {
@@ -178,7 +186,8 @@ public class MyLuceneUtils {
     /**
      * Sets simple html formatter post tag.
      *
-     * @param simpleHTMLFormatterPostTag the simple html formatter post tag
+     * @param simpleHTMLFormatterPostTag
+     *            the simple html formatter post tag
      * @return the simple html formatter post tag
      */
     public MyLuceneUtils setSimpleHTMLFormatterPostTag(String simpleHTMLFormatterPostTag) {
@@ -198,7 +207,8 @@ public class MyLuceneUtils {
     /**
      * Sets analyzer.
      *
-     * @param analyzer the analyzer
+     * @param analyzer
+     *            the analyzer
      * @return the analyzer
      */
     public MyLuceneUtils setAnalyzer(Analyzer analyzer) {
@@ -218,7 +228,8 @@ public class MyLuceneUtils {
     /**
      * Sets index writer.
      *
-     * @param indexWriter the index writer
+     * @param indexWriter
+     *            the index writer
      * @return the index writer
      */
     public MyLuceneUtils setIndexWriter(IndexWriter indexWriter) {
@@ -229,8 +240,10 @@ public class MyLuceneUtils {
     /**
      * Gets index writer.
      *
-     * @param dir    the dir
-     * @param config the config
+     * @param dir
+     *            the dir
+     * @param config
+     *            the config
      * @return the index writer
      */
     public IndexWriter getIndexWriter(Directory dir, IndexWriterConfig config) throws MyLuceneUtilsException {
@@ -278,8 +291,10 @@ public class MyLuceneUtils {
     /**
      * Index.
      *
-     * @param list the list
-     * @throws Exception the exception
+     * @param list
+     *            the list
+     * @throws Exception
+     *             the exception
      */
     public void index(final List<Map<String, String>> list) throws Exception {
 
@@ -304,7 +319,6 @@ public class MyLuceneUtils {
         });
     }
 
-
     public interface Callback<T> {
         void handle(final T t) throws MyLuceneUtilsException;
     }
@@ -320,7 +334,8 @@ public class MyLuceneUtils {
         /**
          * Instantiates a new My lucene utils exception.
          *
-         * @param msg the msg
+         * @param msg
+         *            the msg
          */
         public MyLuceneUtilsException(String msg) {
             super(msg);
@@ -329,7 +344,8 @@ public class MyLuceneUtils {
         /**
          * Instantiates a new My lucene utils exception.
          *
-         * @param e the e
+         * @param e
+         *            the e
          */
         public MyLuceneUtilsException(Exception e) {
             super(e);

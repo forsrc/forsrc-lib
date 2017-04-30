@@ -17,10 +17,6 @@
 
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Base64;
-
-import javax.crypto.*;
-import javax.crypto.spec.DESKeySpec;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -28,6 +24,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.text.MessageFormat;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * The type My des utils.
@@ -46,15 +51,18 @@ public final class MyDesUtils {
      */
     public static final String CHARSET_UTF8 = "UTF-8";
     private static final String PREFIX = "Salted__";
-    private static final byte[] SALT = {0, 1, 0, 1, 0, 1, 0, 1};
+    private static final byte[] SALT = { 0, 1, 0, 1, 0, 1, 0, 1 };
 
     /**
      * Decrypt string.
      *
-     * @param des  the des
-     * @param code the code
+     * @param des
+     *            the des
+     * @param code
+     *            the code
      * @return String string
-     * @throws DesException the des exception
+     * @throws DesException
+     *             the des exception
      * @Title: decrypt
      * @Description:
      */
@@ -92,10 +100,13 @@ public final class MyDesUtils {
     /**
      * Encrypt string.
      *
-     * @param des the des
-     * @param src the src
+     * @param des
+     *            the des
+     * @param src
+     *            the src
      * @return String string
-     * @throws DesException the des exception
+     * @throws DesException
+     *             the des exception
      * @Title: encrypt
      * @Description:
      */
@@ -122,15 +133,17 @@ public final class MyDesUtils {
     /**
      * Gets decrypt password.
      *
-     * @param des the des
-     * @param pwd the pwd
+     * @param des
+     *            the des
+     * @param pwd
+     *            the pwd
      * @return String decrypt password
-     * @throws DesException the des exception
+     * @throws DesException
+     *             the des exception
      * @Title: getDecryptPassword
      * @Description:
      */
-    public static String getDecryptPassword(DesKey des, String pwd)
-            throws DesException {
+    public static String getDecryptPassword(DesKey des, String pwd) throws DesException {
         if (des == null) {
             throw new DesException("DesKey is null.");
         }
@@ -139,11 +152,8 @@ public final class MyDesUtils {
         }
         try {
             String pass = decrypt(des, pwd);
-            return pass.substring(
-                    (String.valueOf(System.currentTimeMillis())).length(),
-                    pass.length()
-                            - (String.valueOf(System.currentTimeMillis()))
-                            .length());
+            return pass.substring((String.valueOf(System.currentTimeMillis())).length(),
+                    pass.length() - (String.valueOf(System.currentTimeMillis())).length());
         } catch (DesException e) {
             throw e;
         }
@@ -152,15 +162,17 @@ public final class MyDesUtils {
     /**
      * Gets encrypt password.
      *
-     * @param des the des
-     * @param pwd the pwd
+     * @param des
+     *            the des
+     * @param pwd
+     *            the pwd
      * @return String encrypt password
-     * @throws DesException the des exception
+     * @throws DesException
+     *             the des exception
      * @Title: getEncryptPassword
      * @Description:
      */
-    public static String getEncryptPassword(DesKey des, String pwd)
-            throws DesException {
+    public static String getEncryptPassword(DesKey des, String pwd) throws DesException {
         if (des == null) {
             throw new DesException("DesKey is null.");
         }
@@ -169,8 +181,7 @@ public final class MyDesUtils {
         }
         try {
             return encrypt(des,
-                    MessageFormat.format("{0}{1}{2}", System.currentTimeMillis(), pwd,
-                            System.currentTimeMillis()));
+                    MessageFormat.format("{0}{1}{2}", System.currentTimeMillis(), pwd, System.currentTimeMillis()));
         } catch (DesException e) {
             throw e;
         }
@@ -183,7 +194,8 @@ public final class MyDesUtils {
         /**
          * Instantiates a new Des exception.
          *
-         * @param cause the cause
+         * @param cause
+         *            the cause
          */
         public DesException(Throwable cause) {
             super(cause);
@@ -192,7 +204,8 @@ public final class MyDesUtils {
         /**
          * Instantiates a new Des exception.
          *
-         * @param cause the cause
+         * @param cause
+         *            the cause
          */
         public DesException(String cause) {
             super(cause);
@@ -227,14 +240,15 @@ public final class MyDesUtils {
         /**
          * Instantiates a new Des key.
          *
-         * @param key the key
-         * @param iv  the iv
+         * @param key
+         *            the key
+         * @param iv
+         *            the iv
          */
         public DesKey(String key, String iv) {
             this.key = key;
             this.iv = iv;
         }
-
 
         /**
          * Gets key.
@@ -248,7 +262,8 @@ public final class MyDesUtils {
         /**
          * Sets key.
          *
-         * @param key the key
+         * @param key
+         *            the key
          */
         public void setKey(String key) {
             this.key = key;
@@ -266,7 +281,8 @@ public final class MyDesUtils {
         /**
          * Sets iv.
          *
-         * @param iv the iv
+         * @param iv
+         *            the iv
          */
         public void setIv(String iv) {
             this.iv = iv;
@@ -290,13 +306,14 @@ public final class MyDesUtils {
             return MyStringUtils.generate(8);
         }
 
-
         /**
          * Gets cipher.
          *
-         * @param isEncrypt the is encrypt
+         * @param isEncrypt
+         *            the is encrypt
          * @return the cipher
-         * @throws DesException the des exception
+         * @throws DesException
+         *             the des exception
          */
         public Cipher getCipher(boolean isEncrypt) throws DesException {
             Cipher cipher = null;
@@ -308,13 +325,10 @@ public final class MyDesUtils {
                 throw new DesException(e);
             }
             try {
-                SecretKeyFactory keyFactory = SecretKeyFactory
-                        .getInstance(SECRET_KEY);
-                cipher.init(isEncrypt ? Cipher.ENCRYPT_MODE
-                        : Cipher.DECRYPT_MODE, keyFactory
-                        .generateSecret(new DESKeySpec(this.key
-                                .getBytes(CHARSET_UTF8))), SecureRandom
-                        .getInstance("SHA1PRNG"));
+                SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(SECRET_KEY);
+                cipher.init(isEncrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE,
+                        keyFactory.generateSecret(new DESKeySpec(this.key.getBytes(CHARSET_UTF8))),
+                        SecureRandom.getInstance("SHA1PRNG"));
             } catch (InvalidKeyException e) {
                 throw new DesException(e);
             } catch (NoSuchAlgorithmException e) {

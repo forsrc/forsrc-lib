@@ -1,11 +1,5 @@
 package com.forsrc.tools;
 
-import org.springframework.http.HttpInputMessage;
-import org.springframework.http.HttpOutputMessage;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.AbstractHttpMessageConverter;
-import org.springframework.util.FileCopyUtils;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -13,6 +7,12 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.http.HttpInputMessage;
+import org.springframework.http.HttpOutputMessage;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
+import org.springframework.util.FileCopyUtils;
 
 /**
  * The type Utf 8 string http message converter.
@@ -37,10 +37,13 @@ public class Utf8StringHttpMessageConverter extends AbstractHttpMessageConverter
     }
 
     /**
-     * Indicates whether the {@code Accept-Charset} should be written to any outgoing request.
-     * <p>Default is {@code true}.
+     * Indicates whether the {@code Accept-Charset} should be written to any
+     * outgoing request.
+     * <p>
+     * Default is {@code true}.
      *
-     * @param writeAcceptCharset the write accept charset
+     * @param writeAcceptCharset
+     *            the write accept charset
      */
     public void setWriteAcceptCharset(boolean writeAcceptCharset) {
         this.writeAcceptCharset = writeAcceptCharset;
@@ -52,7 +55,8 @@ public class Utf8StringHttpMessageConverter extends AbstractHttpMessageConverter
     }
 
     @Override
-    protected String readInternal(@SuppressWarnings("rawtypes") Class clazz, HttpInputMessage inputMessage) throws IOException {
+    protected String readInternal(@SuppressWarnings("rawtypes") Class clazz, HttpInputMessage inputMessage)
+            throws IOException {
         Charset charset = getContentTypeCharset(inputMessage.getHeaders().getContentType());
         return FileCopyUtils.copyToString(new InputStreamReader(inputMessage.getBody(), charset));
     }
@@ -80,7 +84,9 @@ public class Utf8StringHttpMessageConverter extends AbstractHttpMessageConverter
     /**
      * Return the list of supported {@link Charset}.
      * <p/>
-     * <p>By default, returns {@link Charset#availableCharsets()}. Can be overridden in subclasses.
+     * <p>
+     * By default, returns {@link Charset#availableCharsets()}. Can be
+     * overridden in subclasses.
      *
      * @return the list of accepted charsets
      */

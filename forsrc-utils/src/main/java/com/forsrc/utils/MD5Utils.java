@@ -1,15 +1,21 @@
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.security.MessageDigest;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * The type Md 5 utils.
@@ -40,10 +46,11 @@ public class MD5Utils {
     /**
      * Md 5 string.
      *
-     * @param string the string
+     * @param string
+     *            the string
      * @return String string
-     * @throws
-     * @Title: md5
+     * @throws @Title:
+     *             md5
      * @Description:
      */
     public static String md5(String string) {
@@ -56,9 +63,11 @@ public class MD5Utils {
     /**
      * Md 5 dir.
      *
-     * @param dir the dir
+     * @param dir
+     *            the dir
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: md5dir
      * @Description:
      */
@@ -73,6 +82,9 @@ public class MD5Utils {
         }
         Set<File> list = new HashSet<File>();
         File[] files = dir.listFiles();
+        if (files == null) {
+            return;
+        }
         for (File f : files) {
             String fileName = f.getAbsolutePath();
             if (f.isDirectory()) {
@@ -93,12 +105,14 @@ public class MD5Utils {
     /**
      * Md 5 thread.
      *
-     * @param file the file
-     * @param pool the pool
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param pool
+     *            the pool
+     * @throws IOException
+     *             the io exception
      */
-    public static void md5Thread(File file, ExecutorService pool)
-            throws IOException {
+    public static void md5Thread(File file, ExecutorService pool) throws IOException {
         if (file == null || !file.exists()) {
             return;
         }
@@ -115,13 +129,15 @@ public class MD5Utils {
         }
     }
 
-    private static void md5DirThread(File dir, ExecutorService pool)
-            throws IOException {
+    private static void md5DirThread(File dir, ExecutorService pool) throws IOException {
         if (dir.isFile()) {
             return;
         }
 
         File[] files = dir.listFiles();
+        if(files == null){
+            return;
+        }
         for (File f : files) {
             String fileName = f.getPath();
             if (f.isDirectory()) {
@@ -140,15 +156,17 @@ public class MD5Utils {
     /**
      * Gets file md 5.
      *
-     * @param file      the file
-     * @param isBigfile the is bigfile
+     * @param file
+     *            the file
+     * @param isBigfile
+     *            the is bigfile
      * @return String file md 5
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: getFileMd5
      * @Description:
      */
-    public static String getFileMd5_(File file, boolean isBigfile)
-            throws IOException {
+    public static String getFileMd5_(File file, boolean isBigfile) throws IOException {
         if (isBigfile) {
             return getFileMd5(file);
         }
@@ -177,9 +195,11 @@ public class MD5Utils {
     /**
      * Gets file md 5 x.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the file md 5 x
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static String getFileMd5X(File file) throws IOException {
         return getFileMd5(file);
@@ -188,9 +208,11 @@ public class MD5Utils {
     /**
      * Gets file md 5.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the file md 5
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static String getFileMd5(File file) throws IOException {
         if (file == null || !file.exists() || file.isDirectory()) {
@@ -217,24 +239,13 @@ public class MD5Utils {
             long read = 0;
             while ((length = in.read(buffer)) != -1) {
                 md.update(buffer, 0, length);
-                if (isShowProgress
-                        && (read = read + length) >= MAX_BUFFER * index) {
+                if (isShowProgress && (read = read + length) >= MAX_BUFFER * index) {
                     double rate = read * 100.00 / file.length();
-                    double speed = 1.000
-                            * read
-                            * 1000
-                            / (1024 * 1024 * 1.000 * (System
-                            .currentTimeMillis() - start));
-                    CmdUtils.printMark(new StringBuilder()
-                            .append(DateTimeUtils.getDateTime())
-                            .append(" [INFO] md5 ")
-                            .append(String.format("%5.2f", rate))
-                            .append("% ")
-                            .append(String.format(
-                                    "%" + (file.length() + "").length() + "d",
-                                    read)).append("/").append(file.length())
-                            .append(" ")
-                            .append(String.format("%.3f", speed) + "m/s (")
+                    double speed = 1.000 * read * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+                    CmdUtils.printMark(new StringBuilder().append(DateTimeUtils.getDateTime()).append(" [INFO] md5 ")
+                            .append(String.format("%5.2f", rate)).append("% ")
+                            .append(String.format("%" + (file.length() + "").length() + "d", read)).append("/")
+                            .append(file.length()).append(" ").append(String.format("%.3f", speed) + "m/s (")
                             .append(file.getName()).append(")").toString());
                 }
             }
@@ -258,9 +269,11 @@ public class MD5Utils {
     /**
      * Md 5.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return String
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: md5
      * @Description:
      */
@@ -276,17 +289,11 @@ public class MD5Utils {
 
         if (checkMd5(file)) {
             // LogUtils.logger.info("md5: " + file.getAbsolutePath() +
-            // "  skip.");
-            LogUtils.LOGGER.info(new StringBuilder()
-                    .append("md5: ")
-                    .append(file.getPath())
-                    .append(" [Already md5] ")
-                    .append(file.length())
-                    .append(" md5: ")
-                    .append(JsonUtils.getValue(
-                            "md5",
-                            FileUtils.getFileTxt(new File(file.getPath()
-                                    + FILE_DEF_EXT)))).toString());
+            // " skip.");
+            LogUtils.LOGGER.info(new StringBuilder().append("md5: ").append(file.getPath()).append(" [Already md5] ")
+                    .append(file.length()).append(" md5: ")
+                    .append(JsonUtils.getValue("md5", FileUtils.getFileTxt(new File(file.getPath() + FILE_DEF_EXT))))
+                    .toString());
 
             return;
         }
@@ -297,45 +304,38 @@ public class MD5Utils {
             // FileUtils .setFileTxt(new File(file.getAbsolutePath() + ".md5"),
             // md5);
             File jsonFile = new File(file.getPath() + FILE_DEF_EXT);
-            String json = JsonUtils.setValue("fileName", file.getName(),
-                    FileUtils.getFileTxt(jsonFile));
+            String json = JsonUtils.setValue("fileName", file.getName(), FileUtils.getFileTxt(jsonFile));
 
             json = JsonUtils.setValue("md5", md5, json);
-            json = JsonUtils.setValue("md5Time", DateTimeUtils.getDateTime(),
-                    json);
+            json = JsonUtils.setValue("md5Time", DateTimeUtils.getDateTime(), json);
             json = JsonUtils.setValue("filePath", file.getPath(), json);
             json = JsonUtils.setValue("fileLength", file.length() + "", json);
-            json = JsonUtils.setValue("fileLastModifiedTime", DateTimeUtils
-                            .getDateTime(file.lastModified(), "yyyy-MM-dd HH:mm:ss"),
-                    json);
-            json = JsonUtils.setValue("fileLastModified", file.lastModified()
-                    + "", json);
-            json = JsonUtils.setValue("md5Start1k", getFileMd5(file, 0, 1024L)
-                    + "", json);
-            json = JsonUtils.setValue("md5End1k",
-                    getFileMd5(file, file.length() - 1024, 1024L) + "", json);
+            json = JsonUtils.setValue("fileLastModifiedTime",
+                    DateTimeUtils.getDateTime(file.lastModified(), "yyyy-MM-dd HH:mm:ss"), json);
+            json = JsonUtils.setValue("fileLastModified", file.lastModified() + "", json);
+            json = JsonUtils.setValue("md5Start1k", getFileMd5(file, 0, 1024L) + "", json);
+            json = JsonUtils.setValue("md5End1k", getFileMd5(file, file.length() - 1024, 1024L) + "", json);
 
             FileUtils.setFileTxt(jsonFile, JsonUtils.jsonToPrintln(json));
         }
 
         // LogUtils.logger.info("md5: " + file.getPath() + " ["
         // + (System.currentTimeMillis() - start) + "ms] " + md5);
-        LogUtils.LOGGER.info(new StringBuilder().append("md5: ")
-                .append(file.getPath()).append(" [")
-                .append((System.currentTimeMillis() - start)).append("ms] ")
-                .append(file.length()).append(" md5: ").append(md5).toString());
+        LogUtils.LOGGER.info(new StringBuilder().append("md5: ").append(file.getPath()).append(" [")
+                .append((System.currentTimeMillis() - start)).append("ms] ").append(file.length()).append(" md5: ")
+                .append(md5).toString());
 
     }
 
     /**
      * Is md 5 file boolean.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the boolean
      */
     public static boolean isMd5File(File file) {
-        if (file == null || !file.exists() || file.isDirectory()
-                || file.length() <= 0) {
+        if (file == null || !file.exists() || file.isDirectory() || file.length() <= 0) {
             return false;
         }
         return isMd5FileType(file.getAbsolutePath()) || checkMd5(file);
@@ -345,7 +345,8 @@ public class MD5Utils {
     /**
      * Is md 5 file type boolean.
      *
-     * @param fileName the file name
+     * @param fileName
+     *            the file name
      * @return the boolean
      */
     public static boolean isMd5FileType(String fileName) {
@@ -361,10 +362,13 @@ public class MD5Utils {
     /**
      * Gets file md 5.
      *
-     * @param file  the file
-     * @param start the start
+     * @param file
+     *            the file
+     * @param start
+     *            the start
      * @return the file md 5
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static String getFileMd5(File file, long start) throws IOException {
         RandomAccessFile raf = null;
@@ -407,14 +411,17 @@ public class MD5Utils {
     /**
      * Gets file md 5.
      *
-     * @param file   the file
-     * @param start  the start
-     * @param length the length
+     * @param file
+     *            the file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
      * @return the file md 5
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public static String getFileMd5(File file, long start, long length)
-            throws IOException {
+    public static String getFileMd5(File file, long start, long length) throws IOException {
         // RandomAccessFile in = null;
         InputStream in = null;
         long size = 0;
@@ -442,7 +449,7 @@ public class MD5Utils {
                 md.update(buf, 0, (int) (read + len > length ? length : len));
                 read += len;
             }
-            // System.out.println("L read  " + read);
+            // System.out.println("L read " + read);
             return new String(Hex.encodeHex(md.digest()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -457,14 +464,17 @@ public class MD5Utils {
     /**
      * Gets file md 5 old.
      *
-     * @param file   the file
-     * @param start  the start
-     * @param length the length
+     * @param file
+     *            the file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
      * @return the file md 5 old
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public static String getFileMd5Old(File file, long start, long length)
-            throws IOException {
+    public static String getFileMd5Old(File file, long start, long length) throws IOException {
         RandomAccessFile raf = null;
         long size = 0;
         try {
@@ -508,7 +518,7 @@ public class MD5Utils {
                 md.update(buf, 0, len);
 
             }
-            // System.out.println("L read  " + read);
+            // System.out.println("L read " + read);
             return new String(Hex.encodeHex(md.digest()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -523,7 +533,8 @@ public class MD5Utils {
     /**
      * Check md 5 boolean.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the boolean
      */
     public static boolean checkMd5(File file) {
@@ -533,8 +544,10 @@ public class MD5Utils {
     /**
      * Check md 5 boolean.
      *
-     * @param file the file
-     * @param md5  the md 5
+     * @param file
+     *            the file
+     * @param md5
+     *            the md 5
      * @return the boolean
      */
     public static boolean checkMd5(File file, String md5) {
@@ -547,27 +560,20 @@ public class MD5Utils {
         }
         try {
             String jsonString = FileUtils.getFileTxt(jsonFile);
-            if (md5 != null
-                    && !md5.equals(JsonUtils.getValue("md5", jsonString))) {
+            if (md5 != null && !md5.equals(JsonUtils.getValue("md5", jsonString))) {
                 return false;
             }
-            String length = JsonUtils.getValue("fileLength",
-                    jsonString);
+            String length = JsonUtils.getValue("fileLength", jsonString);
             if (length == null || !length.equals(file.length() + "")) {
                 return false;
             }
 
-            String md5Start1k = JsonUtils.getValue("md5Start1k",
-                    jsonString);
-            if (md5Start1k == null
-                    || !md5Start1k.equals(getFileMd5(file, 0, 1024))) {
+            String md5Start1k = JsonUtils.getValue("md5Start1k", jsonString);
+            if (md5Start1k == null || !md5Start1k.equals(getFileMd5(file, 0, 1024))) {
                 return false;
             }
-            String md5End1k = JsonUtils.getValue("md5End1k",
-                    jsonString);
-            if (md5End1k == null
-                    || !md5End1k.equals(getFileMd5(file, file.length() - 1024,
-                    1024))) {
+            String md5End1k = JsonUtils.getValue("md5End1k", jsonString);
+            if (md5End1k == null || !md5End1k.equals(getFileMd5(file, file.length() - 1024, 1024))) {
                 return false;
             }
 
@@ -590,7 +596,8 @@ public class MD5Utils {
         /**
          * Instantiates a new Md 5 thread.
          *
-         * @param file the file
+         * @param file
+         *            the file
          */
         public Md5Thread(File file) {
             this.file = file;
@@ -621,7 +628,8 @@ public class MD5Utils {
         /**
          * Sets file.
          *
-         * @param file the file
+         * @param file
+         *            the file
          */
         public void setFile(File file) {
             this.file = file;

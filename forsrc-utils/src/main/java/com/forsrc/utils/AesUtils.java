@@ -17,7 +17,11 @@
 
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Base64;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.text.MessageFormat;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -25,11 +29,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.text.MessageFormat;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * The type Aes utils.
@@ -68,9 +69,11 @@ public final class AesUtils {
     /**
      * Decrypt string.
      *
-     * @param code the code
+     * @param code
+     *            the code
      * @return String string
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: decrypt
      * @Description:
      */
@@ -131,9 +134,11 @@ public final class AesUtils {
     /**
      * Encrypt string.
      *
-     * @param src the src
+     * @param src
+     *            the src
      * @return String string
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: encrypt
      * @Description:
      */
@@ -152,8 +157,7 @@ public final class AesUtils {
 
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, SECRET_KEY);
 
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(
-                IV_PARAMETER.getBytes());
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(IV_PARAMETER.getBytes());
 
         try {
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
@@ -180,9 +184,11 @@ public final class AesUtils {
     /**
      * Gets decrypt password.
      *
-     * @param pwd the pwd
+     * @param pwd
+     *            the pwd
      * @return String decrypt password
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: getDecryptPassword
      * @Description:
      */
@@ -190,11 +196,8 @@ public final class AesUtils {
 
         try {
             String pass = decrypt(pwd);
-            return pass.substring(
-                    (String.valueOf(System.currentTimeMillis())).length(),
-                    pass.length()
-                            - (String.valueOf(System.currentTimeMillis()))
-                            .length());
+            return pass.substring((String.valueOf(System.currentTimeMillis())).length(),
+                    pass.length() - (String.valueOf(System.currentTimeMillis())).length());
         } catch (AesException e) {
             throw e;
         }
@@ -203,17 +206,19 @@ public final class AesUtils {
     /**
      * Gets encrypt password.
      *
-     * @param pwd the pwd
+     * @param pwd
+     *            the pwd
      * @return String encrypt password
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: getEncryptPassword
      * @Description:
      */
     public String getEncryptPassword(String pwd) throws AesException {
 
         try {
-            return encrypt(MessageFormat.format("{0}{1}{2}", System.currentTimeMillis(),
-                    pwd, System.currentTimeMillis()));
+            return encrypt(
+                    MessageFormat.format("{0}{1}{2}", System.currentTimeMillis(), pwd, System.currentTimeMillis()));
         } catch (AesException e) {
             throw e;
         }
@@ -222,8 +227,10 @@ public final class AesUtils {
     /**
      * Matches boolean.
      *
-     * @param password the password
-     * @param pwd      the pwd
+     * @param password
+     *            the password
+     * @param pwd
+     *            the pwd
      * @return the boolean
      */
     public boolean matches(String password, String pwd) {
@@ -244,7 +251,8 @@ public final class AesUtils {
         /**
          * Instantiates a new Aes exception.
          *
-         * @param cause the cause
+         * @param cause
+         *            the cause
          */
         public AesException(Throwable cause) {
             super(cause);

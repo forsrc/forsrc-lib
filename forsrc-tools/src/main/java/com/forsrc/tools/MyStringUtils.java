@@ -11,13 +11,15 @@ public class MyStringUtils {
     /**
      * Gets multi language.
      *
-     * @param string the string
-     * @param src    the src
-     * @param des    the des
+     * @param string
+     *            the string
+     * @param src
+     *            the src
+     * @param des
+     *            the des
      * @return the multi language
      */
-    public static String getMultiLanguage(String string, Charset src,
-                                          Charset des) {
+    public static String getMultiLanguage(String string, Charset src, Charset des) {
         if (src.name().equals(des.name())) {
             return string;
         }
@@ -33,8 +35,10 @@ public class MyStringUtils {
     /**
      * Gets last line break offset.
      *
-     * @param txt       the txt
-     * @param lineBreak the line break
+     * @param txt
+     *            the txt
+     * @param lineBreak
+     *            the line break
      * @return the last line break offset
      */
     public static int getLastLineBreakOffset(String txt, String lineBreak) {
@@ -44,8 +48,7 @@ public class MyStringUtils {
         for (int i = txtBytes.length - 1; i >= 0; i = i - lineBreak.length()) {
             int matchs = 0;
             for (int j = lineBreakBytes.length - 1; j >= 0; j--) {
-                if (lineBreakBytes[j] == txtBytes[i + j + 1
-                        - lineBreakBytes.length]) {
+                if (lineBreakBytes[j] == txtBytes[i + j + 1 - lineBreakBytes.length]) {
                     matchs++;
                 }
             }
@@ -60,7 +63,8 @@ public class MyStringUtils {
     /**
      * Generate letter string.
      *
-     * @param length the length
+     * @param length
+     *            the length
      * @return the string
      */
     public static String generateLetter(int length) {
@@ -77,7 +81,8 @@ public class MyStringUtils {
     /**
      * Generate string.
      *
-     * @param length the length
+     * @param length
+     *            the length
      * @return the string
      */
     public static String generate(int length) {
@@ -98,7 +103,8 @@ public class MyStringUtils {
     /**
      * Generate number string.
      *
-     * @param length the length
+     * @param length
+     *            the length
      * @return the string
      */
     public static String generateNumber(int length) {
@@ -114,8 +120,10 @@ public class MyStringUtils {
     /**
      * formatStr("{0} + {1} = {2}", 1, 2, 3) --> "1 + 2 = 3"
      *
-     * @param format format: "{0} + {1} = {2}"
-     * @param args   args
+     * @param format
+     *            format: "{0} + {1} = {2}"
+     * @param args
+     *            args
      * @return formatted string
      */
     public static String formatStr(final String format, final Object... args) {
@@ -133,10 +141,13 @@ public class MyStringUtils {
     }
 
     /**
-     * Returns the formatted string: format("{0} + {1} = {2}", 1, 2, 3) --> "1 + 2 = 3"
+     * Returns the formatted string: format("{0} + {1} = {2}", 1, 2, 3) --> "1 +
+     * 2 = 3"
      *
-     * @param format format: "{0} + {1} = {2}"
-     * @param args   args
+     * @param format
+     *            format: "{0} + {1} = {2}"
+     * @param args
+     *            args
      * @return the formatted string
      */
     public static String format(final String format, final Object... args) {
@@ -175,7 +186,8 @@ public class MyStringUtils {
     /**
      * Returns <tt>true</tt> if this string is number.
      *
-     * @param number {String}
+     * @param number
+     *            {String}
      * @return true | false; <tt>true</tt> if this string is number.
      */
     public static boolean isNumber(final String number) {
@@ -195,7 +207,8 @@ public class MyStringUtils {
     /**
      * Is blank boolean.
      *
-     * @param str the str
+     * @param str
+     *            the str
      * @return the boolean
      */
     public static boolean isBlank(String str) {
@@ -214,7 +227,8 @@ public class MyStringUtils {
     /**
      * Is not blank boolean.
      *
-     * @param str the str
+     * @param str
+     *            the str
      * @return the boolean
      */
     public static boolean isNotBlank(String str) {

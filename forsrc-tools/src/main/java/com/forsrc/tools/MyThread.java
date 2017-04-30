@@ -1,6 +1,5 @@
 package com.forsrc.tools;
 
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -23,27 +22,29 @@ public class MyThread {
     /**
      * Instantiates a new My thread.
      *
-     * @param corePoolSize    the core pool size
-     * @param maximumPoolSize the maximum pool size
-     * @param keepAliveTime   the keep alive time
-     * @param unit            the unit
-     * @param capacity        the capacity
+     * @param corePoolSize
+     *            the core pool size
+     * @param maximumPoolSize
+     *            the maximum pool size
+     * @param keepAliveTime
+     *            the keep alive time
+     * @param unit
+     *            the unit
+     * @param capacity
+     *            the capacity
      */
-    public MyThread(int corePoolSize,
-                    int maximumPoolSize,
-                    long keepAliveTime,
-                    TimeUnit unit,
-                    int capacity) {
-        this.threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime,
-                unit, new ArrayBlockingQueue<Runnable>(capacity),
-                new ThreadPoolExecutor.CallerRunsPolicy());
+    public MyThread(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, int capacity) {
+        this.threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit,
+                new ArrayBlockingQueue<Runnable>(capacity), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     /**
      * Submit future.
      *
-     * @param <T>  the type parameter
-     * @param task the task
+     * @param <T>
+     *            the type parameter
+     * @param task
+     *            the task
      * @return the future
      */
     public <T> Future<T> submit(Runnable task) {
@@ -53,9 +54,12 @@ public class MyThread {
     /**
      * Submit future.
      *
-     * @param <T>    the type parameter
-     * @param task   the task
-     * @param result the result
+     * @param <T>
+     *            the type parameter
+     * @param task
+     *            the task
+     * @param result
+     *            the result
      * @return the future
      */
     public <T> Future<T> submit(Runnable task, T result) {
@@ -104,7 +108,8 @@ public class MyThread {
     /**
      * Sets thread pool executor.
      *
-     * @param threadPoolExecutor the thread pool executor
+     * @param threadPoolExecutor
+     *            the thread pool executor
      */
     public void setThreadPoolExecutor(ThreadPoolExecutor threadPoolExecutor) {
         this.threadPoolExecutor = threadPoolExecutor;

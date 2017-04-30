@@ -1,14 +1,18 @@
 package com.forsrc.tools;
 
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import redis.clients.jedis.*;
-
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
+import redis.clients.jedis.ShardedJedisPool;
+import redis.clients.jedis.Transaction;
 
 /**
  * The type Jredis utils.
@@ -28,14 +32,15 @@ public class JredisUtils {
      * @return the instance
      */
     public static JredisUtils getInstance() {
-        setShardedJedisPool();
+        init();
         return JredisUtilsClass.INSTANCE;
     }
 
     /**
      * Gets instance.
      *
-     * @param shardedJedisPool the sharded jedis pool
+     * @param shardedJedisPool
+     *            the sharded jedis pool
      * @return the instance
      */
     public static JredisUtils getInstance(ShardedJedisPool shardedJedisPool) {
@@ -46,7 +51,7 @@ public class JredisUtils {
     /**
      * Sets sharded jedis pool.
      */
-    public static void setShardedJedisPool() {
+    public static void init() {
         if (_shardedJedisPool == null) {
             synchronized (JredisUtils.class) {
                 if (_shardedJedisPool == null) {
@@ -62,15 +67,16 @@ public class JredisUtils {
      * @return the sharded jedis pool
      */
     public static ShardedJedisPool getShardedJedisPool() {
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext("classpath:config/spring/redis/spring_redis_config.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext(
+                "classpath:config/spring/redis/spring_redis_config.xml");
         return (ShardedJedisPool) context.getBean("shardedJedisPool");
     }
 
     /**
      * Sets sharded jedis pool.
      *
-     * @param pool the pool
+     * @param pool
+     *            the pool
      */
     public static synchronized void setShardedJedisPool(ShardedJedisPool pool) {
         _shardedJedisPool = pool;
@@ -79,13 +85,18 @@ public class JredisUtils {
     /**
      * Format key string.
      *
-     * @param namespace the namespace
-     * @param keyType   the key type
-     * @param key       the key
+     * @param namespace
+     *            the namespace
+     * @param keyType
+     *            the key type
+     * @param key
+     *            the key
      * @return the string
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
-    public static String formatKey(final String namespace, final KeyType keyType, final String key) throws JredisUtilsException {
+    public static String formatKey(final String namespace, final KeyType keyType, final String key)
+            throws JredisUtilsException {
         String k = namespace + keyType.getType() + key;
         if (MyStringUtils.isBlank(namespace)) {
             throw new IllegalArgumentException(String.format("Namespace is blank. -> %s", k));
@@ -100,13 +111,19 @@ public class JredisUtils {
     /**
      * Call.
      *
-     * @param namespace the namespace
-     * @param type      the type
-     * @param key       the key
-     * @param callback  the callback
-     * @throws JredisUtilsException the jredis utils exception
+     * @param namespace
+     *            the namespace
+     * @param type
+     *            the type
+     * @param key
+     *            the key
+     * @param callback
+     *            the callback
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
-    public static final void call(final String namespace, final KeyType type, final String key, final CallbackWithKey<ShardedJedis> callback) throws JredisUtilsException {
+    public static final void call(final String namespace, final KeyType type, final String key,
+            final CallbackWithKey<ShardedJedis> callback) throws JredisUtilsException {
         JredisUtils jredisUtils = JredisUtils.getInstance();
         final String k = formatKey(namespace, type, key);
         jredisUtils.setKey(namespace, type, key);
@@ -116,9 +133,12 @@ public class JredisUtils {
     /**
      * Call.
      *
-     * @param <T>      the type parameter
-     * @param callback the callback
-     * @throws JredisUtilsException the jredis utils exception
+     * @param <T>
+     *            the type parameter
+     * @param callback
+     *            the callback
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public static final <T> void call(final Callback<ShardedJedis> callback) throws JredisUtilsException {
         JredisUtils jredisUtils = JredisUtils.getInstance();
@@ -128,9 +148,12 @@ public class JredisUtils {
     /**
      * Check reply.
      *
-     * @param actual   the actual
-     * @param expected the expected
-     * @throws JredisUtilsException the jredis utils exception
+     * @param actual
+     *            the actual
+     * @param expected
+     *            the expected
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public static void checkReply(Long actual, long expected) throws JredisUtilsException {
         if (actual == null) {
@@ -138,33 +161,34 @@ public class JredisUtils {
         }
         if (actual.equals(expected)) {
             throw new JredisUtilsException(
-                    MessageFormat.format("Actual reply is {0}, expected : {1}", actual, expected)
-            );
+                    MessageFormat.format("Actual reply is {0}, expected : {1}", actual, expected));
         }
     }
 
     /**
      * Check reply.
      *
-     * @param actual the actual
-     * @throws JredisUtilsException the jredis utils exception
+     * @param actual
+     *            the actual
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public static void checkReply(String actual) throws JredisUtilsException {
         if (actual == null) {
             throw new JredisUtilsException("Actual reply is null, expected : OK");
         }
         if (!actual.equalsIgnoreCase("OK") && !actual.equalsIgnoreCase("QUEUED")) {
-            throw new JredisUtilsException(
-                    MessageFormat.format("Actual reply is {0}, expected : OK", actual)
-            );
+            throw new JredisUtilsException(MessageFormat.format("Actual reply is {0}, expected : OK", actual));
         }
     }
 
     /**
      * Check key.
      *
-     * @param key the key
-     * @throws JredisUtilsException the jredis utils exception
+     * @param key
+     *            the key
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public static void checkKey(String key) throws JredisUtilsException {
         if (key == null) {
@@ -186,7 +210,8 @@ public class JredisUtils {
     /**
      * Gets sharded jedis.
      *
-     * @param pool the pool
+     * @param pool
+     *            the pool
      * @return the sharded jedis
      */
     public ShardedJedis getShardedJedis(ShardedJedisPool pool) {
@@ -232,9 +257,11 @@ public class JredisUtils {
     /**
      * Set jredis utils.
      *
-     * @param value the value
+     * @param value
+     *            the value
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public JredisUtils set(final String value) throws JredisUtilsException {
         ShardedJedis shardedJedis = getShardedJedis();
@@ -256,7 +283,8 @@ public class JredisUtils {
     /**
      * Sets key type.
      *
-     * @param keyType the key type
+     * @param keyType
+     *            the key type
      * @return the key type
      */
     public JredisUtils setKeyType(KeyType keyType) {
@@ -267,7 +295,8 @@ public class JredisUtils {
     /**
      * Sets namespace.
      *
-     * @param namespace the namespace
+     * @param namespace
+     *            the namespace
      * @return the namespace
      */
     public JredisUtils setNamespace(String namespace) {
@@ -278,7 +307,8 @@ public class JredisUtils {
     /**
      * Sets key.
      *
-     * @param key the key
+     * @param key
+     *            the key
      * @return the key
      */
     public JredisUtils setKey(String key) {
@@ -289,9 +319,12 @@ public class JredisUtils {
     /**
      * Sets key.
      *
-     * @param namespace the namespace
-     * @param keyType   the key type
-     * @param key       the key
+     * @param namespace
+     *            the namespace
+     * @param keyType
+     *            the key type
+     * @param key
+     *            the key
      * @return the key
      */
     public JredisUtils setKey(String namespace, KeyType keyType, String key) {
@@ -304,9 +337,11 @@ public class JredisUtils {
     /**
      * Get jredis utils.
      *
-     * @param callback the callback
+     * @param callback
+     *            the callback
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public JredisUtils get(final Callback<String> callback) throws JredisUtilsException {
         final String k = formatKey(_namespace.get(), _keyType.get(), _key.get());
@@ -326,7 +361,8 @@ public class JredisUtils {
      * Delete jredis utils.
      *
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public JredisUtils delete() throws JredisUtilsException {
         final String k = formatKey(_namespace.get(), _keyType.get(), _key.get());
@@ -347,9 +383,11 @@ public class JredisUtils {
     /**
      * Handle jredis utils.
      *
-     * @param callback the callback
+     * @param callback
+     *            the callback
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public final JredisUtils handle(final Callback<ShardedJedis> callback) throws JredisUtilsException {
         ShardedJedis shardedJedis = getShardedJedis();
@@ -369,12 +407,16 @@ public class JredisUtils {
     /**
      * Handle transaction jredis utils.
      *
-     * @param jedisKey the jedis key
-     * @param callback the callback
+     * @param jedisKey
+     *            the jedis key
+     * @param callback
+     *            the callback
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
-    public final JredisUtils handleTransaction(String jedisKey, final Callback<Jedis> callback) throws JredisUtilsException {
+    public final JredisUtils handleTransaction(String jedisKey, final Callback<Jedis> callback)
+            throws JredisUtilsException {
         ShardedJedis shardedJedis = getShardedJedis();
         Jedis jedis = shardedJedis.getShard(jedisKey);
         Transaction transaction = jedis.multi();
@@ -401,10 +443,13 @@ public class JredisUtils {
     /**
      * Handle jedis jredis utils.
      *
-     * @param jedisKey the jedis key
-     * @param callback the callback
+     * @param jedisKey
+     *            the jedis key
+     * @param callback
+     *            the callback
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public final JredisUtils handleJedis(String jedisKey, final Callback<Jedis> callback) throws JredisUtilsException {
         ShardedJedis shardedJedis = getShardedJedis();
@@ -423,9 +468,11 @@ public class JredisUtils {
     /**
      * Handle pipeline jredis utils.
      *
-     * @param callback the callback
+     * @param callback
+     *            the callback
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public final JredisUtils handlePipeline(final Callback<ShardedJedisPipeline> callback) throws JredisUtilsException {
         ShardedJedis shardedJedis = getShardedJedis();
@@ -445,9 +492,11 @@ public class JredisUtils {
     /**
      * Handle jredis utils.
      *
-     * @param callback the callback
+     * @param callback
+     *            the callback
      * @return the jredis utils
-     * @throws JredisUtilsException the jredis utils exception
+     * @throws JredisUtilsException
+     *             the jredis utils exception
      */
     public final JredisUtils handle(final CallbackWithKey<ShardedJedis> callback) throws JredisUtilsException {
         ShardedJedis shardedJedis = getShardedJedis();
@@ -515,14 +564,17 @@ public class JredisUtils {
     /**
      * The interface Callback.
      *
-     * @param <T> the type parameter
+     * @param <T>
+     *            the type parameter
      */
     public interface Callback<T> {
         /**
          * Handle.
          *
-         * @param t the t
-         * @throws JredisUtilsException the jredis utils exception
+         * @param t
+         *            the t
+         * @throws JredisUtilsException
+         *             the jredis utils exception
          */
         void handle(final T t) throws JredisUtilsException;
     }
@@ -530,15 +582,19 @@ public class JredisUtils {
     /**
      * The interface Callback with key.
      *
-     * @param <T> the type parameter
+     * @param <T>
+     *            the type parameter
      */
     public interface CallbackWithKey<T> {
         /**
          * Handle.
          *
-         * @param key the key
-         * @param t   the t
-         * @throws JredisUtilsException the jredis utils exception
+         * @param key
+         *            the key
+         * @param t
+         *            the t
+         * @throws JredisUtilsException
+         *             the jredis utils exception
          */
         void handle(final String key, final T t) throws JredisUtilsException;
     }
@@ -554,7 +610,8 @@ public class JredisUtils {
         /**
          * Instantiates a new Jredis utils exception.
          *
-         * @param msg the msg
+         * @param msg
+         *            the msg
          */
         public JredisUtilsException(String msg) {
             super(msg);
@@ -563,7 +620,8 @@ public class JredisUtils {
         /**
          * Instantiates a new Jredis utils exception.
          *
-         * @param e the e
+         * @param e
+         *            the e
          */
         public JredisUtilsException(Exception e) {
             super(e);

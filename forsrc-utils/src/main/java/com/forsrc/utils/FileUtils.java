@@ -1,7 +1,21 @@
 package com.forsrc.utils;
 
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.HashSet;
@@ -39,10 +53,14 @@ public class FileUtils {
     /**
      * Read line.
      *
-     * @param file      the file
-     * @param adapter   the adapter
-     * @param isUseLock the is use lock
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param adapter
+     *            the adapter
+     * @param isUseLock
+     *            the is use lock
+     * @throws IOException
+     *             the io exception
      */
     public static void readLine(File file, FileReadLineAdapter adapter, boolean isUseLock) throws IOException {
         if (!isUseLock) {
@@ -60,9 +78,12 @@ public class FileUtils {
     /**
      * Read line.
      *
-     * @param file    the file
-     * @param adapter the adapter
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
      */
     public static void readLine(File file, FileReadLineAdapter adapter) throws IOException {
         if (file == null) {
@@ -75,8 +96,7 @@ public class FileUtils {
         BufferedReader br = null;
 
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(
-                    file)), BUFFER_SIZE);
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file)), BUFFER_SIZE);
             String line = null;
             long index = 0;
             while ((line = br.readLine()) != null) {
@@ -91,8 +111,7 @@ public class FileUtils {
             closeQuietly(br);
         }
         if (isDebug) {
-            LogUtils.LOGGER.debug(String.format("%s readLine: %.3f s", Thread
-                            .currentThread().getName(),
+            LogUtils.LOGGER.debug(String.format("%s readLine: %.3f s", Thread.currentThread().getName(),
                     (System.currentTimeMillis() - startTime) / 1000f));
         }
     }
@@ -100,18 +119,21 @@ public class FileUtils {
     /**
      * Random access file read line.
      *
-     * @param file      the file
-     * @param start     the start
-     * @param length    the length
-     * @param adapter   the adapter
-     * @param isUseLock the is use lock
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     * @param adapter
+     *            the adapter
+     * @param isUseLock
+     *            the is use lock
+     * @throws IOException
+     *             the io exception
      */
-    public static void randomAccessFileReadLine(File file,
-                                                long start,
-                                                long length,
-                                                FileReadLineAdapter adapter,
-                                                boolean isUseLock) throws IOException {
+    public static void randomAccessFileReadLine(File file, long start, long length, FileReadLineAdapter adapter,
+            boolean isUseLock) throws IOException {
         if (!isUseLock) {
             randomAccessFileReadLine(file, start, length, adapter);
             return;
@@ -127,14 +149,19 @@ public class FileUtils {
     /**
      * Random access file read line.
      *
-     * @param file    the file
-     * @param start   the start
-     * @param length  the length
-     * @param adapter the adapter
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
      */
-    public static void randomAccessFileReadLine(File file, long start,
-                                                long length, FileReadLineAdapter adapter) throws IOException {
+    public static void randomAccessFileReadLine(File file, long start, long length, FileReadLineAdapter adapter)
+            throws IOException {
         if (file == null) {
             throw new IllegalArgumentException("File is null.");
         }
@@ -176,10 +203,14 @@ public class FileUtils {
     /**
      * Scanner read line.
      *
-     * @param file      the file
-     * @param adapter   the adapter
-     * @param isUseLock the is use lock
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param adapter
+     *            the adapter
+     * @param isUseLock
+     *            the is use lock
+     * @throws IOException
+     *             the io exception
      */
     public static void scannerReadLine(File file, FileReadLineAdapter adapter, boolean isUseLock) throws IOException {
         if (!isUseLock) {
@@ -197,9 +228,12 @@ public class FileUtils {
     /**
      * Scanner read line.
      *
-     * @param file    the file
-     * @param adapter the adapter
-     * @throws FileNotFoundException the file not found exception
+     * @param file
+     *            the file
+     * @param adapter
+     *            the adapter
+     * @throws FileNotFoundException
+     *             the file not found exception
      */
     public static void scannerReadLine(File file, FileReadLineAdapter adapter) throws FileNotFoundException {
         if (file == null) {
@@ -226,26 +260,29 @@ public class FileUtils {
             scanner.close();
         }
         if (isDebug) {
-            LogUtils.LOGGER.debug(String.format("scannerReadLine: %.3f s",
-                    (System.currentTimeMillis() - startTime) / 1000f));
+            LogUtils.LOGGER
+                    .debug(String.format("scannerReadLine: %.3f s", (System.currentTimeMillis() - startTime) / 1000f));
         }
     }
 
     /**
      * Read line.
      *
-     * @param file      the file
-     * @param start     the start
-     * @param length    the length
-     * @param adapter   the adapter
-     * @param isUseLock the is use lock
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     * @param adapter
+     *            the adapter
+     * @param isUseLock
+     *            the is use lock
+     * @throws IOException
+     *             the io exception
      */
-    public static void readLine(final File file,
-                                final long start,
-                                final long length,
-                                FileReadLineAdapter adapter,
-                                boolean isUseLock) throws IOException {
+    public static void readLine(final File file, final long start, final long length, FileReadLineAdapter adapter,
+            boolean isUseLock) throws IOException {
         if (!isUseLock) {
             readLine(file, start, length, adapter);
             return;
@@ -261,16 +298,19 @@ public class FileUtils {
     /**
      * Read line.
      *
-     * @param file    the file
-     * @param start   the start
-     * @param length  the length
-     * @param adapter the adapter
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
      */
-    public static void readLine(final File file,
-                                final long start,
-                                final long length,
-                                FileReadLineAdapter adapter) throws IOException {
+    public static void readLine(final File file, final long start, final long length, FileReadLineAdapter adapter)
+            throws IOException {
         if (file == null) {
             throw new IllegalArgumentException("File is null.");
         }
@@ -278,9 +318,8 @@ public class FileUtils {
             throw new IllegalArgumentException(String.format("File is not exists: %s", file));
         }
         if (start >= file.length()) {
-            throw new IllegalArgumentException(String.format(
-                    "The start(%s) >= file(%s) length(%s)", start, file,
-                    file.length()));
+            throw new IllegalArgumentException(
+                    String.format("The start(%s) >= file(%s) length(%s)", start, file, file.length()));
         }
 
         long readLength = length <= 0 ? file.length() : length;
@@ -304,8 +343,7 @@ public class FileUtils {
                     break;
                 }
             }
-            readLength = readStart + readLength > file.length() ? file.length()
-                    - readStart : readLength;
+            readLength = readStart + readLength > file.length() ? file.length() - readStart : readLength;
             is.getChannel().position(readStart);
             pos = readStart;
             while ((line = br.readLine()) != null) {
@@ -327,8 +365,7 @@ public class FileUtils {
             closeQuietly(br);
         }
         if (isDebug) {
-            LogUtils.LOGGER.debug(String.format("%s readLine: %.3f s", Thread
-                            .currentThread().getName(),
+            LogUtils.LOGGER.debug(String.format("%s readLine: %.3f s", Thread.currentThread().getName(),
                     (System.currentTimeMillis() - startTime) / 1000f));
         }
     }
@@ -336,20 +373,23 @@ public class FileUtils {
     /**
      * Rewrite line.
      *
-     * @param file      the file
-     * @param saveFile  the save file
-     * @param start     the start
-     * @param length    the length
-     * @param adapter   the adapter
-     * @param isUseLock the is use lock
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param saveFile
+     *            the save file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     * @param adapter
+     *            the adapter
+     * @param isUseLock
+     *            the is use lock
+     * @throws IOException
+     *             the io exception
      */
-    public static void rewriteLine(final File file,
-                                   final File saveFile,
-                                   final long start,
-                                   final long length,
-                                   FileWriteReadLineAdapter adapter,
-                                   boolean isUseLock) throws IOException {
+    public static void rewriteLine(final File file, final File saveFile, final long start, final long length,
+            FileWriteReadLineAdapter adapter, boolean isUseLock) throws IOException {
         if (!isUseLock) {
             rewriteLine(file, saveFile, start, length, adapter);
             return;
@@ -365,18 +405,21 @@ public class FileUtils {
     /**
      * Rewrite line.
      *
-     * @param file     the file
-     * @param saveFile the save file
-     * @param start    the start
-     * @param length   the length
-     * @param adapter  the adapter
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param saveFile
+     *            the save file
+     * @param start
+     *            the start
+     * @param length
+     *            the length
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
      */
-    public static void rewriteLine(final File file,
-                                   final File saveFile,
-                                   final long start,
-                                   final long length,
-                                   FileWriteReadLineAdapter adapter) throws IOException {
+    public static void rewriteLine(final File file, final File saveFile, final long start, final long length,
+            FileWriteReadLineAdapter adapter) throws IOException {
         if (file == null) {
             throw new IllegalArgumentException("File is null.");
         }
@@ -387,9 +430,8 @@ public class FileUtils {
             throw new IllegalArgumentException(String.format("File is not exists: %s", file));
         }
         if (start >= file.length()) {
-            LogUtils.LOGGER.debug(MessageFormat.format(
-                    "[SKIP] The start({0}) >= file({1}) length({2})", start, file,
-                    file.length()));
+            LogUtils.LOGGER.debug(
+                    MessageFormat.format("[SKIP] The start({0}) >= file({1}) length({2})", start, file, file.length()));
             return;
         }
 
@@ -402,8 +444,7 @@ public class FileUtils {
         try {
             is = new FileInputStream(file);
             br = new BufferedReader(new InputStreamReader(is), BUFFER_SIZE);
-            bw = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(saveFile, false)), BUFFER_SIZE);
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(saveFile, false)), BUFFER_SIZE);
             is.getChannel().position(readStart);
             String line = null;
             long index = 0;
@@ -416,8 +457,7 @@ public class FileUtils {
                     break;
                 }
             }
-            readLength = readStart + readLength > file.length() ? file.length()
-                    - readStart : readLength;
+            readLength = readStart + readLength > file.length() ? file.length() - readStart : readLength;
             is.getChannel().position(readStart);
             pos = readStart;
             while ((line = br.readLine()) != null) {
@@ -444,21 +484,21 @@ public class FileUtils {
             closeQuietly(bw);
         }
         if (isDebug) {
-            LogUtils.LOGGER.debug(String.format(
-                    "%s rewriteLine(%s, %s, %s, %s, %s): %.3f s", Thread
-                            .currentThread().getName(), file, saveFile, start,
-                    length, adapter,
-                    (System.currentTimeMillis() - startTime) / 1000f));
+            LogUtils.LOGGER
+                    .debug(String.format("%s rewriteLine(%s, %s, %s, %s, %s): %.3f s", Thread.currentThread().getName(),
+                            file, saveFile, start, length, adapter, (System.currentTimeMillis() - startTime) / 1000f));
         }
     }
-
 
     /**
      * Cut file.
      *
-     * @param file   the file
-     * @param length the length
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param length
+     *            the length
+     * @throws IOException
+     *             the io exception
      */
     public static void cutFile(File file, long length) throws IOException {
         cutFile(file, length, null);
@@ -467,16 +507,19 @@ public class FileUtils {
     /**
      * Cut file.
      *
-     * @param file    the file
-     * @param length  the length
-     * @param adapter the adapter
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param length
+     *            the length
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
      */
-    public static void cutFile(File file, long length,
-                               FileWriteReadLineAdapter adapter) throws IOException {
+    public static void cutFile(File file, long length, FileWriteReadLineAdapter adapter) throws IOException {
         check(file);
         if (length >= file.length()) {
-            //return;
+            // return;
         }
         if (length < 1024 * 1024 * 10) {
             // return;
@@ -489,7 +532,8 @@ public class FileUtils {
             rewriteLine(file, saveFile, start, length, adapter);
             start += length;
         }
-        // LogUtils.LOGGER.debug(String.format("%s rewriteLine(%s, %s, %s): %.3f s",
+        // LogUtils.LOGGER.debug(String.format("%s rewriteLine(%s, %s, %s): %.3f
+        // s",
         // Thread.currentThread().getName(), file, length, adapter,
         // (System.currentTimeMillis() - startTime) / 1000f));
     }
@@ -497,7 +541,8 @@ public class FileUtils {
     /**
      * Check.
      *
-     * @param file the file
+     * @param file
+     *            the file
      */
     public static void check(File file) {
         if (file == null) {
@@ -512,25 +557,29 @@ public class FileUtils {
     /**
      * Thread read line.
      *
-     * @param file    the file
-     * @param length  the length
-     * @param thread  the thread
-     * @param adapter the adapter
-     * @throws IOException          the io exception
-     * @throws InterruptedException the interrupted exception
+     * @param file
+     *            the file
+     * @param length
+     *            the length
+     * @param thread
+     *            the thread
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
+     * @throws InterruptedException
+     *             the interrupted exception
      */
-    public static void threadReadLine(final File file, final long length,
-                                      int thread, final FileReadLineAdapter adapter) throws IOException, InterruptedException {
+    public static void threadReadLine(final File file, final long length, int thread, final FileReadLineAdapter adapter)
+            throws IOException, InterruptedException {
         check(file);
         if (length >= file.length()) {
             // return;
         }
 
         long startTime = System.currentTimeMillis();
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(3,
-                thread >= 3 ? thread : 3, 10, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<Runnable>(3),
-                new ThreadPoolExecutor.CallerRunsPolicy());
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(3, thread >= 3 ? thread : 3, 10, TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<Runnable>(3), new ThreadPoolExecutor.CallerRunsPolicy());
 
         // ExecutorService threadPool = Executors.newFixedThreadPool(thread);
         int count = (int) Math.ceil(file.length() / length) + 1;
@@ -551,8 +600,7 @@ public class FileUtils {
         }
         threadPool.shutdown();
         try {
-            while (threadPool != null
-                    && !threadPool.awaitTermination(1, TimeUnit.SECONDS)) {
+            while (threadPool != null && !threadPool.awaitTermination(1, TimeUnit.SECONDS)) {
             }
         } catch (InterruptedException e) {
             throw e;
@@ -560,8 +608,7 @@ public class FileUtils {
             threadPool.shutdownNow();
         }
         if (isDebug) {
-            LogUtils.LOGGER.debug(String.format("threadReadLine(%s, %s, %s): %.3f s",
-                    file, length, adapter,
+            LogUtils.LOGGER.debug(String.format("threadReadLine(%s, %s, %s): %.3f s", file, length, adapter,
                     (System.currentTimeMillis() - startTime) / 1000f));
         }
     }
@@ -569,24 +616,27 @@ public class FileUtils {
     /**
      * Thread cut file.
      *
-     * @param file    the file
-     * @param length  the length
-     * @param thread  the thread
-     * @param adapter the adapter
-     * @throws InterruptedException the interrupted exception
+     * @param file
+     *            the file
+     * @param length
+     *            the length
+     * @param thread
+     *            the thread
+     * @param adapter
+     *            the adapter
+     * @throws InterruptedException
+     *             the interrupted exception
      */
-    public static void threadCutFile(final File file, final long length,
-                                     int thread, final FileWriteReadLineAdapter adapter) throws InterruptedException {
+    public static void threadCutFile(final File file, final long length, int thread,
+            final FileWriteReadLineAdapter adapter) throws InterruptedException {
         check(file);
         if (length >= file.length()) {
             // return;
         }
 
         long startTime = System.currentTimeMillis();
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(3,
-                thread >= 3 ? thread : 3, 10, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<Runnable>(3),
-                new ThreadPoolExecutor.CallerRunsPolicy());
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(3, thread >= 3 ? thread : 3, 10, TimeUnit.MILLISECONDS,
+                new ArrayBlockingQueue<Runnable>(3), new ThreadPoolExecutor.CallerRunsPolicy());
 
         // ExecutorService threadPool = Executors.newFixedThreadPool(thread);
         int count = (int) Math.ceil(file.length() / length) + 1;
@@ -605,8 +655,7 @@ public class FileUtils {
         }
         threadPool.shutdown();
         try {
-            while (threadPool != null
-                    && !threadPool.awaitTermination(1, TimeUnit.SECONDS)) {
+            while (threadPool != null && !threadPool.awaitTermination(1, TimeUnit.SECONDS)) {
             }
         } catch (InterruptedException e) {
             throw e;
@@ -614,8 +663,7 @@ public class FileUtils {
             threadPool.shutdownNow();
         }
         if (isDebug) {
-            LogUtils.LOGGER.debug(String.format("threadCutFile(%s, %s, %s): %.3f s",
-                    file, length, adapter,
+            LogUtils.LOGGER.debug(String.format("threadCutFile(%s, %s, %s): %.3f s", file, length, adapter,
                     (System.currentTimeMillis() - startTime) / 1000f));
         }
     }
@@ -623,10 +671,13 @@ public class FileUtils {
     /**
      * Save file.
      *
-     * @param src the src
-     * @param dst the dst
+     * @param src
+     *            the src
+     * @param dst
+     *            the dst
      * @return boolean
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: saveFile
      * @Description:
      */
@@ -654,10 +705,13 @@ public class FileUtils {
     /**
      * Sets file txt.
      *
-     * @param file the file
-     * @param info the info
+     * @param file
+     *            the file
+     * @param info
+     *            the info
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: setFileTxt
      * @Description:
      */
@@ -668,34 +722,40 @@ public class FileUtils {
     /**
      * Sets file txt.
      *
-     * @param file   the file
-     * @param info   the info
-     * @param append the append
+     * @param file
+     *            the file
+     * @param info
+     *            the info
+     * @param append
+     *            the append
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: setFileTxt
      * @Description:
      */
-    public static void setFileTxt(File file, String info, boolean append)
-            throws IOException {
+    public static void setFileTxt(File file, String info, boolean append) throws IOException {
         setFileTxt(file, info, Charset.defaultCharset(), append);
     }
 
     /**
      * Sets file txt.
      *
-     * @param file    the file
-     * @param info    the info
-     * @param charset the charset
-     * @param append  the append
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param info
+     *            the info
+     * @param charset
+     *            the charset
+     * @param append
+     *            the append
+     * @throws IOException
+     *             the io exception
      */
-    public static void setFileTxt(File file, String info, Charset charset,
-                                  boolean append) throws IOException {
+    public static void setFileTxt(File file, String info, Charset charset, boolean append) throws IOException {
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(file, append), charset));
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append), charset));
             bw.write(info);
             bw.flush();
         } catch (IOException e) {
@@ -708,9 +768,11 @@ public class FileUtils {
     /**
      * Gets file txt.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return String file txt
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: getFileTxt
      * @Description:
      */
@@ -722,15 +784,18 @@ public class FileUtils {
         return getFileTxt(file, charset, -1, -1);
     }
 
-
     /**
      * Gets file txt.
      *
-     * @param file      the file
-     * @param startLine the start line
-     * @param countLine the count line
+     * @param file
+     *            the file
+     * @param startLine
+     *            the start line
+     * @param countLine
+     *            the count line
      * @return String file txt
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: getFileTxt
      * @Description:
      */
@@ -741,17 +806,21 @@ public class FileUtils {
     /**
      * Gets file txt.
      *
-     * @param file      the file
-     * @param charset   the charset
-     * @param startLine the start line
-     * @param countLine the count line
+     * @param file
+     *            the file
+     * @param charset
+     *            the charset
+     * @param startLine
+     *            the start line
+     * @param countLine
+     *            the count line
      * @return String file txt
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: getFileTxt
      * @Description:
      */
-    public static String getFileTxt(File file, Charset charset, long startLine,
-                                    long countLine) throws IOException {
+    public static String getFileTxt(File file, Charset charset, long startLine, long countLine) throws IOException {
         // if (file == null || !file.exists()) {
         // throw new FileNotFoundException(file.getAbsolutePath());
         // }
@@ -761,8 +830,7 @@ public class FileUtils {
         long count = countLine < 0 ? -1 : countLine;
         try {
             br = new BufferedReader(new InputStreamReader(
-                    charset == null ? new FileInputStream(file)
-                            : new FileInputStream(file), charset), 1024 * 10);
+                    charset == null ? new FileInputStream(file) : new FileInputStream(file), charset), 1024 * 10);
             StringBuilder sb = new StringBuilder();
             String s = "";
             long index = 0;
@@ -795,8 +863,10 @@ public class FileUtils {
     /**
      * Gets file list.
      *
-     * @param dir       the dir
-     * @param arrayList the array list
+     * @param dir
+     *            the dir
+     * @param arrayList
+     *            the array list
      * @return the file list
      */
     public static boolean getFileList(File dir, Set<File> arrayList) {
@@ -806,9 +876,12 @@ public class FileUtils {
     /**
      * Gets file list.
      *
-     * @param dir    the dir
-     * @param filter the filter
-     * @param set    the set
+     * @param dir
+     *            the dir
+     * @param filter
+     *            the filter
+     * @param set
+     *            the set
      * @return the file list
      */
     public static boolean getFileList(File dir, FileFilter filter, Set<File> set) {
@@ -823,6 +896,9 @@ public class FileUtils {
         }
 
         File[] files = filter == null ? dir.listFiles() : dir.listFiles(filter);
+        if (files == null) {
+            return false;
+        }
         for (File f : files) {
             set.add(f);
             if (f.isDirectory()) {
@@ -836,8 +912,10 @@ public class FileUtils {
     /**
      * Close.
      *
-     * @param in the in
-     * @throws IOException the io exception
+     * @param in
+     *            the in
+     * @throws IOException
+     *             the io exception
      */
     public static void close(InputStream in) throws IOException {
         if (in == null) {
@@ -853,8 +931,10 @@ public class FileUtils {
     /**
      * Close.
      *
-     * @param out the out
-     * @throws IOException the io exception
+     * @param out
+     *            the out
+     * @throws IOException
+     *             the io exception
      */
     public static void close(OutputStream out) throws IOException {
         if (out == null) {
@@ -870,12 +950,14 @@ public class FileUtils {
     /**
      * Close.
      *
-     * @param in  the in
-     * @param out the out
-     * @throws IOException the io exception
+     * @param in
+     *            the in
+     * @param out
+     *            the out
+     * @throws IOException
+     *             the io exception
      */
-    public static void close(InputStream in, OutputStream out)
-            throws IOException {
+    public static void close(InputStream in, OutputStream out) throws IOException {
         try {
             close(in);
         } catch (IOException e) {
@@ -892,8 +974,10 @@ public class FileUtils {
     /**
      * Close.
      *
-     * @param br the br
-     * @throws IOException the io exception
+     * @param br
+     *            the br
+     * @throws IOException
+     *             the io exception
      */
     public static void close(BufferedReader br) throws IOException {
         if (br == null) {
@@ -909,8 +993,10 @@ public class FileUtils {
     /**
      * Close.
      *
-     * @param bw the bw
-     * @throws IOException the io exception
+     * @param bw
+     *            the bw
+     * @throws IOException
+     *             the io exception
      */
     public static void close(BufferedWriter bw) throws IOException {
         if (bw == null) {
@@ -926,12 +1012,14 @@ public class FileUtils {
     /**
      * Close.
      *
-     * @param in  the in
-     * @param out the out
-     * @throws IOException the io exception
+     * @param in
+     *            the in
+     * @param out
+     *            the out
+     * @throws IOException
+     *             the io exception
      */
-    public static void close(BufferedReader in, BufferedWriter out)
-            throws IOException {
+    public static void close(BufferedReader in, BufferedWriter out) throws IOException {
         try {
             close(in);
         } catch (IOException e) {
@@ -945,11 +1033,11 @@ public class FileUtils {
         }
     }
 
-
     /**
      * Gets file info.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the file info
      */
     public static String getFileInfo(File file) {
@@ -960,18 +1048,18 @@ public class FileUtils {
             return MessageFormat.format("Not exist: '{0}'", file);
         }
 
-        return MessageFormat.format("{0} {1} {2}",
-                DateTimeUtils.getDateTime(file.lastModified(), false),
-                (file.isFile() ? "F" : "D"),
-                (file.isFile() ? file.length() : ""));
+        return MessageFormat.format("{0} {1} {2}", DateTimeUtils.getDateTime(file.lastModified(), false),
+                (file.isFile() ? "F" : "D"), (file.isFile() ? file.length() : ""));
     }
 
     /**
      * Read txt file string.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the string
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static String readTxtFile(File file) throws IOException {
         return readTxtFile(file, null);
@@ -980,10 +1068,13 @@ public class FileUtils {
     /**
      * Read txt file string.
      *
-     * @param file    the file
-     * @param charset the charset
+     * @param file
+     *            the file
+     * @param charset
+     *            the charset
      * @return the string
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static String readTxtFile(File file, Charset charset) throws IOException {
         long fileLength = file.length();
@@ -1008,14 +1099,19 @@ public class FileUtils {
     /**
      * Read txt file.
      *
-     * @param file       the file
-     * @param charset    the charset
-     * @param adapter    the adapter
-     * @param bufferSize the buffer size
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param charset
+     *            the charset
+     * @param adapter
+     *            the adapter
+     * @param bufferSize
+     *            the buffer size
+     * @throws IOException
+     *             the io exception
      */
-    public static void readTxtFile(File file, Charset charset,
-                                   ReadTxtFileAdapter adapter, int bufferSize) throws IOException {
+    public static void readTxtFile(File file, Charset charset, ReadTxtFileAdapter adapter, int bufferSize)
+            throws IOException {
         long fileLength = file.length();
         if (fileLength <= bufferSize) {
             adapter.todo(readTxtFile(file, charset));
@@ -1027,8 +1123,7 @@ public class FileUtils {
         try {
             in = new FileInputStream(file);
             while ((length = in.read(b)) != -1) {
-                adapter.todo(charset == null ? new String(b, 0, length)
-                        : new String(b, 0, length, charset));
+                adapter.todo(charset == null ? new String(b, 0, length) : new String(b, 0, length, charset));
             }
 
         } catch (FileNotFoundException e) {
@@ -1044,15 +1139,21 @@ public class FileUtils {
     /**
      * Read txt file.
      *
-     * @param file       the file
-     * @param charset    the charset
-     * @param adapter    the adapter
-     * @param bufferSize the buffer size
-     * @param lineBreak  the line break
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param charset
+     *            the charset
+     * @param adapter
+     *            the adapter
+     * @param bufferSize
+     *            the buffer size
+     * @param lineBreak
+     *            the line break
+     * @throws IOException
+     *             the io exception
      */
-    public static void readTxtFile(File file, Charset charset,
-                                   ReadTxtFileAdapter adapter, int bufferSize, String lineBreak) throws IOException {
+    public static void readTxtFile(File file, Charset charset, ReadTxtFileAdapter adapter, int bufferSize,
+            String lineBreak) throws IOException {
         long fileLength = file.length();
         if (fileLength <= bufferSize) {
             adapter.todo(readTxtFile(file, charset));
@@ -1066,18 +1167,16 @@ public class FileUtils {
 
             String newLine = null;
             while ((length = in.read(b)) != -1) {
-                String txt = charset == null ? new String(b, 0, length)
-                        : new String(b, 0, length, charset);
+                String txt = charset == null ? new String(b, 0, length) : new String(b, 0, length, charset);
 
                 if (newLine != null) {
                     txt = String.format("%s%s", newLine, txt);
                 }
-                int offset = MyStringUtils.getLastLineBreakOffset(txt,
-                        lineBreak);
+                int offset = MyStringUtils.getLastLineBreakOffset(txt, lineBreak);
                 if (offset == -1) {
                     adapter.todo(txt);
                     newLine = null;
-                    // System.out.println("	if (offset == -1)");
+                    // System.out.println(" if (offset == -1)");
                     continue;
                 }
                 if (offset == 0 && lineBreak.length() == txt.length()) {
@@ -1110,34 +1209,39 @@ public class FileUtils {
     /**
      * Read txt file.
      *
-     * @param file    the file
-     * @param charset the charset
-     * @param adapter the adapter
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param charset
+     *            the charset
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
      */
-    public static void readTxtFile(File file, Charset charset,
-                                   ReadTxtFileAdapter adapter) throws IOException {
+    public static void readTxtFile(File file, Charset charset, ReadTxtFileAdapter adapter) throws IOException {
         readTxtFile(file, charset, adapter, BUFFER_SIZE);
     }
 
     /**
      * Read line.
      *
-     * @param file    the file
-     * @param charset the charset
-     * @param adapter the adapter
-     * @throws IOException the io exception
+     * @param file
+     *            the file
+     * @param charset
+     *            the charset
+     * @param adapter
+     *            the adapter
+     * @throws IOException
+     *             the io exception
      */
-    public static void readLine(File file, Charset charset,
-                                ReadLineAdapter adapter) throws IOException {
+    public static void readLine(File file, Charset charset, ReadLineAdapter adapter) throws IOException {
         // if (file == null || !file.exists()) {
         // throw new FileNotFoundException(file.getAbsolutePath());
         // }
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(
-                    charset == null ? new FileInputStream(file)
-                            : new FileInputStream(file), charset), 1024 * 10);
+                    charset == null ? new FileInputStream(file) : new FileInputStream(file), charset), 1024 * 10);
             String s = "";
             while ((s = br.readLine()) != null) {
                 adapter.todo(s);
@@ -1153,7 +1257,8 @@ public class FileUtils {
     /**
      * Delete boolean.
      *
-     * @param dir the dir
+     * @param dir
+     *            the dir
      * @return the boolean
      */
     public static boolean delete(File dir) {
@@ -1168,6 +1273,9 @@ public class FileUtils {
             return ok;
         }
         File[] list = dir.listFiles();
+        if(list == null){
+            return true;
+        }
         for (File file : list) {
             delete(file);
         }
@@ -1179,7 +1287,8 @@ public class FileUtils {
     /**
      * Close quietly.
      *
-     * @param closeable the closeable
+     * @param closeable
+     *            the closeable
      */
     public static void closeQuietly(Closeable closeable) {
         try {
@@ -1199,7 +1308,8 @@ public class FileUtils {
         /**
          * Todo.
          *
-         * @param str the str
+         * @param str
+         *            the str
          */
         void todo(String str);
     }
@@ -1211,7 +1321,8 @@ public class FileUtils {
         /**
          * Todo.
          *
-         * @param str the str
+         * @param str
+         *            the str
          */
         void todo(String str);
     }
@@ -1224,8 +1335,10 @@ public class FileUtils {
         /**
          * Todo.
          *
-         * @param index the index
-         * @param line  the line
+         * @param index
+         *            the index
+         * @param line
+         *            the line
          */
         void todo(long index, String line);
     }
@@ -1237,7 +1350,8 @@ public class FileUtils {
         /**
          * Init.
          *
-         * @param scanner the scanner
+         * @param scanner
+         *            the scanner
          */
         void init(Scanner scanner);
     }
@@ -1250,7 +1364,8 @@ public class FileUtils {
         /**
          * Todo.
          *
-         * @param raf the raf
+         * @param raf
+         *            the raf
          */
         void todo(RandomAccessFile raf);
     }
@@ -1263,8 +1378,10 @@ public class FileUtils {
         /**
          * Todo string.
          *
-         * @param index the index
-         * @param line  the line
+         * @param index
+         *            the index
+         * @param line
+         *            the line
          * @return the string
          */
         String todo(long index, String line);

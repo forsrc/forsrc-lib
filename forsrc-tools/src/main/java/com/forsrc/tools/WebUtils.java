@@ -1,13 +1,18 @@
 package com.forsrc.tools;
 
-//import com.opensymphony.xwork2.ActionContext;
-
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.MessageFormat;
-import java.util.*;
+
+//import com.opensymphony.xwork2.ActionContext;
+
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 /**
  * The type Web utils.
@@ -34,7 +39,8 @@ public class WebUtils {
     /**
      * Gets ip.
      *
-     * @param request the request
+     * @param request
+     *            the request
      * @return the ip
      */
     public static String getIp(HttpServletRequest request) {
@@ -58,8 +64,10 @@ public class WebUtils {
     /**
      * Sets content type.
      *
-     * @param request  the request
-     * @param response the response
+     * @param request
+     *            the request
+     * @param response
+     *            the response
      */
     public static void setContentType(HttpServletRequest request, HttpServletResponse response) {
         int index = request.getRequestURI().lastIndexOf(".");
@@ -91,7 +99,8 @@ public class WebUtils {
     /**
      * Gets locale.
      *
-     * @param language the language
+     * @param language
+     *            the language
      * @return the locale
      */
     public static Locale getLocale(String language) {
@@ -99,32 +108,32 @@ public class WebUtils {
         if (language == null || language.indexOf("_") < 0) {
             return Locale.getDefault();
         }
-        Locale locale = getAvailableLanguage().contains(language) ? new Locale(
-                language.substring(0, language.indexOf("_")),
-                language.substring(language.indexOf("_") + 1)) : Locale
-                .getDefault();
+        Locale locale = getAvailableLanguage().contains(language)
+                ? new Locale(language.substring(0, language.indexOf("_")),
+                        language.substring(language.indexOf("_") + 1))
+                : Locale.getDefault();
         return locale;
     }
 
     /**
      * Sets language.
      *
-     * @param request the request
+     * @param request
+     *            the request
      */
     public static void setLanguage(HttpServletRequest request) {
 
         String languageFromRequest = request.getParameter(KEY_LANGUAGE);
-        String languageFromSession = (String) request.getSession()
-                .getAttribute(KEY_LANGUAGE);
-        String language = languageFromRequest == null ? languageFromSession
-                : languageFromRequest;
+        String languageFromSession = (String) request.getSession().getAttribute(KEY_LANGUAGE);
+        String language = languageFromRequest == null ? languageFromSession : languageFromRequest;
         Locale locale = getLocale(language);
         language = String.format("%s_%s", locale.getLanguage(), locale.getCountry());
-        //struts2
-        /*ActionContext actionContext = ActionContext.getContext();
-         if (actionContext != null) { //struts2
-         actionContext.setLocale(locale);
-         }*/
+        // struts2
+        /*
+         * ActionContext actionContext = ActionContext.getContext(); if
+         * (actionContext != null) { //struts2 actionContext.setLocale(locale);
+         * }
+         */
         request.setAttribute(KEY_LANGUAGE, language);
         request.getSession().setAttribute(KEY_LANGUAGE, language);
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
@@ -135,8 +144,8 @@ public class WebUtils {
         if (baseUrl != null) {
             return baseUrl;
         }
-        baseUrl = MessageFormat.format("//{0}:{1,number,#}{2}",
-                request.getServerName(), request.getServerPort(), request.getContextPath());
+        baseUrl = MessageFormat.format("//{0}:{1,number,#}{2}", request.getServerName(), request.getServerPort(),
+                request.getContextPath());
         request.getSession().setAttribute(KEY_BASE_URL, baseUrl);
         return baseUrl;
     }

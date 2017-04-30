@@ -1,5 +1,13 @@
 package com.forsrc.tools;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -26,11 +34,6 @@ import org.apache.lucene.util.Version;
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
 import org.wltea.analyzer.lucene.IKAnalyzer;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.nio.file.Paths;
-import java.util.*;
 
 /**
  * The type Lucene utils.
@@ -61,7 +64,8 @@ public class LuceneUtils {
     /**
      * Instantiates a new Lucene utils.
      *
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public LuceneUtils() throws IOException {
         this(DEF_DIR);
@@ -70,8 +74,10 @@ public class LuceneUtils {
     /**
      * Instantiates a new Lucene utils.
      *
-     * @param indexFile the index file
-     * @throws IOException the io exception
+     * @param indexFile
+     *            the index file
+     * @throws IOException
+     *             the io exception
      */
     public LuceneUtils(String indexFile) throws IOException {
         this.analyzer = new IKAnalyzer(true);
@@ -81,8 +87,10 @@ public class LuceneUtils {
     /**
      * Instantiates a new Lucene utils.
      *
-     * @param analyzer the analyzer
-     * @throws IOException the io exception
+     * @param analyzer
+     *            the analyzer
+     * @throws IOException
+     *             the io exception
      */
     public LuceneUtils(Analyzer analyzer) throws IOException {
         this.analyzer = analyzer;
@@ -92,8 +100,10 @@ public class LuceneUtils {
     /**
      * Instantiates a new Lucene utils.
      *
-     * @param indexWriter the index writer
-     * @throws IOException the io exception
+     * @param indexWriter
+     *            the index writer
+     * @throws IOException
+     *             the io exception
      */
     public LuceneUtils(IndexWriter indexWriter) throws IOException {
         this.analyzer = new IKAnalyzer(true);
@@ -103,8 +113,10 @@ public class LuceneUtils {
     /**
      * Instantiates a new Lucene utils.
      *
-     * @param indexWriter the index writer
-     * @param analyzer    the analyzer
+     * @param indexWriter
+     *            the index writer
+     * @param analyzer
+     *            the analyzer
      */
     public LuceneUtils(IndexWriter indexWriter, Analyzer analyzer) {
         this.indexWriter = indexWriter;
@@ -114,16 +126,20 @@ public class LuceneUtils {
     /**
      * Create index writer index writer.
      *
-     * @param indexFile the index file
-     * @param analyzer  the analyzer
+     * @param indexFile
+     *            the index file
+     * @param analyzer
+     *            the analyzer
      * @return the index writer
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @since 1.7
      */
     public synchronized IndexWriter createIndexWriter(String indexFile, Analyzer analyzer) throws IOException {
         Directory directory = null;
         try {
-            //directory = FSDirectory.open(Paths.get(indexFile == null ? DEF_DIR : indexFile));
+            // directory = FSDirectory.open(Paths.get(indexFile == null ?
+            // DEF_DIR : indexFile));
             directory = SimpleFSDirectory.open(Paths.get(indexFile == null ? DEF_DIR : indexFile));
         } catch (IOException e) {
             throw e;
@@ -131,7 +147,7 @@ public class LuceneUtils {
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
         try {
             if (IndexWriter.isLocked(directory)) {
-                //IndexWriter.unlock(directory);
+                // IndexWriter.unlock(directory);
                 directory.obtainLock(IndexWriter.WRITE_LOCK_NAME).close();
             }
             return new IndexWriter(directory, indexWriterConfig);
@@ -143,11 +159,12 @@ public class LuceneUtils {
     /**
      * Unlock.
      *
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public synchronized void unlock() throws IOException {
         if (IndexWriter.isLocked(this.indexWriter.getDirectory())) {
-            //IndexWriter.unlock(this.indexWriter.getDirectory());
+            // IndexWriter.unlock(this.indexWriter.getDirectory());
             this.indexWriter.getDirectory().obtainLock(IndexWriter.WRITE_LOCK_NAME).close();
         }
     }
@@ -155,14 +172,20 @@ public class LuceneUtils {
     /**
      * Search list.
      *
-     * @param text   the text
-     * @param fields the fields
-     * @param count  the count
+     * @param text
+     *            the text
+     * @param fields
+     *            the fields
+     * @param count
+     *            the count
      * @return the list
-     * @throws IOException    the io exception
-     * @throws ParseException the parse exception
+     * @throws IOException
+     *             the io exception
+     * @throws ParseException
+     *             the parse exception
      */
-    public synchronized List<Document> search(String text, String[] fields, int count) throws IOException, ParseException {
+    public synchronized List<Document> search(String text, String[] fields, int count)
+            throws IOException, ParseException {
         this.highlighter = null;
         IndexSearcher searcher = getSearcher();
         QueryParser parser = new MultiFieldQueryParser(fields, this.analyzer);
@@ -189,28 +212,20 @@ public class LuceneUtils {
     }
 
     /**
-     * Search list.
-     *
-     * @param query the query
-     * @param count the count
-     * @return the list
-     * @throws IOException    the io exception
-     * @throws ParseException the parse exception
-     */
-    public synchronized List<Document> search(Query query, int count) throws IOException, ParseException {
-        return search(query, count);
-    }
-
-    /**
      * Parse list.
      *
-     * @param list   the list
-     * @param fields the fields
+     * @param list
+     *            the list
+     * @param fields
+     *            the fields
      * @return the list
-     * @throws IOException                  the io exception
-     * @throws InvalidTokenOffsetsException the invalid token offsets exception
+     * @throws IOException
+     *             the io exception
+     * @throws InvalidTokenOffsetsException
+     *             the invalid token offsets exception
      */
-    public List<Map<String, String>> parse(List<Document> list, String[] fields) throws IOException, InvalidTokenOffsetsException {
+    public List<Map<String, String>> parse(List<Document> list, String[] fields)
+            throws IOException, InvalidTokenOffsetsException {
         List<Map<String, String>> lst = new ArrayList<Map<String, String>>();
         for (Document doc : list) {
             Map<String, String> map = new HashMap<String, String>();
@@ -228,15 +243,22 @@ public class LuceneUtils {
     /**
      * Query list.
      *
-     * @param text   the text
-     * @param fields the fields
-     * @param count  the count
+     * @param text
+     *            the text
+     * @param fields
+     *            the fields
+     * @param count
+     *            the count
      * @return the list
-     * @throws IOException                  the io exception
-     * @throws ParseException               the parse exception
-     * @throws InvalidTokenOffsetsException the invalid token offsets exception
+     * @throws IOException
+     *             the io exception
+     * @throws ParseException
+     *             the parse exception
+     * @throws InvalidTokenOffsetsException
+     *             the invalid token offsets exception
      */
-    public synchronized List<Map<String, String>> query(String text, String[] fields, int count) throws IOException, ParseException, InvalidTokenOffsetsException {
+    public synchronized List<Map<String, String>> query(String text, String[] fields, int count)
+            throws IOException, ParseException, InvalidTokenOffsetsException {
         List<Document> list = search(text, fields, count);
         return parse(list, fields);
     }
@@ -245,11 +267,11 @@ public class LuceneUtils {
      * Index files string [ ].
      *
      * @return the string [ ]
-     * @throws IOException the service exception
+     * @throws IOException
+     *             the service exception
      */
     public String[] indexFiles() throws IOException {
         Directory d = indexWriter.getDirectory();
-        String[] fs = new String[0];
         try {
             return d.listAll();
         } catch (IOException e) {
@@ -260,9 +282,11 @@ public class LuceneUtils {
     /**
      * List indexed list.
      *
-     * @param count the count
+     * @param count
+     *            the count
      * @return the list
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public List<Document> listIndexed(int count) throws IOException {
         IndexSearcher indexSearcher = getSearcher();
@@ -281,10 +305,13 @@ public class LuceneUtils {
     /**
      * Split word list.
      *
-     * @param text     the text
-     * @param useSmart the use smart
+     * @param text
+     *            the text
+     * @param useSmart
+     *            the use smart
      * @return the list
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public List<String> splitWord(String text, boolean useSmart) throws IOException {
 
@@ -301,8 +328,10 @@ public class LuceneUtils {
     /**
      * Index.
      *
-     * @param list the list
-     * @throws Exception the exception
+     * @param list
+     *            the list
+     * @throws Exception
+     *             the exception
      */
     public synchronized void index(List<Map<String, String>> list) throws Exception {
 
@@ -311,7 +340,8 @@ public class LuceneUtils {
             Document doc = new Document();
             while (it.hasNext()) {
                 Map.Entry<String, String> entry = it.next();
-                Field field = new Field(entry.getKey(), entry.getValue(), "id".equals(entry.getKey()) ? TextField.TYPE_NOT_STORED : TextField.TYPE_STORED);
+                Field field = new Field(entry.getKey(), entry.getValue(),
+                        "id".equals(entry.getKey()) ? TextField.TYPE_NOT_STORED : TextField.TYPE_STORED);
                 doc.add(field);
             }
             indexWriter.addDocument(doc);
@@ -323,18 +353,21 @@ public class LuceneUtils {
      * Gets searcher.
      *
      * @return the searcher
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public synchronized IndexSearcher getSearcher() throws IOException {
-        //IndexReader indexReader = IndexReader.open(indexWriter.getDirectory());
-        //return new IndexSearcher(indexReader);
+        // IndexReader indexReader =
+        // IndexReader.open(indexWriter.getDirectory());
+        // return new IndexSearcher(indexReader);
         return new IndexSearcher(DirectoryReader.open(indexWriter.getDirectory()));
     }
 
     /**
      * Close.
      *
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public synchronized void close() throws IOException {
         if (this.analyzer != null) {
@@ -360,7 +393,8 @@ public class LuceneUtils {
     /**
      * Sets analyzer.
      *
-     * @param analyzer the analyzer
+     * @param analyzer
+     *            the analyzer
      */
     public void setAnalyzer(Analyzer analyzer) {
         this.analyzer = analyzer;
@@ -378,7 +412,8 @@ public class LuceneUtils {
     /**
      * Sets index writer.
      *
-     * @param indexWriter the index writer
+     * @param indexWriter
+     *            the index writer
      */
     public void setIndexWriter(IndexWriter indexWriter) {
         this.indexWriter = indexWriter;
@@ -396,7 +431,8 @@ public class LuceneUtils {
     /**
      * Sets font start tag.
      *
-     * @param fontStartTag the font start tag
+     * @param fontStartTag
+     *            the font start tag
      */
     public void setFontStartTag(String fontStartTag) {
         this.fontStartTag = fontStartTag;
@@ -414,7 +450,8 @@ public class LuceneUtils {
     /**
      * Sets font end tag.
      *
-     * @param fontEndTag the font end tag
+     * @param fontEndTag
+     *            the font end tag
      */
     public void setFontEndTag(String fontEndTag) {
         this.fontEndTag = fontEndTag;
@@ -432,7 +469,8 @@ public class LuceneUtils {
     /**
      * Sets highlighter.
      *
-     * @param highlighter the highlighter
+     * @param highlighter
+     *            the highlighter
      */
     public void setHighlighter(Highlighter highlighter) {
         this.highlighter = highlighter;

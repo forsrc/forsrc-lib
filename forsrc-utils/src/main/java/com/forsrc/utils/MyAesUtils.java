@@ -17,15 +17,6 @@
 
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -33,6 +24,16 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.text.MessageFormat;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * The type My aes utils.
@@ -51,15 +52,18 @@ public final class MyAesUtils {
      */
     public static final String CHARSET_UTF8 = "UTF-8";
     private static final String PREFIX = "Salted__";
-    private static final byte[] SALT = {0, 0, 0, 0, 0, 0, 0, 0};
+    private static final byte[] SALT = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     /**
      * Decrypt string.
      *
-     * @param aes  the aes
-     * @param code the code
+     * @param aes
+     *            the aes
+     * @param code
+     *            the code
      * @return String string
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: decrypt
      * @Description:
      */
@@ -91,10 +95,13 @@ public final class MyAesUtils {
     /**
      * Encrypt string.
      *
-     * @param aes the aes
-     * @param src the src
+     * @param aes
+     *            the aes
+     * @param src
+     *            the src
      * @return String string
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: encrypt
      * @Description:
      */
@@ -102,8 +109,7 @@ public final class MyAesUtils {
 
         byte[] encrypted = null;
         try {
-            encrypted = aes.getEncryptCipher().doFinal(
-                    src.getBytes(CHARSET_UTF8));
+            encrypted = aes.getEncryptCipher().doFinal(src.getBytes(CHARSET_UTF8));
         } catch (IllegalBlockSizeException e) {
             throw new AesException(e);
         } catch (BadPaddingException e) {
@@ -117,23 +123,22 @@ public final class MyAesUtils {
     /**
      * Gets decrypt password.
      *
-     * @param aes the aes
-     * @param pwd the pwd
+     * @param aes
+     *            the aes
+     * @param pwd
+     *            the pwd
      * @return String decrypt password
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: getDecryptPassword
      * @Description:
      */
-    public static String getDecryptPassword(AesKey aes, String pwd)
-            throws AesException {
+    public static String getDecryptPassword(AesKey aes, String pwd) throws AesException {
 
         try {
             String pass = decrypt(aes, pwd);
-            return pass.substring(
-                    (String.valueOf(System.currentTimeMillis())).length(),
-                    pass.length()
-                            - (String.valueOf(System.currentTimeMillis()))
-                            .length());
+            return pass.substring((String.valueOf(System.currentTimeMillis())).length(),
+                    pass.length() - (String.valueOf(System.currentTimeMillis())).length());
         } catch (AesException e) {
             throw e;
         }
@@ -142,20 +147,21 @@ public final class MyAesUtils {
     /**
      * Gets encrypt password.
      *
-     * @param aes the aes
-     * @param pwd the pwd
+     * @param aes
+     *            the aes
+     * @param pwd
+     *            the pwd
      * @return String encrypt password
-     * @throws AesException the aes exception
+     * @throws AesException
+     *             the aes exception
      * @Title: getEncryptPassword
      * @Description:
      */
-    public static String getEncryptPassword(AesKey aes, String pwd)
-            throws AesException {
+    public static String getEncryptPassword(AesKey aes, String pwd) throws AesException {
 
         try {
             return encrypt(aes,
-                    MessageFormat.format("{0}{1}{2}", System.currentTimeMillis(), pwd,
-                            System.currentTimeMillis()));
+                    MessageFormat.format("{0}{1}{2}", System.currentTimeMillis(), pwd, System.currentTimeMillis()));
         } catch (AesException e) {
             throw e;
         }
@@ -168,7 +174,8 @@ public final class MyAesUtils {
         /**
          * Instantiates a new Aes exception.
          *
-         * @param cause the cause
+         * @param cause
+         *            the cause
          */
         public AesException(Throwable cause) {
             super(cause);
@@ -203,14 +210,15 @@ public final class MyAesUtils {
         /**
          * Instantiates a new Aes key.
          *
-         * @param key the key
-         * @param iv  the iv
+         * @param key
+         *            the key
+         * @param iv
+         *            the iv
          */
         public AesKey(String key, String iv) {
             this.key = key;
             this.iv = iv;
         }
-
 
         /**
          * Gets key.
@@ -224,7 +232,8 @@ public final class MyAesUtils {
         /**
          * Sets key.
          *
-         * @param key the key
+         * @param key
+         *            the key
          */
         public void setKey(String key) {
             this.key = key;
@@ -242,7 +251,8 @@ public final class MyAesUtils {
         /**
          * Sets iv.
          *
-         * @param iv the iv
+         * @param iv
+         *            the iv
          */
         public void setIv(String iv) {
             this.iv = iv;
@@ -266,18 +276,17 @@ public final class MyAesUtils {
             return MyStringUtils.generate(16);
         }
 
-
         /**
          * Gets encrypt cipher.
          *
          * @return the encrypt cipher
-         * @throws AesException the aes exception
+         * @throws AesException
+         *             the aes exception
          */
         public Cipher getEncryptCipher() throws AesException {
             Cipher cipher = getCipher();
             try {
-                cipher.init(Cipher.ENCRYPT_MODE,
-                        new SecretKeySpec(this.key.getBytes(), SECRET_KEY),
+                cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(this.key.getBytes(), SECRET_KEY),
                         new IvParameterSpec(this.iv.getBytes()));
             } catch (InvalidKeyException e) {
                 throw new AesException(e);
@@ -291,13 +300,13 @@ public final class MyAesUtils {
          * Gets decrypt cipher.
          *
          * @return the decrypt cipher
-         * @throws AesException the aes exception
+         * @throws AesException
+         *             the aes exception
          */
         public Cipher getDecryptCipher() throws AesException {
             Cipher cipher = getCipher();
             try {
-                cipher.init(Cipher.DECRYPT_MODE,
-                        new SecretKeySpec(this.key.getBytes(), SECRET_KEY),
+                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(this.key.getBytes(), SECRET_KEY),
                         new IvParameterSpec(this.iv.getBytes()));
             } catch (InvalidKeyException e) {
                 throw new AesException(e);
@@ -317,9 +326,10 @@ public final class MyAesUtils {
                 throw new AesException(e);
             } catch (NoSuchPaddingException e) {
                 throw new AesException(e);
-            } /*catch (NoSuchProviderException e) {
-                throw new AesException(e);
-            }*/
+            } /*
+               * catch (NoSuchProviderException e) { throw new AesException(e);
+               * }
+               */
             return cipher;
         }
     }

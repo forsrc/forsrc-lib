@@ -1,10 +1,10 @@
 package com.forsrc.tools;
 
+import java.util.Properties;
+
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
 import org.apache.solr.common.SolrException;
-
-import java.util.Properties;
 
 public class SolrUtils {
 
@@ -12,7 +12,8 @@ public class SolrUtils {
 
         HttpSolrClient httpSolrClient = null;
 
-        httpSolrClient = new HttpSolrClient.Builder(properties.getProperty(SolrProperties.baseSolrUrl.getKey())).build();
+        httpSolrClient = new HttpSolrClient.Builder(properties.getProperty(SolrProperties.baseSolrUrl.getKey()))
+                .build();
         httpSolrClient.setParser(new XMLResponseParser());
         int timeout = 5 * 1000;
 
@@ -26,8 +27,7 @@ public class SolrUtils {
 
     public enum SolrProperties {
 
-        baseSolrUrl("baseSolrUrl"),
-        timeout("timeout");
+        baseSolrUrl("baseSolrUrl"), timeout("timeout");
         private String key;
 
         SolrProperties(String key) {

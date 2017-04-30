@@ -1,6 +1,11 @@
 package com.forsrc.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.MessageFormat;
 
 /**
@@ -11,13 +16,15 @@ public class CmdUtils {
     /**
      * Cmd int.
      *
-     * @param cmd the cmd
+     * @param cmd
+     *            the cmd
      * @return the int
-     * @throws IOException          the io exception
-     * @throws InterruptedException the interrupted exception
+     * @throws IOException
+     *             the io exception
+     * @throws InterruptedException
+     *             the interrupted exception
      */
-    public static int cmd(String[] cmd) throws IOException,
-            InterruptedException {
+    public static int cmd(String[] cmd) throws IOException, InterruptedException {
         if (cmd == null || cmd.length == 0) {
             return -100;
         }
@@ -29,8 +36,7 @@ public class CmdUtils {
             throw new IOException(e);
         }
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                process.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         String str = null;
         try {
@@ -50,8 +56,7 @@ public class CmdUtils {
             }
         }
 
-        BufferedReader brerr = new BufferedReader(new InputStreamReader(
-                process.getErrorStream()));
+        BufferedReader brerr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
         String strerr = null;
         try {
@@ -83,14 +88,17 @@ public class CmdUtils {
     /**
      * Cmd int.
      *
-     * @param cmd  the cmd
-     * @param cmds the cmds
+     * @param cmd
+     *            the cmd
+     * @param cmds
+     *            the cmds
      * @return the int
-     * @throws InterruptedException the interrupted exception
-     * @throws IOException          the io exception
+     * @throws InterruptedException
+     *             the interrupted exception
+     * @throws IOException
+     *             the io exception
      */
-    public static int cmd(String[] cmd, String[] cmds)
-            throws InterruptedException, IOException {
+    public static int cmd(String[] cmd, String[] cmds) throws InterruptedException, IOException {
         if (cmd == null || cmd.length == 0) {
             return -100;
         }
@@ -102,16 +110,13 @@ public class CmdUtils {
             throw new IOException(e);
         }
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-                process.getOutputStream()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         new CmdWriterThread(bw, cmds).start();
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                process.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         new CmdReaderThread(br).start();
 
-        BufferedReader brerr = new BufferedReader(new InputStreamReader(
-                process.getErrorStream()));
+        BufferedReader brerr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         new CmdReaderThread(brerr).start();
 
         int rc = -1000;
@@ -149,14 +154,17 @@ public class CmdUtils {
     /**
      * Cmd int.
      *
-     * @param cmd the cmd
-     * @param is  the is
+     * @param cmd
+     *            the cmd
+     * @param is
+     *            the is
      * @return the int
-     * @throws IOException          the io exception
-     * @throws InterruptedException the interrupted exception
+     * @throws IOException
+     *             the io exception
+     * @throws InterruptedException
+     *             the interrupted exception
      */
-    public static int cmd(String[] cmd, InputStream is) throws IOException,
-            InterruptedException {
+    public static int cmd(String[] cmd, InputStream is) throws IOException, InterruptedException {
         if (cmd == null || cmd.length == 0) {
             return -100;
         }
@@ -168,16 +176,13 @@ public class CmdUtils {
             throw new IOException(e);
         }
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-                process.getOutputStream()));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         new CmdWriterThread(bw, is).start();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                process.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
         new CmdReaderThread(br).start();
 
-        BufferedReader brerr = new BufferedReader(new InputStreamReader(
-                process.getErrorStream()));
+        BufferedReader brerr = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         new CmdReaderThread(brerr).start();
 
         int rc = -1000;
@@ -216,10 +221,11 @@ public class CmdUtils {
     /**
      * Print mark.
      *
-     * @param mark the mark
+     * @param mark
+     *            the mark
      * @return void
-     * @throws
-     * @Title: printMark
+     * @throws @Title:
+     *             printMark
      * @Description:
      */
     public static void printMark(String mark) {
@@ -240,8 +246,10 @@ public class CmdUtils {
     /**
      * Print mark.
      *
-     * @param mark   the mark
-     * @param millis the millis
+     * @param mark
+     *            the mark
+     * @param millis
+     *            the millis
      */
     public static void printMark(String mark, long millis) {
         if (mark == null || "".equals(mark)) {
@@ -284,8 +292,10 @@ public class CmdUtils {
         /**
          * Instantiates a new Cmd writer thread.
          *
-         * @param writer the writer
-         * @param in     the in
+         * @param writer
+         *            the writer
+         * @param in
+         *            the in
          */
         CmdWriterThread(BufferedWriter writer, InputStream in) {
             this.bw = writer;
@@ -296,8 +306,10 @@ public class CmdUtils {
         /**
          * Instantiates a new Cmd writer thread.
          *
-         * @param writer the writer
-         * @param cmds   the cmds
+         * @param writer
+         *            the writer
+         * @param cmds
+         *            the cmds
          */
         CmdWriterThread(BufferedWriter writer, String[] cmds) {
             this.bw = writer;
@@ -322,14 +334,11 @@ public class CmdUtils {
 
                 String cmd = null;
                 while ((cmd = this.br.readLine()) != null) {
-                    String lf = cmd.length() >= 2 ? cmd.substring(
-                            cmd.length() - 2).equals("\\n") ? "\n" : "" : "";
-                    String crlf = cmd.length() >= 4 ? cmd.substring(
-                            cmd.length() - 4).equals("\\r\\n") ? "\r\n" : ""
+                    String lf = cmd.length() >= 2 ? cmd.substring(cmd.length() - 2).equals("\\n") ? "\n" : "" : "";
+                    String crlf = cmd.length() >= 4 ? cmd.substring(cmd.length() - 4).equals("\\r\\n") ? "\r\n" : ""
                             : "";
-                    cmd = crlf.equals("") ? lf.equals("") ? cmd : cmd
-                            .substring(0, cmd.length() - 2) + lf : cmd
-                            .substring(0, cmd.length() - 4) + crlf;
+                    cmd = crlf.equals("") ? lf.equals("") ? cmd : cmd.substring(0, cmd.length() - 2) + lf
+                            : cmd.substring(0, cmd.length() - 4) + crlf;
 
                     this.bw.write(cmd);
                     this.bw.flush();
@@ -352,7 +361,8 @@ public class CmdUtils {
         /**
          * Instantiates a new Cmd reader thread.
          *
-         * @param br the br
+         * @param br
+         *            the br
          */
         CmdReaderThread(BufferedReader br) {
             this.br = br;

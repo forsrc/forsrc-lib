@@ -16,13 +16,29 @@
  */
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Base64;
-
-import javax.crypto.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.*;
-import java.security.spec.*;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * The type My rsa 2 utils.
@@ -34,10 +50,13 @@ public final class MyRsa2Utils {
     /**
      * Decrypt string.
      *
-     * @param rsaKey     the rsa key
-     * @param cipherText the cipher text
+     * @param rsaKey
+     *            the rsa key
+     * @param cipherText
+     *            the cipher text
      * @return the string
-     * @throws RsaException the rsa exception
+     * @throws RsaException
+     *             the rsa exception
      */
     public static String decrypt(RsaKey rsaKey, String cipherText) throws RsaException {
         return decrypt(rsaKey.getKeyPair().getPrivate(), cipherText);
@@ -46,10 +65,13 @@ public final class MyRsa2Utils {
     /**
      * Decrypt string.
      *
-     * @param privateKey the private key
-     * @param cipherText the cipher text
+     * @param privateKey
+     *            the private key
+     * @param cipherText
+     *            the cipher text
      * @return the string
-     * @throws RsaException the rsa exception
+     * @throws RsaException
+     *             the rsa exception
      */
     public static String decrypt(PrivateKey privateKey, String cipherText) throws RsaException {
         Cipher cipher = null;
@@ -96,10 +118,13 @@ public final class MyRsa2Utils {
     /**
      * Encrypt string.
      *
-     * @param rsaKey    the rsa key
-     * @param plaintext the plaintext
+     * @param rsaKey
+     *            the rsa key
+     * @param plaintext
+     *            the plaintext
      * @return the string
-     * @throws RsaException the rsa exception
+     * @throws RsaException
+     *             the rsa exception
      */
     public static String encrypt(RsaKey rsaKey, String plaintext) throws RsaException {
         return encrypt(rsaKey.getKeyPair().getPublic(), plaintext);
@@ -108,10 +133,13 @@ public final class MyRsa2Utils {
     /**
      * Encrypt string.
      *
-     * @param publicKey the public key
-     * @param plaintext the plaintext
+     * @param publicKey
+     *            the public key
+     * @param plaintext
+     *            the plaintext
      * @return the string
-     * @throws RsaException the rsa exception
+     * @throws RsaException
+     *             the rsa exception
      */
     public static String encrypt(PublicKey publicKey, String plaintext) throws RsaException {
         Cipher cipher = null;
@@ -150,7 +178,6 @@ public final class MyRsa2Utils {
                 i++;
             } while (data.length - start - blockSize >= 0);
 
-
         } catch (IllegalBlockSizeException e) {
             throw new RsaException(e);
         } catch (BadPaddingException e) {
@@ -161,13 +188,14 @@ public final class MyRsa2Utils {
         return new String(new Base64().encode(output));
     }
 
-
     /**
      * Gets public key.
      *
-     * @param key the key
+     * @param key
+     *            the key
      * @return the public key
-     * @throws RsaException the rsa exception
+     * @throws RsaException
+     *             the rsa exception
      */
     public static PublicKey getPublicKey(String key) throws RsaException {
         byte[] keyBytes;
@@ -192,13 +220,14 @@ public final class MyRsa2Utils {
         return publicKey;
     }
 
-
     /**
      * Gets private key.
      *
-     * @param key the key
+     * @param key
+     *            the key
      * @return the private key
-     * @throws RsaException the rsa exception
+     * @throws RsaException
+     *             the rsa exception
      */
     public static PrivateKey getPrivateKey(String key) throws RsaException {
         byte[] keyBytes;
@@ -223,7 +252,6 @@ public final class MyRsa2Utils {
         return privateKey;
     }
 
-
     /**
      * Gets rsa key.
      *
@@ -232,7 +260,6 @@ public final class MyRsa2Utils {
     public static RsaKey getRsaKey() {
         return new RsaKey();
     }
-
 
     /**
      * The type Rsa key.
@@ -261,7 +288,10 @@ public final class MyRsa2Utils {
                 cipher = Cipher.getInstance(ALGORITHM, new org.bouncycastle.jce.provider.BouncyCastleProvider());
                 keyFactory = KeyFactory.getInstance(ALGORITHM);
                 KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM);
-                keyPairGenerator.initialize(KEY_SIZE, new SecureRandom()); // 1024 used for normal
+                keyPairGenerator.initialize(KEY_SIZE, new SecureRandom()); // 1024
+                                                                           // used
+                                                                           // for
+                                                                           // normal
                 this.keyPair = keyPairGenerator.generateKeyPair();
             } catch (NoSuchAlgorithmException e) {
                 throw new IllegalArgumentException(e.getMessage());
@@ -283,7 +313,8 @@ public final class MyRsa2Utils {
         /**
          * Sets key pair.
          *
-         * @param keyPair the key pair
+         * @param keyPair
+         *            the key pair
          */
         public void setKeyPair(KeyPair keyPair) {
             this.keyPair = keyPair;
@@ -293,7 +324,8 @@ public final class MyRsa2Utils {
          * Gets rsa public key spec.
          *
          * @return the rsa public key spec
-         * @throws RsaException the rsa exception
+         * @throws RsaException
+         *             the rsa exception
          */
         public RSAPublicKeySpec getRSAPublicKeySpec() throws RsaException {
             try {
@@ -307,7 +339,8 @@ public final class MyRsa2Utils {
          * Gets rsa private key spec.
          *
          * @return the rsa private key spec
-         * @throws RsaException the rsa exception
+         * @throws RsaException
+         *             the rsa exception
          */
         public RSAPrivateKeySpec getRSAPrivateKeySpec() throws RsaException {
             try {
@@ -325,7 +358,8 @@ public final class MyRsa2Utils {
         /**
          * Instantiates a new Rsa exception.
          *
-         * @param e the e
+         * @param e
+         *            the e
          */
         public RsaException(Exception e) {
             super(e);
@@ -334,7 +368,8 @@ public final class MyRsa2Utils {
         /**
          * Instantiates a new Rsa exception.
          *
-         * @param e the e
+         * @param e
+         *            the e
          */
         public RsaException(String e) {
             super(e);

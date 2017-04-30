@@ -1,25 +1,31 @@
 package com.forsrc.tools;
 
-import org.apache.tomcat.jdbc.pool.PoolProperties;
-
-import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 public class JdbcUtils {
 
     private static final ThreadLocal<DataSource> THREADLOCAL_DATASOURCE = new ThreadLocal<DataSource>();
     private static final ThreadLocal<Connection> THREADLOCAL_CONNECTION = new ThreadLocal<Connection>();
 
-    public static List<Map<String, Object>> list(final Connection connection,
-                                                 final String sql, final Object... parameters) throws SQLException {
+    public static List<Map<String, Object>> list(final Connection connection, final String sql,
+            final Object... parameters) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        if (parameters != null) {
+        if (parameters != null && parameters.length > 0) {
             for (int i = 0; i < parameters.length; i++) {
-                preparedStatement.setObject(i, parameters[i]);
+                preparedStatement.setObject(i + 1, parameters[i]);
             }
         }
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -30,8 +36,7 @@ public class JdbcUtils {
             while (resultSet.next()) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 for (int i = 1; i <= columnCount; i++) {
-                    map.put(resultSetMetaData.getColumnName(i),
-                            resultSet.getObject(i));
+                    map.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));
                 }
                 list.add(map);
             }
@@ -42,9 +47,8 @@ public class JdbcUtils {
         return list;
     }
 
-    public static void call(final Connection connection, final String sql,
-                            final Object[] parameters, final HandlerResultSet handlerResultSet)
-            throws SQLException {
+    public static void call(final Connection connection, final String sql, final Object[] parameters,
+            final HandlerResultSet handlerResultSet) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -58,8 +62,7 @@ public class JdbcUtils {
         try {
             while (resultSet.next()) {
                 for (int i = 1; i <= columnCount; i++) {
-                    if (!handlerResultSet.handle(resultSet.getRow(),
-                            resultSetMetaData.getColumnName(i),
+                    if (!handlerResultSet.handle(resultSet.getRow(), resultSetMetaData.getColumnName(i),
                             resultSet.getObject(i))) {
                         break;
                     }
@@ -81,8 +84,7 @@ public class JdbcUtils {
         }
     }
 
-    public static DataSource getDataSource(String driverName, String url, String user,
-                                           String password) {
+    public static DataSource getDataSource(String driverName, String url, String user, String password) {
         PoolProperties p = new PoolProperties();
         p.setUrl(url);
         p.setDriverClassName(driverName);
@@ -103,7 +105,8 @@ public class JdbcUtils {
         p.setMinIdle(10);
         p.setLogAbandoned(true);
         p.setRemoveAbandoned(true);
-        p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
+        p.setJdbcInterceptors(
+                "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
         org.apache.tomcat.jdbc.pool.DataSource datasource = new org.apache.tomcat.jdbc.pool.DataSource();
         datasource.setPoolProperties(p);
         return datasource;
@@ -128,15 +131,13 @@ public class JdbcUtils {
         return connection;
     }
 
-    public final Connection getConnection(String url, String user,
-                                          String password) throws SQLException {
+    public final Connection getConnection(String url, String user, String password) throws SQLException {
 
         Connection connection = THREADLOCAL_CONNECTION.get();
         if (connection == null || connection.isClosed()) {
             synchronized (JdbcUtils.class) {
                 if (connection == null) {
-                    connection = DriverManager.getConnection(url, user,
-                            password);
+                    connection = DriverManager.getConnection(url, user, password);
                     THREADLOCAL_CONNECTION.set(connection);
                 }
             }
@@ -167,25 +168,22 @@ public class JdbcUtils {
         return this;
     }
 
-    public List<Map<String, Object>> list(final String sql, Object... parameters)
-            throws SQLException {
+    public List<Map<String, Object>> list(final String sql, Object... parameters) throws SQLException {
         Connection connection = getConnection();
 
         return list(connection, sql, parameters);
     }
 
-    public JdbcUtils call(final String sql, final Object[] parameters,
-                          final HandlerResultSet handlerResultSet) throws SQLException {
+    public JdbcUtils call(final String sql, final Object[] parameters, final HandlerResultSet handlerResultSet)
+            throws SQLException {
         call(getConnection(), sql, parameters, handlerResultSet);
         return this;
     }
 
     public interface HandlerResultSet {
-        void handle(ResultSetMetaData resultSetMetaData)
-                throws SQLException;
+        void handle(ResultSetMetaData resultSetMetaData) throws SQLException;
 
-        boolean handle(int row, String columnName, Object value)
-                throws SQLException;
+        boolean handle(int row, String columnName, Object value) throws SQLException;
     }
 
     public interface HandlerConnection {

@@ -1,11 +1,12 @@
 package com.forsrc.tools;
 
-import com.forsrc.utils.LogUtils;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.binary.StringUtils;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.forsrc.utils.LogUtils;
 
 /**
  * The type Message digest utils.
@@ -25,15 +26,15 @@ public class MessageDigestUtils {
     /**
      * Md 5 string.
      *
-     * @param string the string
+     * @param string
+     *            the string
      * @return the string
      */
     public static String md5(String string) {
         if (string == null) {
             return null;
         }
-        return new String(Hex.encodeHex(md.digest(StringUtils
-                .getBytesUtf8(string))));
+        return new String(Hex.encodeHex(md.digest(StringUtils.getBytesUtf8(string))));
         // return new String(DigestUtils.md5Hex(string));
     }
 

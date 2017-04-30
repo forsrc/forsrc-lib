@@ -1,5 +1,8 @@
 package com.forsrc.tools;
 
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -8,9 +11,6 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
-
 /**
  * The type Message utils.
  */
@@ -18,9 +18,12 @@ public class MessageUtils {
     /**
      * Sets message.
      *
-     * @param request the request
-     * @param key     the key
-     * @param msg     the msg
+     * @param request
+     *            the request
+     * @param key
+     *            the key
+     * @param msg
+     *            the msg
      */
     public static void setMessage(HttpServletRequest request, String key, String msg) {
         request.setAttribute(key, msg);
@@ -29,9 +32,12 @@ public class MessageUtils {
     /**
      * Gets text.
      *
-     * @param messageSource the message source
-     * @param key           the key
-     * @param params        the params
+     * @param messageSource
+     *            the message source
+     * @param key
+     *            the key
+     * @param params
+     *            the params
      * @return the text
      */
     public static String getText(MessageSource messageSource, String key, Object[] params) {
@@ -42,8 +48,10 @@ public class MessageUtils {
     /**
      * Gets text.
      *
-     * @param messageSource the message source
-     * @param key           the key
+     * @param messageSource
+     *            the message source
+     * @param key
+     *            the key
      * @return the text
      */
     public static String getText(MessageSource messageSource, String key) {
@@ -57,7 +65,8 @@ public class MessageUtils {
      * @return the locale
      */
     public static Locale getLocale() {
-        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest();
         LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(httpServletRequest);
 
         if (localeResolver != null) {

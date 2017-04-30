@@ -1,21 +1,36 @@
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-//import org.apache.commons.compress.archivers.zip.Zip64Mode;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 
+//import org.apache.commons.compress.archivers.zip.Zip64Mode;
 
 /**
  * The type My zip.
@@ -42,7 +57,8 @@ public class MyZip {
     /**
      * Instantiates a new My zip.
      *
-     * @param zipFile the zip file
+     * @param zipFile
+     *            the zip file
      */
     public MyZip(File zipFile) {
         this.zipFile = zipFile;
@@ -51,11 +67,13 @@ public class MyZip {
     /**
      * Add zip entry.
      *
-     * @param zipEntry the zip entry
-     * @param isSucc   the is succ
+     * @param zipEntry
+     *            the zip entry
+     * @param isSucc
+     *            the is succ
      * @return void
-     * @throws
-     * @Title: addZipEntry
+     * @throws @Title:
+     *             addZipEntry
      * @Description:
      */
     public synchronized void addZipEntry(ZipEntry zipEntry, boolean isSucc) {
@@ -67,9 +85,11 @@ public class MyZip {
     /**
      * Check zip file boolean.
      *
-     * @param onlySize the only size
+     * @param onlySize
+     *            the only size
      * @return the boolean
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public boolean checkZipFile(boolean onlySize) throws IOException {
         if (this.zipFile == null || !this.zipFile.exists()) {
@@ -98,8 +118,7 @@ public class MyZip {
                 continue;
             }
             if (onlySize) {
-                String msg = new StringBuffer().append("check ")
-                        .append(zipEntry.getName()).append(" size: ")
+                String msg = new StringBuffer().append("check ").append(zipEntry.getName()).append(" size: ")
                         .append(zipEntry.getSize()).toString();
                 LogUtils.LOGGER.info(msg);
                 isSucc = true;
@@ -114,21 +133,24 @@ public class MyZip {
     /**
      * Check file list boolean.
      *
-     * @param listZipEntry the list zip entry
-     * @param onlySize     the only size
+     * @param listZipEntry
+     *            the list zip entry
+     * @param onlySize
+     *            the only size
      * @return the boolean
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public boolean checkFileList(ZipEntry listZipEntry, boolean onlySize)
-            throws IOException {
+    public boolean checkFileList(ZipEntry listZipEntry, boolean onlySize) throws IOException {
 
         BufferedReader bufferedReader = null;
         boolean isSucc = true;
         ZipFile zip = new ZipFile(this.zipFile);
         try {
-            bufferedReader = new BufferedReader(new InputStreamReader(
-                    new BufferedInputStream(zip.getInputStream(listZipEntry),
-                            this.bufferSizipEntry)), this.bufferSizipEntry);
+            bufferedReader = new BufferedReader(
+                    new InputStreamReader(
+                            new BufferedInputStream(zip.getInputStream(listZipEntry), this.bufferSizipEntry)),
+                    this.bufferSizipEntry);
             String str = null;
             while ((str = bufferedReader.readLine()) != null) {
                 String zipEntryName = JsonUtils.getValue("name", str);
@@ -138,18 +160,15 @@ public class MyZip {
                 }
                 ZipEntry zipEntry = zip.getEntry(zipEntryName);
                 if (zipEntry == null) {
-                    LogUtils.LOGGER.warn("Miss  \"" + zipEntryName + "\"."
-                            + str);
+                    LogUtils.LOGGER.warn("Miss  \"" + zipEntryName + "\"." + str);
                     isSucc = false;
                     continue;
                 }
                 if (onlySize && !zipEntry.isDirectory()) {
-                    String msg = new StringBuffer().append("check ")
-                            .append(zipEntry.getName()).append(" size: ")
+                    String msg = new StringBuffer().append("check ").append(zipEntry.getName()).append(" size: ")
                             .append(zipEntry.getSize()).toString();
 
-                    String sizeStr = JsonUtils.getValue("length",
-                            zipEntry.getComment());
+                    String sizeStr = JsonUtils.getValue("length", zipEntry.getComment());
                     if (sizeStr == null || sizeStr.isEmpty()) {
                         LogUtils.LOGGER.warn(msg);
                         isSucc = false;
@@ -188,13 +207,15 @@ public class MyZip {
     /**
      * Check zip file boolean.
      *
-     * @param zipFile  the zip file
-     * @param zipEntry the zip entry
+     * @param zipFile
+     *            the zip file
+     * @param zipEntry
+     *            the zip entry
      * @return the boolean
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public boolean checkZipFile(ZipFile zipFile, ZipEntry zipEntry)
-            throws IOException {
+    public boolean checkZipFile(ZipFile zipFile, ZipEntry zipEntry) throws IOException {
 
         if (zipEntry == null || zipEntry.isDirectory()) {
             return true;
@@ -207,8 +228,7 @@ public class MyZip {
         String md5 = null;
         long start = System.currentTimeMillis();
         try {
-            commentMd5 = JsonUtils.getValue("md5",
-                    zipEntry.getComment());
+            commentMd5 = JsonUtils.getValue("md5", zipEntry.getComment());
             in = zipFile.getInputStream(zipEntry);
 
             byte[] buffer = new byte[bufferSizipEntry];
@@ -219,34 +239,23 @@ public class MyZip {
             MessageDigest md = DigestUtils.getMd5Digest();
             while ((length = in.read(buffer)) != -1) {
                 md.update(buffer, 0, length);
-                if (progress
-                        && ((read = read + length) >= bufferSizipEntry * index)) {
+                if (progress && ((read = read + length) >= bufferSizipEntry * index)) {
                     double d = (index++ * 100.000 / count);
-                    double speed = 1.000
-                            * read
-                            * 1000
-                            / (1024 * 1024 * 1.000 * (System
-                            .currentTimeMillis() - start));
-                    CmdUtils.printMark(DateTimeUtils.getDateTime()
-                            + " [INFO] check   "
-                            // + zipEntry.getName()
-                            // + " -> "
-                            // + file.getPath()
-                            // + " "
-                            + String.format("%5.2f", d)
-                            + "% "
-                            + String.format(
-                            "%" + (zipEntry.getSize() + "").length()
-                                    + "d", read) + "/"
-                            + zipEntry.getSize() + " "
-                            + String.format("%.3f", speed) + "m/s ");
+                    double speed = 1.000 * read * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+                    CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] check   "
+                    // + zipEntry.getName()
+                    // + " -> "
+                    // + file.getPath()
+                    // + " "
+                            + String.format("%5.2f", d) + "% "
+                            + String.format("%" + (zipEntry.getSize() + "").length() + "d", read) + "/"
+                            + zipEntry.getSize() + " " + String.format("%.3f", speed) + "m/s ");
                 }
             }
             md5 = new String(Hex.encodeHex(md.digest()));
             if (this.progress) {
-                CmdUtils.printMark(DateTimeUtils.getDateTime()
-                        + " [INFO] check   "
-                        // + zipEntry.getName() + " -> " + file.getPath()
+                CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] check   "
+                // + zipEntry.getName() + " -> " + file.getPath()
                         + " 100.000% " + read + "/" + zipEntry.getSize());
             }
         } catch (IOException e) {
@@ -262,20 +271,15 @@ public class MyZip {
             }
 
         }
-        double speed = 1.000 * zipEntry.getSize() * 1000
-                / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+        double speed = 1.000 * zipEntry.getSize() * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
 
         if (commentMd5 == null || (md5 != null && md5.equals(commentMd5))) {
             isSucc = true;
         }
-        String msg = new StringBuffer()
-                .append(commentMd5 == null ? "check (Without comment) "
-                        : "check ")
-                .append(zipEntry.getName())
-                .append(" size: ")
-                .append(zipEntry.getSize())
-                .append(progress ? " " + String.format("%.3f", speed) + "m/s"
-                        : "").append(" md5: ").append(md5).toString();
+        String msg = new StringBuffer().append(commentMd5 == null ? "check (Without comment) " : "check ")
+                .append(zipEntry.getName()).append(" size: ").append(zipEntry.getSize())
+                .append(progress ? " " + String.format("%.3f", speed) + "m/s" : "").append(" md5: ").append(md5)
+                .toString();
 
         if (isSucc) {
             if (commentMd5 == null) {
@@ -301,7 +305,8 @@ public class MyZip {
     /**
      * Sets buffer sizip entry.
      *
-     * @param bufferSizipEntry the buffer sizip entry
+     * @param bufferSizipEntry
+     *            the buffer sizip entry
      */
     public void setBufferSizipEntry(int bufferSizipEntry) {
         this.bufferSizipEntry = bufferSizipEntry;
@@ -319,7 +324,8 @@ public class MyZip {
     /**
      * Sets encode.
      *
-     * @param encode the encode
+     * @param encode
+     *            the encode
      */
     public void setEncode(String encode) {
         this.encode = encode;
@@ -329,7 +335,8 @@ public class MyZip {
      * Gets entries.
      *
      * @return the entries
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public Enumeration<ZipEntry> getEntries() throws IOException {
         ZipFile zip = null;
@@ -364,7 +371,8 @@ public class MyZip {
     /**
      * Sets level.
      *
-     * @param level the level
+     * @param level
+     *            the level
      */
     public void setLevel(int level) {
         if (level > -1 && level <= 9) {
@@ -384,7 +392,8 @@ public class MyZip {
     /**
      * Sets list.
      *
-     * @param list the list
+     * @param list
+     *            the list
      */
     public synchronized void setList(Map<ZipEntry, Boolean> list) {
         this.list = list;
@@ -402,7 +411,8 @@ public class MyZip {
     /**
      * Sets root.
      *
-     * @param root the root
+     * @param root
+     *            the root
      */
     public void setRoot(String root) {
         if (root == null) {
@@ -423,7 +433,8 @@ public class MyZip {
     /**
      * Sets version.
      *
-     * @param version the version
+     * @param version
+     *            the version
      */
     public void setVersion(String version) {
         this.version = version;
@@ -433,7 +444,8 @@ public class MyZip {
      * Gets zip entries.
      *
      * @return Enumeration<ZipEntry> zip entries
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: getZipEntries
      * @Description:
      */
@@ -451,9 +463,12 @@ public class MyZip {
     /**
      * Gets zip entry.
      *
-     * @param zip   the zip
-     * @param key   the key
-     * @param isReg the is reg
+     * @param zip
+     *            the zip
+     * @param key
+     *            the key
+     * @param isReg
+     *            the is reg
      * @return the zip entry
      */
     public ZipEntry getZipEntry(ZipFile zip, String key, boolean isReg) {
@@ -464,8 +479,7 @@ public class MyZip {
         Enumeration<? extends ZipEntry> enumeration = zip.entries();
         while (enumeration.hasMoreElements()) {
             ZipEntry ze = enumeration.nextElement();
-            if (ze.getName().equals(key)
-                    || (isReg && ze.getName().matches(key))) {
+            if (ze.getName().equals(key) || (isReg && ze.getName().matches(key))) {
                 zipEntry = ze;
                 break;
             }
@@ -479,36 +493,36 @@ public class MyZip {
     /**
      * Gets zip entry file.
      *
-     * @param zip      the zip
-     * @param key      the key
-     * @param saveFile the save file
-     * @param isReg    the is reg
-     * @throws IOException the io exception
+     * @param zip
+     *            the zip
+     * @param key
+     *            the key
+     * @param saveFile
+     *            the save file
+     * @param isReg
+     *            the is reg
+     * @throws IOException
+     *             the io exception
      */
-    public void getZipEntryFile(ZipFile zip, String key, File saveFile,
-                                boolean isReg) throws IOException {
+    public void getZipEntryFile(ZipFile zip, String key, File saveFile, boolean isReg) throws IOException {
         if (zip == null || saveFile == null) {
             return;
         }
-        if (saveFile.getParentFile() != null
-                && !saveFile.getParentFile().exists()) {
+        if (saveFile.getParentFile() != null && !saveFile.getParentFile().exists()) {
             saveFile.getParentFile().mkdirs();
         }
         Enumeration<? extends ZipEntry> enumeration = zip.entries();
         while (enumeration.hasMoreElements()) {
             ZipEntry ze = enumeration.nextElement();
-            if (!ze.getName().startsWith(key)
-                    && !(isReg && ze.getName().matches(key))) {
+            if (!ze.getName().startsWith(key) && !(isReg && ze.getName().matches(key))) {
                 continue;
             }
-            File file = new File(saveFile.getPath() + File.separator
-                    + ze.getName());
+            File file = new File(saveFile.getPath() + File.separator + ze.getName());
             if (ze.isDirectory()) {
                 file.mkdirs();
                 continue;
             }
-            unzip(zip, ze, saveFile.exists() && saveFile.isDirectory() ? file
-                    : saveFile);
+            unzip(zip, ze, saveFile.exists() && saveFile.isDirectory() ? file : saveFile);
         }
 
     }
@@ -516,14 +530,17 @@ public class MyZip {
     /**
      * Gets zip entry file txt.
      *
-     * @param zip   the zip
-     * @param key   the key
-     * @param isReg the is reg
+     * @param zip
+     *            the zip
+     * @param key
+     *            the key
+     * @param isReg
+     *            the is reg
      * @return the zip entry file txt
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public String getZipEntryFileTxt(ZipFile zip, String key, boolean isReg)
-            throws IOException {
+    public String getZipEntryFileTxt(ZipFile zip, String key, boolean isReg) throws IOException {
         if (zip == null) {
             return "";
         }
@@ -534,9 +551,9 @@ public class MyZip {
         StringBuffer stringBuffer = new StringBuffer();
         BufferedReader bufferedReader = null;
         try {
-            bufferedReader = new BufferedReader(new InputStreamReader(
-                    new BufferedInputStream(zip.getInputStream(zipEntry),
-                            this.bufferSizipEntry)), this.bufferSizipEntry);
+            bufferedReader = new BufferedReader(
+                    new InputStreamReader(new BufferedInputStream(zip.getInputStream(zipEntry), this.bufferSizipEntry)),
+                    this.bufferSizipEntry);
             String str = null;
             while ((str = bufferedReader.readLine()) != null) {
                 stringBuffer.append(str).append("\n");
@@ -570,7 +587,8 @@ public class MyZip {
     /**
      * Sets zip file.
      *
-     * @param zipFile the zip file
+     * @param zipFile
+     *            the zip file
      */
     public void setZipFile(File zipFile) {
         this.zipFile = zipFile;
@@ -580,8 +598,8 @@ public class MyZip {
      * Gets zip file md 5.
      *
      * @return String zip file md 5
-     * @throws
-     * @Title: getZipFileMd5
+     * @throws @Title:
+     *             getZipFileMd5
      * @Description:
      */
     public String getZipFileMd5() {
@@ -598,7 +616,8 @@ public class MyZip {
     /**
      * Sets zip file md 5.
      *
-     * @param md5 the md 5
+     * @param md5
+     *            the md 5
      */
     public void setZipFileMd5(String md5) {
         this.zipFileMd5 = md5;
@@ -616,7 +635,8 @@ public class MyZip {
     /**
      * Sets zip map.
      *
-     * @param zipMap the zip map
+     * @param zipMap
+     *            the zip map
      */
     public synchronized void setZipMap(Map<File, String> zipMap) {
         this.zipMap = zipMap;
@@ -634,7 +654,8 @@ public class MyZip {
     /**
      * Sets append.
      *
-     * @param isAppend the is append
+     * @param isAppend
+     *            the is append
      */
     public void setAppend(boolean isAppend) {
         this.isAppend = isAppend;
@@ -652,7 +673,8 @@ public class MyZip {
     /**
      * Sets check.
      *
-     * @param isCheck the is check
+     * @param isCheck
+     *            the is check
      */
     public void setCheck(boolean isCheck) {
         this.isCheck = isCheck;
@@ -670,7 +692,8 @@ public class MyZip {
     /**
      * Sets cover.
      *
-     * @param isCover the is cover
+     * @param isCover
+     *            the is cover
      */
     public void setCover(boolean isCover) {
         this.isCover = isCover;
@@ -688,7 +711,8 @@ public class MyZip {
     /**
      * Sets progress.
      *
-     * @param progress the progress
+     * @param progress
+     *            the progress
      */
     public void setProgress(boolean progress) {
         this.progress = progress;
@@ -706,7 +730,8 @@ public class MyZip {
     /**
      * Sets save md 5 info.
      *
-     * @param saveMd5Info the save md 5 info
+     * @param saveMd5Info
+     *            the save md 5 info
      */
     public synchronized void setSaveMd5Info(boolean saveMd5Info) {
         this.saveMd5Info = saveMd5Info;
@@ -716,7 +741,8 @@ public class MyZip {
      * Unzip.
      *
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: unzip
      * @Description:
      */
@@ -760,23 +786,25 @@ public class MyZip {
     /**
      * Unzip.
      *
-     * @param zipFile  the zip file
-     * @param zipEntry the zip entry
-     * @param saveFile the save file
+     * @param zipFile
+     *            the zip file
+     * @param zipEntry
+     *            the zip entry
+     * @param saveFile
+     *            the save file
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: unzip
      * @Description:
      */
-    public void unzip(ZipFile zipFile, ZipEntry zipEntry, File saveFile)
-            throws IOException {
+    public void unzip(ZipFile zipFile, ZipEntry zipEntry, File saveFile) throws IOException {
         if (zipEntry == null || zipEntry.isDirectory()) {
             return;
         }
 
         if (!isCover && saveFile.exists()) {
-            saveFile = new File(saveFile.getPath() + "."
-                    + System.currentTimeMillis());
+            saveFile = new File(saveFile.getPath() + "." + System.currentTimeMillis());
         }
         InputStream in = null;
         OutputStream out = null;
@@ -784,10 +812,8 @@ public class MyZip {
         String md5 = null;
         long start = System.currentTimeMillis();
         try {
-            commentMd5 = JsonUtils.getValue("md5",
-                    zipEntry.getComment());
-            in = new BufferedInputStream(zipFile.getInputStream(zipEntry),
-                    this.bufferSizipEntry);
+            commentMd5 = JsonUtils.getValue("md5", zipEntry.getComment());
+            in = new BufferedInputStream(zipFile.getInputStream(zipEntry), this.bufferSizipEntry);
             out = new FileOutputStream(saveFile);
             byte[] buffer = new byte[this.bufferSizipEntry];
             int length = -1;
@@ -801,35 +827,23 @@ public class MyZip {
                 out.flush();
                 md.update(buffer, 0, length);
 
-                if (this.progress
-                        && ((read = read + length) >= this.bufferSizipEntry
-                        * index)) {
+                if (this.progress && ((read = read + length) >= this.bufferSizipEntry * index)) {
                     double d = (index++ * 100.000 / count);
-                    double speed = 1.000
-                            * read
-                            * 1000
-                            / (1024 * 1024 * 1.000 * (System
-                            .currentTimeMillis() - start));
-                    CmdUtils.printMark(DateTimeUtils.getDateTime()
-                            + " [INFO] unzip   "
-                            // + zipEntry.getName()
-                            // + " -> "
-                            // + file.getPath()
-                            // + " "
-                            + String.format("%5.2f", d)
-                            + "% "
-                            + String.format(
-                            "%" + (zipEntry.getSize() + "").length()
-                                    + "d", read) + "/"
-                            + zipEntry.getSize() + " "
-                            + String.format("%.3f", speed) + "m/s ");
+                    double speed = 1.000 * read * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+                    CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] unzip   "
+                    // + zipEntry.getName()
+                    // + " -> "
+                    // + file.getPath()
+                    // + " "
+                            + String.format("%5.2f", d) + "% "
+                            + String.format("%" + (zipEntry.getSize() + "").length() + "d", read) + "/"
+                            + zipEntry.getSize() + " " + String.format("%.3f", speed) + "m/s ");
                 }
             }
             md5 = new String(Hex.encodeHex(md.digest()));
             if (this.progress) {
-                CmdUtils.printMark(DateTimeUtils.getDateTime()
-                        + " [INFO] zip   "
-                        // + zipEntry.getName() + " -> " + file.getPath()
+                CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] zip   "
+                // + zipEntry.getName() + " -> " + file.getPath()
                         + " 100.000% " + read + "/" + zipEntry.getSize());
             }
         } catch (IOException e) {
@@ -839,17 +853,12 @@ public class MyZip {
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(out);
         }
-        double speed = 1.000 * saveFile.length() * 1000
-                / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+        double speed = 1.000 * saveFile.length() * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
 
-        String msg = new StringBuffer()
-                .append(commentMd5 == null ? "unzip (Without comment) "
-                        : "unzip ")
-                .append(zipEntry.getName())
-                .append(" -> ")
-                .append(saveFile.getPath())
-                .append((this.progress ? " " + String.format("%.3f", speed)
-                        + "m/s" : "")).append(" md5: ").append(md5).toString();
+        String msg = new StringBuffer().append(commentMd5 == null ? "unzip (Without comment) " : "unzip ")
+                .append(zipEntry.getName()).append(" -> ").append(saveFile.getPath())
+                .append((this.progress ? " " + String.format("%.3f", speed) + "m/s" : "")).append(" md5: ").append(md5)
+                .toString();
 
         if (commentMd5 == null || (md5 != null && md5.equals(commentMd5))) {
             saveFile.setLastModified(zipEntry.getTime());
@@ -860,8 +869,7 @@ public class MyZip {
                 LogUtils.LOGGER.info(msg);
             }
 
-            if (!zipEntry.getName().endsWith(".md5")
-                    && !zipEntry.getName().endsWith(".javazip.list")) {
+            if (!zipEntry.getName().endsWith(".md5") && !zipEntry.getName().endsWith(".javazip.list")) {
                 MD5Utils.md5(saveFile);
             }
         } else {
@@ -873,7 +881,8 @@ public class MyZip {
      * Zip.
      *
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: zip
      * @Description:
      */
@@ -895,10 +904,8 @@ public class MyZip {
         }
 
         if (this.isAppend && this.zipFile.exists()) {
-            oldZipFile = new File(this.zipFile.getPath() + "."
-                    + System.currentTimeMillis() + ".tmp.zip");
-            new File(this.zipFile.getPath()).renameTo(new File(oldZipFile
-                    .getPath()));
+            oldZipFile = new File(this.zipFile.getPath() + "." + System.currentTimeMillis() + ".tmp.zip");
+            new File(this.zipFile.getPath()).renameTo(new File(oldZipFile.getPath()));
             this.zipFile.createNewFile();
         } else {
             this.zipFile.delete();
@@ -909,8 +916,7 @@ public class MyZip {
         ZipOutputStream zipOutputStream = null;
         ZipFile zip = null;
         try {
-            zipOutputStream = new ZipOutputStream(new FileOutputStream(
-                    this.zipFile, true));
+            zipOutputStream = new ZipOutputStream(new FileOutputStream(this.zipFile, true));
             // zipOutputStream.setUseZip64(this.zip64Mode);
             // zipOutputStream.setEncoding(this.encode);
             zipOutputStream.setLevel(this.level);
@@ -956,8 +962,7 @@ public class MyZip {
                 ZipEntry zipEntry = enumeration.nextElement();
                 setZipEntryComment(zipEntry);
             }
-            zipFilelist(zipOutputStream, new ZipEntry(this.zipFile.getName()
-                    + ".file.javazip.list"));
+            zipFilelist(zipOutputStream, new ZipEntry(this.zipFile.getName() + ".file.javazip.list"));
 
             zipOutputStream.flush();
             zipOutputStream.finish();
@@ -995,16 +1000,19 @@ public class MyZip {
     /**
      * Zip.
      *
-     * @param zip             the zip
-     * @param zipOutputStream the zip output stream
-     * @param zipEntry        the zip entry
+     * @param zip
+     *            the zip
+     * @param zipOutputStream
+     *            the zip output stream
+     * @param zipEntry
+     *            the zip entry
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: zip
      * @Description:
      */
-    public void zip(ZipFile zip, ZipOutputStream zipOutputStream,
-                    ZipEntry zipEntry) throws IOException {
+    public void zip(ZipFile zip, ZipOutputStream zipOutputStream, ZipEntry zipEntry) throws IOException {
         if (zipEntry == null || zipEntry.isDirectory()) {
             return;
         }
@@ -1016,10 +1024,8 @@ public class MyZip {
                 continue;
             }
             String md5 = JsonUtils.getValue("md5", entry.getComment());
-            if (entry.getName().equals(zipEntry.getName())
-                    && md5 != null
-                    && md5.equals(JsonUtils.getValue("md5",
-                    zipEntry.getComment()))) {
+            if (entry.getName().equals(zipEntry.getName()) && md5 != null
+                    && md5.equals(JsonUtils.getValue("md5", zipEntry.getComment()))) {
                 return;
             }
         }
@@ -1031,11 +1037,9 @@ public class MyZip {
         try {
 
             if (zipEntry.getComment() != null) {
-                comment = JsonUtils.getValue("md5",
-                        zipEntry.getComment());
+                comment = JsonUtils.getValue("md5", zipEntry.getComment());
             }
-            in = new BufferedInputStream(zip.getInputStream(zipEntry),
-                    this.bufferSizipEntry);
+            in = new BufferedInputStream(zip.getInputStream(zipEntry), this.bufferSizipEntry);
             byte[] buffer = new byte[this.bufferSizipEntry];
             int length = -1;
             long count = zipEntry.getSize() / this.bufferSizipEntry + 1;
@@ -1049,33 +1053,21 @@ public class MyZip {
                 md.update(buffer, 0, length);
                 zipOutputStream.flush();
 
-                if (this.progress
-                        && ((read = read + length) >= this.bufferSizipEntry
-                        * index)) {
+                if (this.progress && ((read = read + length) >= this.bufferSizipEntry * index)) {
                     double d = (read * 100.000 / zipEntry.getSize());
-                    double speed = 1.000
-                            * read
-                            * 1000
-                            / (1024 * 1024 * 1.000 * (System
-                            .currentTimeMillis() - start));
-                    CmdUtils.printMark(DateTimeUtils.getDateTime()
-                            + " [INFO] zip   Append "
-                            // + zipEntry.getName()
-                            // + " "
-                            + String.format("%5.2f", d)
-                            + "% "
-                            + String.format(
-                            "%" + (zipEntry.getSize() + "").length()
-                                    + "d", read) + "/"
-                            + zipEntry.getSize() + " "
-                            + String.format("%.3f", speed) + "m/s ");
+                    double speed = 1.000 * read * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+                    CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] zip   Append "
+                    // + zipEntry.getName()
+                    // + " "
+                            + String.format("%5.2f", d) + "% "
+                            + String.format("%" + (zipEntry.getSize() + "").length() + "d", read) + "/"
+                            + zipEntry.getSize() + " " + String.format("%.3f", speed) + "m/s ");
                 }
             }
             md5 = new String(Hex.encodeHex(md.digest()));
             if (this.progress) {
-                CmdUtils.printMark(DateTimeUtils.getDateTime()
-                        + " [INFO] zip   Append "
-                        // + zipEntry.getName()
+                CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] zip   Append "
+                // + zipEntry.getName()
                         + " 100.000% " + read + "/" + zipEntry.getSize());
             }
         } catch (IOException e) {
@@ -1085,17 +1077,13 @@ public class MyZip {
             IOUtils.closeQuietly(in);
         }
 
-        double speed = 1.000 * zipEntry.getSize() * 1000
-                / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+        double speed = 1.000 * zipEntry.getSize() * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
 
-        String msg = new StringBuffer()
-                .append("zip   Append ")
-                .append(zipEntry.getName())
-                .append((this.progress ? " " + String.format("%.3f", speed)
-                        + "m/s" : "")).append(" md5: ").append(md5).toString();
+        String msg = new StringBuffer().append("zip   Append ").append(zipEntry.getName())
+                .append((this.progress ? " " + String.format("%.3f", speed) + "m/s" : "")).append(" md5: ").append(md5)
+                .toString();
         if (comment == null) {
-            String json = JsonUtils.setValue("Append",
-                    this.zipFile.getAbsolutePath(), zipEntry.getComment());
+            String json = JsonUtils.setValue("Append", this.zipFile.getAbsolutePath(), zipEntry.getComment());
             zipEntry.setComment(json);
             setZipEntryComment(zipEntry, md5);
             addZipEntry(zipEntry, true);
@@ -1104,8 +1092,7 @@ public class MyZip {
         }
 
         if (md5 != null && md5.equals(comment)) {
-            String json = JsonUtils.setValue("Append",
-                    this.zipFile.getAbsolutePath(), zipEntry.getComment());
+            String json = JsonUtils.setValue("Append", this.zipFile.getAbsolutePath(), zipEntry.getComment());
             zipEntry.setComment(json);
             addZipEntry(zipEntry, true);
             LogUtils.LOGGER.info(msg);
@@ -1118,9 +1105,11 @@ public class MyZip {
     /**
      * Zip.
      *
-     * @param zipOutputStream the zip output stream
+     * @param zipOutputStream
+     *            the zip output stream
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: zip
      * @Description:
      */
@@ -1137,8 +1126,7 @@ public class MyZip {
             File file = it.next();
             if (!file.exists()) {
                 // System.out.println(file + " Not exist.");
-                LogUtils.LOGGER.info(" zip   Not exist:"
-                        + file.getAbsolutePath());
+                LogUtils.LOGGER.info(" zip   Not exist:" + file.getAbsolutePath());
                 continue;
             }
             String path = this.zipMap.get(file);
@@ -1147,8 +1135,7 @@ public class MyZip {
                 ZipEntry zipEntryDir = new ZipEntry(this.root + dir);
                 zipEntryDir.setTime(file.lastModified());
                 setZipEntryComment(zipEntryDir, file);
-                zipEntryDir.setComment(JsonUtils.setValue("zipEntryPath", path,
-                        zipEntryDir.getComment()));
+                zipEntryDir.setComment(JsonUtils.setValue("zipEntryPath", path, zipEntryDir.getComment()));
                 addZipEntry(zipEntryDir, true);
                 zipOutputStream.putNextEntry(zipEntryDir);
                 zipOutputStream.flush();
@@ -1156,13 +1143,11 @@ public class MyZip {
                 continue;
             }
 
-            ZipEntry zipEntry = new ZipEntry(this.root
-                    + (path == null ? "" : path) + file.getName());
+            ZipEntry zipEntry = new ZipEntry(this.root + (path == null ? "" : path) + file.getName());
             zipEntry.setTime(file.lastModified());
             zip(zipOutputStream, file, zipEntry);
             setZipEntryComment(zipEntry, file);
-            zipEntry.setComment(JsonUtils.setValue("zipEntryPath", path,
-                    zipEntry.getComment()));
+            zipEntry.setComment(JsonUtils.setValue("zipEntryPath", path, zipEntry.getComment()));
 
         }
 
@@ -1171,16 +1156,19 @@ public class MyZip {
     /**
      * Zip.
      *
-     * @param zipOutputStream the zip output stream
-     * @param dir             the dir
-     * @param path            the path
+     * @param zipOutputStream
+     *            the zip output stream
+     * @param dir
+     *            the dir
+     * @param path
+     *            the path
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: zip
      * @Description:
      */
-    public void zip(ZipOutputStream zipOutputStream, File dir, String path)
-            throws IOException {
+    public void zip(ZipOutputStream zipOutputStream, File dir, String path) throws IOException {
         if (dir == null || !dir.exists() || !dir.isDirectory()) {
             return;
         }
@@ -1194,21 +1182,18 @@ public class MyZip {
                 continue;
             }
             if (file.isDirectory()) {
-                String dirZipEntry = (path == null ? "" : path)
-                        + file.getName() + "/";
+                String dirZipEntry = (path == null ? "" : path) + file.getName() + "/";
                 ZipEntry zipEntryDir = new ZipEntry(this.root + dirZipEntry);
                 zipEntryDir.setTime(file.lastModified());
                 setZipEntryComment(zipEntryDir, file);
-                zipEntryDir.setComment(JsonUtils.setValue("zipEntryPath", path,
-                        zipEntryDir.getComment()));
+                zipEntryDir.setComment(JsonUtils.setValue("zipEntryPath", path, zipEntryDir.getComment()));
                 addZipEntry(zipEntryDir, true);
                 zipOutputStream.putNextEntry(zipEntryDir);
                 zipOutputStream.flush();
                 zip(zipOutputStream, file, dirZipEntry);
                 continue;
             }
-            ZipEntry zipEntry = new ZipEntry(this.root
-                    + (path == null ? "" : path) + file.getName());
+            ZipEntry zipEntry = new ZipEntry(this.root + (path == null ? "" : path) + file.getName());
             zipEntry.setTime(file.lastModified());
             zip(zipOutputStream, file, zipEntry);
             setZipEntryComment(zipEntry, file);
@@ -1218,16 +1203,19 @@ public class MyZip {
     /**
      * Zip.
      *
-     * @param zipOutputStream the zip output stream
-     * @param file            the file
-     * @param zipEntry        the zip entry
+     * @param zipOutputStream
+     *            the zip output stream
+     * @param file
+     *            the file
+     * @param zipEntry
+     *            the zip entry
      * @return void
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: zip
      * @Description:
      */
-    public void zip(ZipOutputStream zipOutputStream, File file,
-                    ZipEntry zipEntry) throws IOException {
+    public void zip(ZipOutputStream zipOutputStream, File file, ZipEntry zipEntry) throws IOException {
         if (file == null || !file.exists()) {
             throw new IOException(file + "(Not exist)");
         }
@@ -1238,8 +1226,7 @@ public class MyZip {
         String md5 = null;
         long start = System.currentTimeMillis();
         try {
-            in = new BufferedInputStream(new FileInputStream(file),
-                    this.bufferSizipEntry);
+            in = new BufferedInputStream(new FileInputStream(file), this.bufferSizipEntry);
             byte[] buffer = new byte[this.bufferSizipEntry];
             int length = -1;
             MessageDigest md = DigestUtils.getMd5Digest();
@@ -1250,33 +1237,23 @@ public class MyZip {
                 zipOutputStream.write(buffer, 0, length);
                 md.update(buffer, 0, length);
                 zipOutputStream.flush();
-                if (this.progress
-                        && ((read = read + length) >= this.bufferSizipEntry
-                        * index)) {
+                if (this.progress && ((read = read + length) >= this.bufferSizipEntry * index)) {
                     double d = (read * 100.000 / file.length());
-                    double speed = 1.000
-                            * read
-                            * 1000
-                            / (1024 * 1024 * 1.000 * (System
-                            .currentTimeMillis() - start));
-                    CmdUtils.printMark(DateTimeUtils.getDateTime()
-                            + " [INFO] zip   "
-                            // + zipEntry.getName()
-                            // + " <- "
-                            // + file.getPath()
-                            // + " "
-                            + String.format("%5.2f", d)
-                            + "% "
-                            + String.format("%" + (file.length() + "").length()
-                            + "d", read) + "/" + file.length() + " "
+                    double speed = 1.000 * read * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+                    CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] zip   "
+                    // + zipEntry.getName()
+                    // + " <- "
+                    // + file.getPath()
+                    // + " "
+                            + String.format("%5.2f", d) + "% "
+                            + String.format("%" + (file.length() + "").length() + "d", read) + "/" + file.length() + " "
                             + String.format("%.3f", speed) + "m/s ");
                 }
             }
             md5 = new String(Hex.encodeHex(md.digest()));
             if (this.progress) {
-                CmdUtils.printMark(DateTimeUtils.getDateTime()
-                        + " [INFO] zip   "
-                        // + zipEntry.getName() + " <- " + file.getPath()
+                CmdUtils.printMark(DateTimeUtils.getDateTime() + " [INFO] zip   "
+                // + zipEntry.getName() + " <- " + file.getPath()
                         + " 100.000% " + +read + "/" + file.length());
             }
         } catch (IOException e) {
@@ -1285,16 +1262,11 @@ public class MyZip {
         } finally {
             IOUtils.closeQuietly(in);
         }
-        double speed = 1.000 * file.length() * 1000
-                / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
+        double speed = 1.000 * file.length() * 1000 / (1024 * 1024 * 1.000 * (System.currentTimeMillis() - start));
 
-        String msg = new StringBuffer()
-                .append("zip   ")
-                .append(zipEntry.getName())
-                .append(" <- ")
-                .append(file.getPath())
-                .append((this.progress ? " " + String.format("%.3f", speed)
-                        + "m/s" : "")).append(" md5: ").append(md5).toString();
+        String msg = new StringBuffer().append("zip   ").append(zipEntry.getName()).append(" <- ")
+                .append(file.getPath()).append((this.progress ? " " + String.format("%.3f", speed) + "m/s" : ""))
+                .append(" md5: ").append(md5).toString();
 
         if (md5 != null && md5.length() > 1) {
             setZipEntryComment(zipEntry, file, md5);
@@ -1310,19 +1282,17 @@ public class MyZip {
     /**
      * @param zipEntry
      * @return void
-     * @throws
-     * @Title: setZipEntryComment
+     * @throws @Title:
+     *             setZipEntryComment
      * @Description:
      */
     private void setZipEntryComment(ZipEntry zipEntry) {
         if (zipEntry == null) {
             return;
         }
-        String json = JsonUtils.setValue("type", zipEntry.isDirectory() ? "D"
-                : "F", zipEntry.getComment());
+        String json = JsonUtils.setValue("type", zipEntry.isDirectory() ? "D" : "F", zipEntry.getComment());
         json = JsonUtils.setValue("name", zipEntry.getName(), json);
-        json = JsonUtils.setValue("compressedSizipEntry",
-                zipEntry.getCompressedSize() + "", json);
+        json = JsonUtils.setValue("compressedSizipEntry", zipEntry.getCompressedSize() + "", json);
         json = JsonUtils.setValue("CRC", zipEntry.getCrc() + "", json);
         zipEntry.setComment(json);
     }
@@ -1331,8 +1301,8 @@ public class MyZip {
      * @param zipEntry
      * @param file
      * @return void
-     * @throws
-     * @Title: setZipEntryComment
+     * @throws @Title:
+     *             setZipEntryComment
      * @Description:
      */
     private void setZipEntryComment(ZipEntry zipEntry, File file) {
@@ -1345,16 +1315,15 @@ public class MyZip {
      * @param file
      * @param md5
      * @return void
-     * @throws
-     * @Title: setZipEntryComment
+     * @throws @Title:
+     *             setZipEntryComment
      * @Description:
      */
     private void setZipEntryComment(ZipEntry zipEntry, File file, String md5) {
         if (zipEntry == null) {
             return;
         }
-        String json = JsonUtils.setValue("name", zipEntry.getName(),
-                zipEntry.getComment());
+        String json = JsonUtils.setValue("name", zipEntry.getName(), zipEntry.getComment());
         json = JsonUtils.setValue("type", file.isDirectory() ? "D" : "F", json);
         json = JsonUtils.setValue("from", file.getAbsolutePath(), json);
         json = JsonUtils.setValue("version", this.version, json);
@@ -1364,39 +1333,31 @@ public class MyZip {
 
         if (!file.isDirectory()) {
             try {
-                json = JsonUtils.setValue("md5Start1k",
-                        MD5Utils.getFileMd5(file, 0, 1024L), json);
-                json = JsonUtils.setValue("md5End1k",
-                        MD5Utils.getFileMd5(file, file.length() - 1024, 1024L),
-                        json);
+                json = JsonUtils.setValue("md5Start1k", MD5Utils.getFileMd5(file, 0, 1024L), json);
+                json = JsonUtils.setValue("md5End1k", MD5Utils.getFileMd5(file, file.length() - 1024, 1024L), json);
             } catch (IOException e) {
             }
         }
         json = JsonUtils.setValue("CRC", zipEntry.getCrc() + "", json);
 
-        json = JsonUtils.setValue("lastModified", file.lastModified() + "",
-                json);
-        json = JsonUtils.setValue("lastModifiedTime",
-                DateTimeUtils.getDateTime(file.lastModified()), json);
+        json = JsonUtils.setValue("lastModified", file.lastModified() + "", json);
+        json = JsonUtils.setValue("lastModifiedTime", DateTimeUtils.getDateTime(file.lastModified()), json);
         json = JsonUtils.setValue("CRC", zipEntry.getCrc() + "", json);
         json = JsonUtils.setValue("length", file.length() + "", json);
-        json = JsonUtils.setValue("compressedSizipEntry",
-                zipEntry.getCompressedSize() + "", json);
+        json = JsonUtils.setValue("compressedSizipEntry", zipEntry.getCompressedSize() + "", json);
 
         InetAddress addr = null;
         try {
             addr = InetAddress.getLocalHost();
             json = JsonUtils.setValue("hostname", addr.getHostName(), json);
-            json = JsonUtils.setValue("ip", addr.getHostAddress().toString(),
-                    json);
+            json = JsonUtils.setValue("ip", addr.getHostAddress().toString(), json);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
         json = JsonUtils.setValue("os", System.getProperty("os.name"), json);
         json = JsonUtils.setValue("encode", this.encode, json);
-        json = JsonUtils.setValue("root", this.root == null ? "/" : this.root,
-                json);
+        json = JsonUtils.setValue("root", this.root == null ? "/" : this.root, json);
         zipEntry.setComment(json);
     }
 
@@ -1404,46 +1365,39 @@ public class MyZip {
      * @param zipEntry
      * @param md5
      * @return void
-     * @throws
-     * @Title: setZipEntryComment
+     * @throws @Title:
+     *             setZipEntryComment
      * @Description:
      */
     private void setZipEntryComment(ZipEntry zipEntry, String md5) {
         if (zipEntry == null) {
             return;
         }
-        String json = JsonUtils.setValue("name", zipEntry.getName(),
-                zipEntry.getComment());
-        json = JsonUtils.setValue("type", zipEntry.isDirectory() ? "D" : "F",
-                json);
+        String json = JsonUtils.setValue("name", zipEntry.getName(), zipEntry.getComment());
+        json = JsonUtils.setValue("type", zipEntry.isDirectory() ? "D" : "F", json);
         json = JsonUtils.setValue("from", null, json);
         if (md5 != null) {
             json = JsonUtils.setValue("md5", md5, json);
         }
         json = JsonUtils.setValue("CRC", zipEntry.getCrc() + "", json);
 
-        json = JsonUtils
-                .setValue("lastModified", zipEntry.getTime() + "", json);
-        json = JsonUtils.setValue("lastModifiedTime",
-                DateTimeUtils.getDateTime(zipEntry.getTime()), json);
+        json = JsonUtils.setValue("lastModified", zipEntry.getTime() + "", json);
+        json = JsonUtils.setValue("lastModifiedTime", DateTimeUtils.getDateTime(zipEntry.getTime()), json);
         json = JsonUtils.setValue("CRC", zipEntry.getCrc() + "", json);
         json = JsonUtils.setValue("length", zipEntry.getSize() + "", json);
-        json = JsonUtils.setValue("compressedSizipEntry",
-                zipEntry.getCompressedSize() + "", json);
+        json = JsonUtils.setValue("compressedSizipEntry", zipEntry.getCompressedSize() + "", json);
 
         InetAddress addr = null;
         try {
             addr = InetAddress.getLocalHost();
             json = JsonUtils.setValue("hostname", addr.getHostName(), json);
-            json = JsonUtils.setValue("ip", addr.getHostAddress().toString(),
-                    json);
+            json = JsonUtils.setValue("ip", addr.getHostAddress().toString(), json);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         json = JsonUtils.setValue("os", System.getProperty("os.name"), json);
         json = JsonUtils.setValue("encode", this.encode, json);
-        json = JsonUtils.setValue("root", this.root == null ? "/" : this.root,
-                json);
+        json = JsonUtils.setValue("root", this.root == null ? "/" : this.root, json);
         zipEntry.setComment(json);
     }
 
@@ -1460,31 +1414,28 @@ public class MyZip {
      * @param key
      * @param value
      * @return void
-     * @throws
-     * @Title: setZipEntryComment
+     * @throws @Title:
+     *             setZipEntryComment
      * @Description:
      */
     private void setZipEntryComment(ZipEntry zipEntry, String key, String value) {
-        zipEntry.setComment(JsonUtils.setValue(key, value,
-                zipEntry.getComment()));
+        zipEntry.setComment(JsonUtils.setValue(key, value, zipEntry.getComment()));
     }
 
     /**
      * @param zipOutputStream
      * @return void
-     * @throws
-     * @Title: setZipOutputStreamComment
+     * @throws @Title:
+     *             setZipOutputStreamComment
      * @Description:
      */
     private void setZipOutputStreamComment(ZipOutputStream zipOutputStream) {
-        String json = JsonUtils.setValue("os", System.getProperty("os.name"),
-                "");
+        String json = JsonUtils.setValue("os", System.getProperty("os.name"), "");
         InetAddress addr = null;
         try {
             addr = InetAddress.getLocalHost();
             json = JsonUtils.setValue("hostname", addr.getHostName(), json);
-            json = JsonUtils.setValue("ip", addr.getHostAddress().toString(),
-                    json);
+            json = JsonUtils.setValue("ip", addr.getHostAddress().toString(), json);
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -1502,12 +1453,11 @@ public class MyZip {
      * @param zipEntry
      * @return void
      * @throws IOException
-     * @throws
-     * @Title: zipFilelist
+     * @throws @Title:
+     *             zipFilelist
      * @Description:
      */
-    private void zipFilelist(ZipOutputStream zipOutputStream, ZipEntry zipEntry)
-            throws IOException {
+    private void zipFilelist(ZipOutputStream zipOutputStream, ZipEntry zipEntry) throws IOException {
         // ZipEntry zipEntry = new ZipEntry(this.zipFile.getName() + ".list");
         zipEntry.setTime(System.currentTimeMillis());
         StringBuffer sb = new StringBuffer();
@@ -1527,25 +1477,19 @@ public class MyZip {
      * @param str
      * @return void
      * @throws IOException
-     * @throws
-     * @Title: zipString
+     * @throws @Title:
+     *             zipString
      * @Description:
      */
-    private void zipString(ZipOutputStream zipOutputStream, ZipEntry zipEntry,
-                           String str) throws IOException {
+    private void zipString(ZipOutputStream zipOutputStream, ZipEntry zipEntry, String str) throws IOException {
 
         // ZipEntry zipEntry = new ZipEntry(this.zipFile.getName() + ".list");
         zipEntry.setTime(System.currentTimeMillis());
-        zipEntry.setComment(JsonUtils.setValue("name", zipEntry.getName(),
-                zipEntry.getComment()));
-        zipEntry.setComment(JsonUtils.setValue("type", "TXT",
-                zipEntry.getComment()));
-        zipEntry.setComment(JsonUtils.setValue("type", "TXT",
-                zipEntry.getComment()));
-        zipEntry.setComment(JsonUtils.setValue("lastModified",
-                zipEntry.getTime() + "", zipEntry.getComment()));
-        zipEntry.setComment(JsonUtils.setValue("lastModifiedTime",
-                DateTimeUtils.getDateTime(zipEntry.getTime()),
+        zipEntry.setComment(JsonUtils.setValue("name", zipEntry.getName(), zipEntry.getComment()));
+        zipEntry.setComment(JsonUtils.setValue("type", "TXT", zipEntry.getComment()));
+        zipEntry.setComment(JsonUtils.setValue("type", "TXT", zipEntry.getComment()));
+        zipEntry.setComment(JsonUtils.setValue("lastModified", zipEntry.getTime() + "", zipEntry.getComment()));
+        zipEntry.setComment(JsonUtils.setValue("lastModifiedTime", DateTimeUtils.getDateTime(zipEntry.getTime()),
                 zipEntry.getComment()));
 
         zipOutputStream.putNextEntry(zipEntry);
@@ -1554,8 +1498,7 @@ public class MyZip {
             byte[] buffer = str.getBytes();
             zipOutputStream.write(buffer, 0, buffer.length);
             zipOutputStream.flush();
-            zipEntry.setComment(JsonUtils.setValue("md5",
-                    DigestUtils.md5Hex(buffer), zipEntry.getComment()));
+            zipEntry.setComment(JsonUtils.setValue("md5", DigestUtils.md5Hex(buffer), zipEntry.getComment()));
         } catch (IOException e) {
             e.printStackTrace();
             throw e;

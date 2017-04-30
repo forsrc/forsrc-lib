@@ -1,6 +1,5 @@
 package com.forsrc.utils;
 
-
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -24,8 +23,10 @@ public class MyLock {
     /**
      * Todo read lock.
      *
-     * @param todoReadLock the todo read lock
-     * @throws Exception the exception
+     * @param todoReadLock
+     *            the todo read lock
+     * @throws Exception
+     *             the exception
      */
     public void todoReadLock(TodoReadLock todoReadLock) throws Exception {
         this.readLock.lock();
@@ -41,8 +42,10 @@ public class MyLock {
     /**
      * Todo write lock.
      *
-     * @param todoWriteLock the todo write lock
-     * @throws Exception the exception
+     * @param todoWriteLock
+     *            the todo write lock
+     * @throws Exception
+     *             the exception
      */
     public void todoWriteLock(TodoWriteLock todoWriteLock) throws Exception {
         this.writeLock.lock();
@@ -80,7 +83,8 @@ public class MyLock {
         /**
          * Todo.
          *
-         * @throws Exception the exception
+         * @throws Exception
+         *             the exception
          */
         void todo() throws Exception;
     }
@@ -92,7 +96,8 @@ public class MyLock {
         /**
          * Todo.
          *
-         * @throws Exception the exception
+         * @throws Exception
+         *             the exception
          */
         void todo() throws Exception;
     }

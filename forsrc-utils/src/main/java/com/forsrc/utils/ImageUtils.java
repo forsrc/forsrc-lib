@@ -17,10 +17,9 @@
 
 package com.forsrc.utils;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,6 +27,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 
 /**
  * ImageUtils
@@ -48,13 +51,13 @@ public final class ImageUtils {
     /**
      * Gets buffered image.
      *
-     * @param code {String} code
+     * @param code
+     *            {String} code
      * @return {BufferedImage}
      */
     public static BufferedImage getBufferedImage(String code) {
 
-        BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT,
-                BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
         Graphics g = bufferedImage.getGraphics();
 
@@ -74,8 +77,7 @@ public final class ImageUtils {
 
         for (int i = 0; i < 3; i++) {
 
-            g.drawLine(r.nextInt(WIDTH), r.nextInt(HEIGHT), r.nextInt(WIDTH),
-                    r.nextInt(HEIGHT));
+            g.drawLine(r.nextInt(WIDTH), r.nextInt(HEIGHT), r.nextInt(WIDTH), r.nextInt(HEIGHT));
 
             g.setColor(new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256)));
         }
@@ -99,9 +101,12 @@ public final class ImageUtils {
     /**
      * Gets input stream.
      *
-     * @param bufferedImage {BufferedImage}
+     * @param bufferedImage
+     *            {BufferedImage}
      * @return {ByteArrayInputStream}
-     * @throws IOException IllegalArgumentException NullPointerException ImageFormatException
+     * @throws IOException
+     *             IllegalArgumentException NullPointerException
+     *             ImageFormatException
      */
     public static ByteArrayInputStream getInputStream(BufferedImage bufferedImage) throws IOException {
 
@@ -137,7 +142,8 @@ public final class ImageUtils {
     /**
      * Gets code.
      *
-     * @param length {int}
+     * @param length
+     *            {int}
      * @return {String} 4 random code
      */
     public static String getCode(int length) {
@@ -155,7 +161,8 @@ public final class ImageUtils {
     /**
      * Gets random char.
      *
-     * @param x 0: 0~9; 1: A~Z; 2: a~z; other: word
+     * @param x
+     *            0: 0~9; 1: A~Z; 2: a~z; other: word
      * @return {char}
      */
     public static char getRandomChar(int x) {
@@ -165,19 +172,19 @@ public final class ImageUtils {
 
         // 48-57 65-90 97-122 u4e00~9fa5 u9fff
         switch (x) {
-            case 0:
-                c = (char) (r.nextInt(10) + 48); //0 ~ 9
-                break;
-            case 1:
-                c = (char) (r.nextInt(26) + 97); //A ~ Z
-                break;
-            case 2:
-                c = (char) (r.nextInt(26) + 65); //a ~ z
-                break;
-            default:
-                String s = Integer.toHexString((r.nextInt(0x9fa5 - 0x4e00) + 0x4e00));
-                c = (char) Integer.parseInt(s, 16);
-                break;
+        case 0:
+            c = (char) (r.nextInt(10) + 48); // 0 ~ 9
+            break;
+        case 1:
+            c = (char) (r.nextInt(26) + 97); // A ~ Z
+            break;
+        case 2:
+            c = (char) (r.nextInt(26) + 65); // a ~ z
+            break;
+        default:
+            String s = Integer.toHexString((r.nextInt(0x9fa5 - 0x4e00) + 0x4e00));
+            c = (char) Integer.parseInt(s, 16);
+            break;
         }
 
         return c;

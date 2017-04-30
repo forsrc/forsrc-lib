@@ -1,6 +1,5 @@
 package com.forsrc.tools;
 
-
 import org.springframework.context.MessageSource;
 
 /**
@@ -34,7 +33,8 @@ public class MyMessageSource {
     /**
      * Sets message source.
      *
-     * @param messageSource the message source
+     * @param messageSource
+     *            the message source
      */
     public void setMessageSource(org.springframework.context.MessageSource messageSource) {
         MessageSource = messageSource;

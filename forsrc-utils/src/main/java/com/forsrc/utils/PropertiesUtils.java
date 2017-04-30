@@ -1,7 +1,11 @@
 package com.forsrc.utils;
 
-
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Iterator;
@@ -13,7 +17,6 @@ import java.util.Set;
  */
 public final class PropertiesUtils {
 
-
     private PropertiesUtils() {
 
     }
@@ -21,16 +24,19 @@ public final class PropertiesUtils {
     /**
      * Gets properties vaule.
      *
-     * @param file    the file
-     * @param key     the key
-     * @param charset the charset
+     * @param file
+     *            the file
+     * @param key
+     *            the key
+     * @param charset
+     *            the charset
      * @return String properties vaule
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: getPropertiesVaule
      * @Description:
      */
-    public static String getPropertiesVaule(File file, String key,
-                                            Charset charset) throws IOException {
+    public static String getPropertiesVaule(File file, String key, Charset charset) throws IOException {
         if (file == null) {
             return null;
         }
@@ -58,79 +64,91 @@ public final class PropertiesUtils {
                 }
             }
         }
-        String value = properties.getProperty(new String(key.getBytes(charset),
-                "ISO8859-1"));
+        String value = properties.getProperty(new String(key.getBytes(charset), "ISO8859-1"));
         if (properties != null) {
             properties.clear();
         }
-        return value == null ? null : new String(value.getBytes("ISO8859-1"),
-                charset);
+        return value == null ? null : new String(value.getBytes("ISO8859-1"), charset);
     }
 
     /**
      * Gets properties vaule.
      *
-     * @param file the file
-     * @param key  the key
+     * @param file
+     *            the file
+     * @param key
+     *            the key
      * @return String properties vaule
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: getPropertiesVaule
      * @Description:
      */
-    public static String getPropertiesVaule(File file, String key)
-            throws IOException {
+    public static String getPropertiesVaule(File file, String key) throws IOException {
         return getPropertiesVaule(file, key, null);
     }
 
     /**
      * Sets properties vaule.
      *
-     * @param file  the file
-     * @param key   the key
-     * @param value the value
+     * @param file
+     *            the file
+     * @param key
+     *            the key
+     * @param value
+     *            the value
      * @return String properties vaule
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: setPropertiesVaule
      * @Description:
      */
-    public static String setPropertiesVaule(File file, String key, String value)
-            throws IOException {
+    public static String setPropertiesVaule(File file, String key, String value) throws IOException {
         return setPropertiesVaule(file, key, value, file.getPath());
     }
-
 
     /**
      * Sets properties vaule.
      *
-     * @param file     the file
-     * @param key      the key
-     * @param value    the value
-     * @param comments the comments
+     * @param file
+     *            the file
+     * @param key
+     *            the key
+     * @param value
+     *            the value
+     * @param comments
+     *            the comments
      * @return String properties vaule
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: setPropertiesVaule
      * @Description:
      */
-    public static String setPropertiesVaule(File file, String key,
-                                            String value, String comments) throws IOException {
+    public static String setPropertiesVaule(File file, String key, String value, String comments) throws IOException {
         return setPropertiesVaule(file, key, value, comments, null);
     }
 
     /**
      * Sets properties vaule.
      *
-     * @param file     the file
-     * @param key      the key
-     * @param value    the value
-     * @param comments the comments
-     * @param charset  the charset
+     * @param file
+     *            the file
+     * @param key
+     *            the key
+     * @param value
+     *            the value
+     * @param comments
+     *            the comments
+     * @param charset
+     *            the charset
      * @return String properties vaule
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      * @Title: setPropertiesVaule
      * @Description:
      */
-    public static String setPropertiesVaule(File file, String key,
-                                            String value, String comments, Charset charset) throws IOException {
+    public static String setPropertiesVaule(File file, String key, String value, String comments, Charset charset)
+            throws IOException {
         if (file == null) {
             return null;
         }
@@ -152,8 +170,8 @@ public final class PropertiesUtils {
                 fis.close();
             }
         }
-        Object v = properties.setProperty(new String(key.getBytes(charset),
-                "ISO8859-1"), new String(value.getBytes(charset), "ISO8859-1"));
+        Object v = properties.setProperty(new String(key.getBytes(charset), "ISO8859-1"),
+                new String(value.getBytes(charset), "ISO8859-1"));
 
         BufferedWriter bw = null;
         try {
@@ -181,23 +199,22 @@ public final class PropertiesUtils {
             }
         }
 
-        return v == null ? null : new String(
-                v.toString().getBytes("ISO8859-1"), charset);
+        return v == null ? null : new String(v.toString().getBytes("ISO8859-1"), charset);
     }
 
     /**
      * Gets properties.
      *
-     * @param propertiesFileName the properties file name
+     * @param propertiesFileName
+     *            the properties file name
      * @return the properties
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
-    public static Properties getProperties(String propertiesFileName)
-            throws IOException {
+    public static Properties getProperties(String propertiesFileName) throws IOException {
         Properties properties = new Properties();
         try {
-            properties.load(PropertiesUtils.class.getResource(
-                    propertiesFileName).openStream());
+            properties.load(PropertiesUtils.class.getResource(propertiesFileName).openStream());
             return properties;
         } catch (IOException e) {
             throw e;

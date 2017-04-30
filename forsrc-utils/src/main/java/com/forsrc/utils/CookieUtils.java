@@ -17,12 +17,13 @@
 
 package com.forsrc.utils;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * The type Cookie utils.
@@ -35,12 +36,14 @@ public final class CookieUtils {
     /**
      * Delete.
      *
-     * @param request  the request
-     * @param response the response
-     * @param name     the name
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param name
+     *            the name
      */
-    public static void delete(HttpServletRequest request,
-                              HttpServletResponse response, String name) {
+    public static void delete(HttpServletRequest request, HttpServletResponse response, String name) {
 
         Cookie cookie = new Cookie(name, "");
         cookie.setMaxAge(0);
@@ -51,13 +54,15 @@ public final class CookieUtils {
     /**
      * Gets cookie.
      *
-     * @param name    the name
-     * @param request the request
+     * @param name
+     *            the name
+     * @param request
+     *            the request
      * @return the cookie
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
-    public static String getCookie(String name, HttpServletRequest request)
-            throws UnsupportedEncodingException {
+    public static String getCookie(String name, HttpServletRequest request) throws UnsupportedEncodingException {
 
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -73,33 +78,41 @@ public final class CookieUtils {
     /**
      * Save cookie.
      *
-     * @param request  the request
-     * @param response the response
-     * @param name     the name
-     * @param value    the value
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
-    public static void saveCookie(HttpServletRequest request,
-                                  HttpServletResponse response, String name, String value)
+    public static void saveCookie(HttpServletRequest request, HttpServletResponse response, String name, String value)
             throws UnsupportedEncodingException {
 
-        CookieUtils
-                .saveCookie(request, response, name, value, 7 * 24 * 60 * 60);
+        CookieUtils.saveCookie(request, response, name, value, 7 * 24 * 60 * 60);
     }
 
     /**
      * Save cookie.
      *
-     * @param request  the request
-     * @param response the response
-     * @param name     the name
-     * @param value    the value
-     * @param maxAge   the max age
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @param maxAge
+     *            the max age
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
-    public static void saveCookie(HttpServletRequest request,
-                                  HttpServletResponse response, String name, String value, int maxAge)
-            throws UnsupportedEncodingException {
+    public static void saveCookie(HttpServletRequest request, HttpServletResponse response, String name, String value,
+            int maxAge) throws UnsupportedEncodingException {
 
         Cookie cookie = new Cookie(name, URLEncoder.encode(value, "UTF-8"));
         cookie.setMaxAge(maxAge);

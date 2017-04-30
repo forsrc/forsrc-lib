@@ -1,7 +1,11 @@
 package com.forsrc.utils;
 
-
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +28,8 @@ public class StarDictUtils {
     /**
      * Byte array to int int.
      *
-     * @param bytesToConvert the bytes to convert
+     * @param bytesToConvert
+     *            the bytes to convert
      * @return the int
      */
     public static int byteArrayToInt(final byte[] bytesToConvert) {
@@ -33,18 +38,17 @@ public class StarDictUtils {
             bytes = new byte[4];
             System.arraycopy(bytesToConvert, 0, bytes, 0, bytesToConvert.length);
         }
-        return (bytes[0] & 0xff) << 24 |
-                (bytes[1] & 0xff) << 16 |
-                (bytes[2] & 0xff) << 8 |
-                (bytes[3] & 0xff);
+        return (bytes[0] & 0xff) << 24 | (bytes[1] & 0xff) << 16 | (bytes[2] & 0xff) << 8 | (bytes[3] & 0xff);
     }
 
     /**
      * Filter utf 8 mb 4 string.
      *
-     * @param text the text
+     * @param text
+     *            the text
      * @return the string
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
     public static String filterUtf8Mb4(String text) throws UnsupportedEncodingException {
         byte[] bytes = text.getBytes(CHARSET_NAME);
@@ -74,9 +78,11 @@ public class StarDictUtils {
     /**
      * Gets info.
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the info
-     * @throws FileNotFoundException the file not found exception
+     * @throws FileNotFoundException
+     *             the file not found exception
      */
     public static Info getInfo(File file) throws FileNotFoundException {
         Info info = new Info();
@@ -94,15 +100,17 @@ public class StarDictUtils {
     /**
      * Get file bytes byte [ ].
      *
-     * @param file the file
+     * @param file
+     *            the file
      * @return the byte [ ]
-     * @throws IOException the io exception
+     * @throws IOException
+     *             the io exception
      */
     public static byte[] getFileBytes(File file) throws IOException {
         byte[] fileBytes;
         FileInputStream fileIn = new FileInputStream(file);
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[524288];   // 512KB
+        byte[] buffer = new byte[524288]; // 512KB
         int bytesCount;
         while (fileIn.available() != 0) {
             bytesCount = fileIn.read(buffer);
@@ -117,10 +125,13 @@ public class StarDictUtils {
     /**
      * Gets syn.
      *
-     * @param currentIndex the current index
-     * @param fileBytes    the file bytes
+     * @param currentIndex
+     *            the current index
+     * @param fileBytes
+     *            the file bytes
      * @return the syn
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
     public static Syn getSyn(int currentIndex, byte[] fileBytes) throws UnsupportedEncodingException {
         if (currentIndex >= fileBytes.length) {
@@ -151,10 +162,13 @@ public class StarDictUtils {
     /**
      * Gets idx.
      *
-     * @param currentIndex the current index
-     * @param fileBytes    the file bytes
+     * @param currentIndex
+     *            the current index
+     * @param fileBytes
+     *            the file bytes
      * @return the idx
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
     public static Idx getIdx(int currentIndex, byte[] fileBytes) throws UnsupportedEncodingException {
         if (currentIndex >= fileBytes.length) {
@@ -193,9 +207,12 @@ public class StarDictUtils {
     /**
      * Handle.
      *
-     * @param fileName the file name
-     * @param handler  the handler
-     * @throws Exception the exception
+     * @param fileName
+     *            the file name
+     * @param handler
+     *            the handler
+     * @throws Exception
+     *             the exception
      */
     public static void handle(String fileName, Handler handler) throws Exception {
         File idxFile = new File(fileName + ".idx");
@@ -229,11 +246,15 @@ public class StarDictUtils {
     /**
      * Gets definition.
      *
-     * @param fileBytes the file bytes
-     * @param offset    the offset
-     * @param size      the size
+     * @param fileBytes
+     *            the file bytes
+     * @param offset
+     *            the offset
+     * @param size
+     *            the size
      * @return the definition
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
     public static String getDefinition(byte[] fileBytes, int offset, int size) throws UnsupportedEncodingException {
         if (offset >= fileBytes.length) {
@@ -251,14 +272,21 @@ public class StarDictUtils {
         /**
          * Handle boolean.
          *
-         * @param index      the index
-         * @param hasNext    the has next
-         * @param info       the info
-         * @param idx        the idx
-         * @param syn        the syn
-         * @param definition the definition
+         * @param index
+         *            the index
+         * @param hasNext
+         *            the has next
+         * @param info
+         *            the info
+         * @param idx
+         *            the idx
+         * @param syn
+         *            the syn
+         * @param definition
+         *            the definition
          * @return the boolean
-         * @throws Exception the exception
+         * @throws Exception
+         *             the exception
          */
         boolean handle(int index, boolean hasNext, Info info, Idx idx, Syn syn, String definition) throws Exception;
     }
@@ -363,7 +391,8 @@ public class StarDictUtils {
         /**
          * Sets info.
          *
-         * @param info the info
+         * @param info
+         *            the info
          */
         public void setInfo(Map<String, String> info) {
             this.info = info;
@@ -371,9 +400,7 @@ public class StarDictUtils {
 
         @Override
         public String toString() {
-            return "Info{" +
-                    "info=" + info +
-                    '}';
+            return "Info{" + "info=" + info + '}';
         }
     }
 
@@ -400,7 +427,8 @@ public class StarDictUtils {
         /**
          * Sets next index.
          *
-         * @param nextIndex the next index
+         * @param nextIndex
+         *            the next index
          */
         public void setNextIndex(int nextIndex) {
             this.nextIndex = nextIndex;
@@ -418,7 +446,8 @@ public class StarDictUtils {
         /**
          * Sets word.
          *
-         * @param word the word
+         * @param word
+         *            the word
          */
         public void setWord(String word) {
             this.word = word;
@@ -436,7 +465,8 @@ public class StarDictUtils {
         /**
          * Sets data offset.
          *
-         * @param dataOffset the data offset
+         * @param dataOffset
+         *            the data offset
          */
         public void setDataOffset(int dataOffset) {
             this.dataOffset = dataOffset;
@@ -454,7 +484,8 @@ public class StarDictUtils {
         /**
          * Sets data size.
          *
-         * @param dataSize the data size
+         * @param dataSize
+         *            the data size
          */
         public void setDataSize(int dataSize) {
             this.dataSize = dataSize;
@@ -472,7 +503,8 @@ public class StarDictUtils {
         /**
          * Sets current index.
          *
-         * @param currentIndex the current index
+         * @param currentIndex
+         *            the current index
          */
         public void setCurrentIndex(int currentIndex) {
             this.currentIndex = currentIndex;
@@ -500,7 +532,8 @@ public class StarDictUtils {
         /**
          * Sets word.
          *
-         * @param word the word
+         * @param word
+         *            the word
          */
         public void setWord(String word) {
             this.word = word;
@@ -518,7 +551,8 @@ public class StarDictUtils {
         /**
          * Sets current index.
          *
-         * @param currentIndex the current index
+         * @param currentIndex
+         *            the current index
          */
         public void setCurrentIndex(int currentIndex) {
             this.currentIndex = currentIndex;
@@ -536,7 +570,8 @@ public class StarDictUtils {
         /**
          * Sets syn index.
          *
-         * @param synIndex the syn index
+         * @param synIndex
+         *            the syn index
          */
         public void setSynIndex(int synIndex) {
             this.synIndex = synIndex;
@@ -554,12 +589,12 @@ public class StarDictUtils {
         /**
          * Sets next index.
          *
-         * @param nextIndex the next index
+         * @param nextIndex
+         *            the next index
          */
         public void setNextIndex(int nextIndex) {
             this.nextIndex = nextIndex;
         }
     }
-
 
 }

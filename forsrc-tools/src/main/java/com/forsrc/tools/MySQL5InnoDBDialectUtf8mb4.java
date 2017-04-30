@@ -1,6 +1,5 @@
 package com.forsrc.tools;
 
-
 import org.hibernate.dialect.MySQL5InnoDBDialect;
 
 /**

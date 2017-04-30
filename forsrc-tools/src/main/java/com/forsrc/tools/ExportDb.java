@@ -47,15 +47,16 @@ public final class ExportDb {
         if (isInit == null || !"true".equals(isInit)) {
             return;
         }
-        //4.x
-        //SchemaExport export = new SchemaExport(cfg);
-        //export.create(true, false);
-        //ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
-        //.applySettings(cfg.getProperties()).buildServiceRegistry();
-        //SessionFactory sessionFactory = cfg.buildSessionFactory(serviceRegistry);
+        // 4.x
+        // SchemaExport export = new SchemaExport(cfg);
+        // export.create(true, false);
+        // ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+        // .applySettings(cfg.getProperties()).buildServiceRegistry();
+        // SessionFactory sessionFactory =
+        // cfg.buildSessionFactory(serviceRegistry);
         ServiceRegistry serviceRegistry = null;
         try {
-            //5.x
+            // 5.x
             serviceRegistry = new StandardServiceRegistryBuilder().configure().build();
             MetadataImplementor metadata = (MetadataImplementor) new MetadataSources(serviceRegistry).buildMetadata();
             SchemaExport export = new SchemaExport(serviceRegistry, metadata);
@@ -63,7 +64,7 @@ public final class ExportDb {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         } catch (Exception e) {
             e.printStackTrace();
-            //LogUtils.LOGGER.error(e.getMessage(), e);
+            // LogUtils.LOGGER.error(e.getMessage(), e);
         } finally {
             if (serviceRegistry != null) {
                 StandardServiceRegistryBuilder.destroy(serviceRegistry);
@@ -72,13 +73,15 @@ public final class ExportDb {
         }
         Session session = null;
         try {
-            //ServiceRegistry serviceRegistry =  new StandardServiceRegistryBuilder().configure().build();
-            //SessionFactory sessionFactory = new MetadataSources(serviceRegistry).buildMetadata()
-            //.buildSessionFactory();
-            //SessionFactory sessionFactory = HibernateSessionFactory.getSessionFactory();
+            // ServiceRegistry serviceRegistry = new
+            // StandardServiceRegistryBuilder().configure().build();
+            // SessionFactory sessionFactory = new
+            // MetadataSources(serviceRegistry).buildMetadata()
+            // .buildSessionFactory();
+            // SessionFactory sessionFactory =
+            // HibernateSessionFactory.getSessionFactory();
             serviceRegistry = new StandardServiceRegistryBuilder().configure().build();
-            SessionFactory sessionFactory = new MetadataSources(serviceRegistry).buildMetadata()
-                    .buildSessionFactory();
+            SessionFactory sessionFactory = new MetadataSources(serviceRegistry).buildMetadata().buildSessionFactory();
             session = sessionFactory.openSession();
 
             executeNamedQuery(session, "sql_user_insert_admin");
@@ -86,7 +89,7 @@ public final class ExportDb {
             executeNamedQuery(session, "sql_book_insert_init");
         } catch (Exception e) {
             e.printStackTrace();
-            //LogUtils.LOGGER.error(e.getMessage(), e);
+            // LogUtils.LOGGER.error(e.getMessage(), e);
         } finally {
             if (serviceRegistry != null) {
                 StandardServiceRegistryBuilder.destroy(serviceRegistry);
@@ -108,15 +111,16 @@ public final class ExportDb {
             if (transaction != null) {
                 transaction.rollback();
             }
-            //session.close();
-            //LogUtils.LOGGER.error(e.getMessage(), e);
+            // session.close();
+            // LogUtils.LOGGER.error(e.getMessage(), e);
         }
     }
 
     /**
      * The entry point of application.
      *
-     * @param args the input arguments
+     * @param args
+     *            the input arguments
      */
     public static void Main(String[] args) {
 

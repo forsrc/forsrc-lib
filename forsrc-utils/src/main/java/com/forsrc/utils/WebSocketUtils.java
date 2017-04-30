@@ -1,42 +1,40 @@
 package com.forsrc.utils;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * The type Web socket utils.
  */
 public class WebSocketUtils {
 
-    //public static final String SessionAttribute = "isWEB";
+    // public static final String SessionAttribute = "isWEB";
 
     /**
      * Forbidden response string.
      *
      * @return the string
      */
-// Construct a successful websocket handshake response using the key param
+    // Construct a successful websocket handshake response using the key param
     // (See RFC 6455).
     public static String forbiddenResponse() {
 
         // String response = "HTTP/1.1 101 Web Socket Protocol Handshake\r\n";
-        StringBuilder response = new StringBuilder("HTTP/1.1 403 Forbidden\r\n")
-                .append("Connection: close\r\n")
-                .append("Content-Length: 0\r\n")
-                .append("\r\n");
+        StringBuilder response = new StringBuilder("HTTP/1.1 403 Forbidden\r\n").append("Connection: close\r\n")
+                .append("Content-Length: 0\r\n").append("\r\n");
         return response.toString();
     }
 
     /**
      * Handshake response string.
      *
-     * @param key the key
+     * @param key
+     *            the key
      * @return the string
      */
     public static String handshakeResponse(final String key) {
@@ -44,22 +42,18 @@ public class WebSocketUtils {
         // String response = "HTTP/1.1 101 Web Socket Protocol Handshake\r\n";
         StringBuilder response = new StringBuilder("HTTP/1.1 101 Switching Protocols\r\n")
 
-                .append("Upgrade: websocket\r\n")
-                .append("Connection: Upgrade\r\n")
-                .append("Sec-WebSocket-Accept: ")
-                .append(key)
-                .append("\r\n")
+                .append("Upgrade: websocket\r\n").append("Connection: Upgrade\r\n").append("Sec-WebSocket-Accept: ")
+                .append(key).append("\r\n")
                 // added by cooper 2015-06-30
-                .append("Sec-WebSocket-Protocol: v10.stomp\r\n")
-                .append("\r\n");
+                .append("Sec-WebSocket-Protocol: v10.stomp\r\n").append("\r\n");
         return response.toString();
     }
-
 
     /**
      * Parse request map.
      *
-     * @param WSRequest the ws request
+     * @param WSRequest
+     *            the ws request
      * @return the map
      */
     public static Map<String, String> parseRequest(final String WSRequest) {
@@ -82,13 +76,14 @@ public class WebSocketUtils {
     /**
      * Gets client ws request key.
      *
-     * @param WSRequest the ws request
+     * @param WSRequest
+     *            the ws request
      * @return the client ws request key
      */
-// Parse the string as a websocket request and return the value from
-    // Sec-WebSocket-Key header (See RFC 6455). Return empty string if not found.
+    // Parse the string as a websocket request and return the value from
+    // Sec-WebSocket-Key header (See RFC 6455). Return empty string if not
+    // found.
     public static String getClientWSRequestKey(final String WSRequest) {
-
 
         String[] headers = WSRequest.split("\r\n");
         String socketKey = null;
@@ -105,21 +100,26 @@ public class WebSocketUtils {
     /**
      * Gets web socket key challenge response.
      *
-     * @param challenge the challenge
+     * @param challenge
+     *            the challenge
      * @return the web socket key challenge response
-     * @throws NoSuchAlgorithmException     the no such algorithm exception
-     * @throws UnsupportedEncodingException the unsupported encoding exception
+     * @throws NoSuchAlgorithmException
+     *             the no such algorithm exception
+     * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      */
-//
+    //
     // Builds the challenge response to be used in WebSocket handshake.
-    // First append the challenge with "258EAFA5-E914-47DA-95CA-C5AB0DC85B11" and then
+    // First append the challenge with "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+    // and then
     // make a SHA1 hash and finally Base64 encode it. (See RFC 6455)
-    public static String getWebSocketKeyChallengeResponse(final String challenge) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public static String getWebSocketKeyChallengeResponse(final String challenge)
+            throws NoSuchAlgorithmException, UnsupportedEncodingException {
         String challengeStr = challenge;
-        challengeStr.concat("258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+        challengeStr = challengeStr.concat("258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
         MessageDigest cript = MessageDigest.getInstance("SHA-1");
         cript.reset();
-        cript.update(challenge.getBytes("utf8"));
+        cript.update(challengeStr.getBytes("utf8"));
         byte[] hashedVal = cript.digest();
         return new String(new Base64().encode(hashedVal));
     }

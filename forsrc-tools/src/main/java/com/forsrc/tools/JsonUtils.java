@@ -1,15 +1,13 @@
 package com.forsrc.tools;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.type.JavaType;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
-
 
 /**
  * The type Json utils.
@@ -19,8 +17,10 @@ public class JsonUtils {
     /**
      * Gets value.
      *
-     * @param key        the key
-     * @param jsonString the json string
+     * @param key
+     *            the key
+     * @param jsonString
+     *            the json string
      * @return the value
      */
     public static String getValue(String key, String jsonString) {
@@ -37,10 +37,14 @@ public class JsonUtils {
     /**
      * Gets value.
      *
-     * @param <V>        the type parameter
-     * @param key        the key
-     * @param v          the v
-     * @param jsonString the json string
+     * @param <V>
+     *            the type parameter
+     * @param key
+     *            the key
+     * @param v
+     *            the v
+     * @param jsonString
+     *            the json string
      * @return the value
      */
     public static <V> V getValue(String key, Class<V> v, String jsonString) {
@@ -59,9 +63,12 @@ public class JsonUtils {
     /**
      * Sets value.
      *
-     * @param key        the key
-     * @param value      the value
-     * @param jsonString the json string
+     * @param key
+     *            the key
+     * @param value
+     *            the value
+     * @param jsonString
+     *            the json string
      * @return the value
      */
     public static String setValue(String key, String value, String jsonString) {
@@ -80,8 +87,10 @@ public class JsonUtils {
     /**
      * Json to ini string.
      *
-     * @param jsonString the json string
-     * @param session    the session
+     * @param jsonString
+     *            the json string
+     * @param session
+     *            the session
      * @return the string
      */
     public static String jsonToIni(String jsonString, String session) {
@@ -100,8 +109,10 @@ public class JsonUtils {
     /**
      * Json to ini string.
      *
-     * @param jsonNode the json node
-     * @param session  the session
+     * @param jsonNode
+     *            the json node
+     * @param session
+     *            the session
      * @return the string
      */
     public static String jsonToIni(JsonNode jsonNode, String session) {
@@ -114,18 +125,17 @@ public class JsonUtils {
         while (it.hasNext()) {
             String key = it.next();
 
-            sb.append(key).append("=").append(jsonNode.get(key))
-                    .append("\n");
+            sb.append(key).append("=").append(jsonNode.get(key)).append("\n");
         }
         return sb.toString();
 
     }
 
-
     /**
      * Json to println string.
      *
-     * @param json the json
+     * @param json
+     *            the json
      * @return the string
      */
     public static String jsonToPrintln(String json) {
@@ -142,8 +152,10 @@ public class JsonUtils {
     /**
      * Json to println string.
      *
-     * @param json  the json
-     * @param index the index
+     * @param json
+     *            the json
+     * @param index
+     *            the index
      * @return the string
      */
     public static String jsonToPrintln(String json, int index) {

@@ -1,12 +1,10 @@
 package com.forsrc.tools;
 
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * The type Session utils.
@@ -28,15 +26,18 @@ public class SessionUtils {
      * @return the httpServletRequest
      */
     public static HttpServletRequest getHttpServletRequest() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest();
         return request;
     }
 
     /**
      * Get t.
      *
-     * @param <T> the type parameter
-     * @param key the key
+     * @param <T>
+     *            the type parameter
+     * @param key
+     *            the key
      * @return the t
      */
     public static <T> T get(String key) {
@@ -47,9 +48,12 @@ public class SessionUtils {
     /**
      * Get t.
      *
-     * @param <T>     the type parameter
-     * @param session the session
-     * @param key     the key
+     * @param <T>
+     *            the type parameter
+     * @param session
+     *            the session
+     * @param key
+     *            the key
      * @return the t
      */
     public static <T> T get(HttpSession session, String key) {

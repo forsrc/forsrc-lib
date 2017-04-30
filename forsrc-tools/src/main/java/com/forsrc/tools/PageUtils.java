@@ -16,8 +16,10 @@ public final class PageUtils {
     /**
      * Gets total page.
      *
-     * @param size  the size
-     * @param total the total
+     * @param size
+     *            the size
+     * @param total
+     *            the total
      * @return the total page
      */
     public static int getTotalPage(final int size, final long total) {

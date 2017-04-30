@@ -17,12 +17,13 @@
 
 package com.forsrc.tools;
 
-import com.forsrc.utils.AesUtils;
-import com.forsrc.utils.AesUtils.AesException;
+import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
-import javax.sql.DataSource;
+import com.forsrc.utils.AesUtils;
+import com.forsrc.utils.AesUtils.AesException;
 
 //import org.apache.commons.dbcp.BasicDataSource;
 
@@ -38,18 +39,18 @@ public class EncryptionLocalContainerEntityManagerFactoryBean extends LocalConta
 
         String password = null;
 
-//        if (dataSource instanceof BasicDataSource) {
-//            password = ((BasicDataSource) dataSource).getPassword();
-//        }
+        // if (dataSource instanceof BasicDataSource) {
+        // password = ((BasicDataSource) dataSource).getPassword();
+        // }
 
         if (dataSource instanceof com.atomikos.jdbc.AtomikosDataSourceBean) {
-            password = ((com.atomikos.jdbc.AtomikosDataSourceBean) dataSource).getXaProperties().getProperty("password");
+            password = ((com.atomikos.jdbc.AtomikosDataSourceBean) dataSource).getXaProperties()
+                    .getProperty("password");
         }
 
         if (dataSource instanceof com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean) {
             password = ((com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean) dataSource).getPassword();
         }
-
 
         String decryPassword = null;
         try {
@@ -58,12 +59,13 @@ public class EncryptionLocalContainerEntityManagerFactoryBean extends LocalConta
             decryPassword = password;
         }
 
-//        if (dataSource instanceof BasicDataSource) {
-//            ((BasicDataSource) dataSource).setPassword(decryPassword);
-//        }
+        // if (dataSource instanceof BasicDataSource) {
+        // ((BasicDataSource) dataSource).setPassword(decryPassword);
+        // }
 
         if (dataSource instanceof com.atomikos.jdbc.AtomikosDataSourceBean) {
-            ((com.atomikos.jdbc.AtomikosDataSourceBean) dataSource).getXaProperties().setProperty("password", decryPassword);
+            ((com.atomikos.jdbc.AtomikosDataSourceBean) dataSource).getXaProperties().setProperty("password",
+                    decryPassword);
         }
 
         if (dataSource instanceof com.atomikos.jdbc.nonxa.AtomikosNonXADataSourceBean) {
