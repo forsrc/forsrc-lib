@@ -52,14 +52,14 @@
     <sql-query name="sql_user_insert_admin_">
         <![CDATA[
              INSERT INTO
-                            my_study_user
+                            t_user
                             (id, username, password, email, status, is_admin, create_on, update_on, version)
              VALUES
                             (1, 'admin', 'EdbQzHVPKsmmwIOtmJOHJg==', 'forsrc@163.com', 1, 1, '2016-07-07 12:00:00', '2016-07-07 12:00:00', 1)
              ;
 
              INSERT INTO
-                            my_study_user
+                            t_user
                             (id, username, password, email, status, is_admin, create_on, update_on, version)
              VALUES
                             (2, 'forsrc', 'EdbQzHVPKsmmwIOtmJOHJg==', 'forsrc-@163.com', 1, 0, '2016-07-07 12:00:00', '2016-07-07 12:00:00', 1)
@@ -71,14 +71,14 @@
     <sql-query name="sql_user_insert_admin">
         <![CDATA[
              INSERT INTO
-                            my_study_user
+                            t_user
                             (id, username, email, status, is_admin, create_on, update_on, version)
              VALUES
                             (1, 'admin', 'forsrc@163.com', 1, 1, '2016-07-07 12:00:00', '2016-07-07 12:00:00', 1)
              ;
 
              INSERT INTO
-                            my_study_user
+                            t_user
                             (id, username, email, status, is_admin, create_on, update_on, version)
              VALUES
                             (2, 'forsrc', 'forsrc-@163.com', 1, 0, '2016-07-07 12:00:00', '2016-07-07 12:00:00', 1)
@@ -92,7 +92,7 @@
              SELECT
                     obj.id, obj.username, obj.status, obj.is_admin, obj.email, obj.image, obj.create_on, obj.update_on, obj.version, obj.status
              FROM
-                    my_study_user obj
+                    t_user obj
              WHERE
                     obj.username = :username
                     and
@@ -109,7 +109,7 @@
              SELECT
                     obj.id, obj.username, obj.password, obj.status, obj.is_admin, obj.email, obj.image, obj.create_on, obj.update_on, obj.version, obj.status
              FROM
-                    my_study_user obj
+                    t_user obj
              WHERE
                     obj.username = :username
                     and
