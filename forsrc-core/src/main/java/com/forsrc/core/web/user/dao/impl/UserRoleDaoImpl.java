@@ -1,12 +1,14 @@
 package com.forsrc.core.web.user.dao.impl;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Repository;
+
 import com.forsrc.core.base.dao.impl.BaseDaoImpl;
 import com.forsrc.core.web.user.dao.UserRoleDao;
 import com.forsrc.pojo.UserRole;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import java.util.List;
 
 @Repository
 public class UserRoleDaoImpl extends BaseDaoImpl<UserRole, Long> implements UserRoleDao {

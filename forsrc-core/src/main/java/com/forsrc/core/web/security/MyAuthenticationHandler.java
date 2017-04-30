@@ -1,7 +1,12 @@
 package com.forsrc.core.web.security;
 
-import com.forsrc.core.web.user.service.UserService;
-import com.forsrc.pojo.User;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -14,11 +19,8 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import com.forsrc.core.web.user.service.UserService;
+import com.forsrc.pojo.User;
 
 public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSuccessHandler
         implements AuthenticationFailureHandler, LogoutHandler {
@@ -28,10 +30,8 @@ public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSucc
     private UserService userService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
-
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
 
         HttpSession session = request.getSession();
         SecurityContext sc = SecurityContextHolder.getContext();
@@ -43,7 +43,7 @@ public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSucc
         }
         System.out.println(String.format("--> onAuthenticationSuccess(): %s", sc.getAuthentication().getName()));
 
-        //clearAuthenticationAttributes(request);
+        // clearAuthenticationAttributes(request);
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest == null) {
@@ -60,7 +60,8 @@ public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSucc
     }
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException ae) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException ae) throws IOException, ServletException {
         SecurityContext sc = SecurityContextHolder.getContext();
         System.out.println(String.format("--> onAuthenticationFailure(): %s", sc.getAuthentication().getName()));
         SecurityContextHolder.clearContext();

@@ -1,20 +1,26 @@
 package com.forsrc.core.web.security;
 
-import com.forsrc.pojo.Role;
-import com.forsrc.pojo.UserPrivacy;
-import com.forsrc.pojo.UserRole;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import com.forsrc.pojo.Role;
+import com.forsrc.pojo.UserPrivacy;
+import com.forsrc.pojo.UserRole;
 
 public class MyUserDetails implements UserDetails {
+
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = -4063306962694515085L;
 
     @Autowired
     private SecurityService securityService;
@@ -31,7 +37,7 @@ public class MyUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<GrantedAuthority> auths = new ArrayList<>();
-        //auths.add(new SimpleGrantedAuthority("ROLE_TEST"));
+        // auths.add(new SimpleGrantedAuthority("ROLE_TEST"));
         List<UserRole> userRoles = securityService.findByUserId(userPrivacy.getUserId());
         for (UserRole userRole : userRoles) {
             Role role = roles.get(userRole.getRoleId());

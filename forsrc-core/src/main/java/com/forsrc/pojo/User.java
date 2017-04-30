@@ -1,27 +1,25 @@
 package com.forsrc.pojo;
 
-
 import java.text.MessageFormat;
 import java.util.Date;
-
 
 /**
  * The type User.
  */
-//@Entity
-//@Table(name = "user")
-//@Document(coreName="collection1")
+// @Entity
+// @Table(name = "user")
+// @Document(coreName="collection1")
 public class User implements java.io.Serializable {
 
     // Fields
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //@Temporal(javax.persistence.TemporalType.DATE)
+    // @Temporal(javax.persistence.TemporalType.DATE)
     private Date updateOn;
-    //@Temporal(javax.persistence.TemporalType.DATE)
+    // @Temporal(javax.persistence.TemporalType.DATE)
     private Date createOn;
-    //@Indexed(solrType="text_general")
+    // @Indexed(solrType="text_general")
     private String username;
     private String email;
     private int status; // 0: delete; 1: OK; 2: NG
@@ -40,7 +38,8 @@ public class User implements java.io.Serializable {
     /**
      * Instantiates a new User.
      *
-     * @param id the id
+     * @param id
+     *            the id
      */
     public User(Long id) {
         this.id = id;
@@ -60,7 +59,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets id.
      *
-     * @param id the id
+     * @param id
+     *            the id
      */
     public void setId(Long id) {
         this.id = id;
@@ -78,7 +78,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets username.
      *
-     * @param username the username
+     * @param username
+     *            the username
      */
     public void setUsername(String username) {
         this.username = username;
@@ -96,7 +97,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets status.
      *
-     * @param status the status
+     * @param status
+     *            the status
      */
     public void setStatus(Integer status) {
         this.status = status;
@@ -123,7 +125,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets update on.
      *
-     * @param updateOn the update on
+     * @param updateOn
+     *            the update on
      */
     public void setUpdateOn(Date updateOn) {
         this.updateOn = updateOn;
@@ -132,7 +135,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets admin.
      *
-     * @param admin the admin
+     * @param admin
+     *            the admin
      */
     public void setAdmin(Boolean admin) {
         this.isAdmin = admin;
@@ -150,7 +154,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets is admin.
      *
-     * @param admin the admin
+     * @param admin
+     *            the admin
      */
     public void setIsAdmin(Boolean admin) {
         this.isAdmin = admin;
@@ -168,7 +173,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets email.
      *
-     * @param email the email
+     * @param email
+     *            the email
      */
     public void setEmail(String email) {
         this.email = email;
@@ -186,7 +192,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets image.
      *
-     * @param image the image
+     * @param image
+     *            the image
      */
     public void setImage(String image) {
         this.image = image;
@@ -204,7 +211,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets create on.
      *
-     * @param createOn the create on
+     * @param createOn
+     *            the create on
      */
     public void setCreateOn(Date createOn) {
         this.createOn = createOn;
@@ -222,7 +230,8 @@ public class User implements java.io.Serializable {
     /**
      * Sets version.
      *
-     * @param version the version
+     * @param version
+     *            the version
      */
     public void setVersion(int version) {
         this.version = version;
@@ -232,6 +241,5 @@ public class User implements java.io.Serializable {
     public String toString() {
         return MessageFormat.format("'{'\"id\" : \"{0}\", \"email\" : \"{1}\"'}'", id, email);
     }
-
 
 }

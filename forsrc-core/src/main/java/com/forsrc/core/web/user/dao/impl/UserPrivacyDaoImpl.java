@@ -1,11 +1,12 @@
 package com.forsrc.core.web.user.dao.impl;
 
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Repository;
+
 import com.forsrc.core.base.dao.impl.BaseDaoImpl;
 import com.forsrc.core.web.user.dao.UserPrivacyDao;
 import com.forsrc.pojo.UserPrivacy;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
 
 @Repository
 public class UserPrivacyDaoImpl extends BaseDaoImpl<UserPrivacy, Long> implements UserPrivacyDao {

@@ -78,6 +78,7 @@ public class RoleUrl implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("'{'\"id\" : \"{0}\", \"userId\" : \"{1}\"', \"roleId\" : \"{2}\"'}'", id, url, roleId);
+        return MessageFormat.format("'{'\"id\" : \"{0}\", \"userId\" : \"{1}\"', \"roleId\" : \"{2}\"'}'", id, url,
+                roleId);
     }
 }

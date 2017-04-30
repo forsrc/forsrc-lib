@@ -1,9 +1,7 @@
 package com.forsrc.pojo;
 
-
 import java.text.MessageFormat;
 import java.util.Date;
-
 
 public class UserRole implements java.io.Serializable {
 
@@ -17,7 +15,6 @@ public class UserRole implements java.io.Serializable {
 
     public UserRole() {
     }
-
 
     public UserRole(Long id) {
         this.id = id;
@@ -81,8 +78,8 @@ public class UserRole implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("'{'\"id\" : \"{0}\", \"userId\" : \"{1}\",\"roleId\" : \"{2}\"'}'", id, userId, roleId);
+        return MessageFormat.format("'{'\"id\" : \"{0}\", \"userId\" : \"{1}\",\"roleId\" : \"{2}\"'}'", id, userId,
+                roleId);
     }
-
 
 }

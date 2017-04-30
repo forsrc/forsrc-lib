@@ -6,19 +6,19 @@ import java.util.Date;
 /**
  * The type UserPrivacy.
  */
-//@Entity
-//@Table(name = "user_privacy")
+// @Entity
+// @Table(name = "user_privacy")
 public class UserPrivacy implements java.io.Serializable {
 
     // Fields
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long userId;
     private String username;
-    //@Temporal(javax.persistence.TemporalType.DATE)
+    // @Temporal(javax.persistence.TemporalType.DATE)
     private Date createOn;
-    //@Temporal(javax.persistence.TemporalType.DATE)
+    // @Temporal(javax.persistence.TemporalType.DATE)
     private Date updateOn;
     private String password;
     private int version;
@@ -41,7 +41,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Instantiates a new User.
      *
-     * @param id the id
+     * @param id
+     *            the id
      */
     public UserPrivacy(Long id) {
         this.id = id;
@@ -61,7 +62,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Sets id.
      *
-     * @param id the id
+     * @param id
+     *            the id
      */
     public void setId(Long id) {
         this.id = id;
@@ -79,7 +81,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Sets username.
      *
-     * @param username the username
+     * @param username
+     *            the username
      */
     public void setUsername(String username) {
         this.username = username;
@@ -97,7 +100,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Sets password.
      *
-     * @param password the password
+     * @param password
+     *            the password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -115,7 +119,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Sets update on.
      *
-     * @param updateOn the update on
+     * @param updateOn
+     *            the update on
      */
     public void setUpdateOn(Date updateOn) {
         this.updateOn = updateOn;
@@ -133,7 +138,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Sets create on.
      *
-     * @param createOn the create on
+     * @param createOn
+     *            the create on
      */
     public void setCreateOn(Date createOn) {
         this.createOn = createOn;
@@ -151,7 +157,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Sets version.
      *
-     * @param version the version
+     * @param version
+     *            the version
      */
     public void setVersion(int version) {
         this.version = version;
@@ -182,7 +189,8 @@ public class UserPrivacy implements java.io.Serializable {
     /**
      * Sets status.
      *
-     * @param status the status
+     * @param status
+     *            the status
      */
     public void setStatus(Integer status) {
         this.status = status;
