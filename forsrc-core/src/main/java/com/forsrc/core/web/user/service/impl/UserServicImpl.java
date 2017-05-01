@@ -3,6 +3,7 @@ package com.forsrc.core.web.user.service.impl;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,16 +30,27 @@ public class UserServicImpl implements UserService {
     }
 
     @Override
-    public void save(User user, char[] password) {
+    public void save(User user, byte[] password) {
         System.out.println(MessageFormat.format("---> has {0} users.", userDao.count()));
         userDao.save(user);
         UserPrivacy userPrivacy = new UserPrivacy();
         userPrivacy.setUserId(user.getId());
-        userPrivacy.setPassword(String.valueOf(password));
+        byte[] username = user.getUsername().getBytes();
+        userPrivacy.setPassword(getPassword(username, password));
         userPrivacy.setUsername(user.getUsername());
         userPrivacyDao.save(userPrivacy);
         System.out.println(MessageFormat.format("---> has {0} users.", userDao.count()));
         // throw new RuntimeException("Test Transactional");
+    }
+
+    private String getPassword(byte[] username, byte[] password) {
+        byte[] split = "/".getBytes();
+        byte[] pwd = new byte[username.length + split.length + password.length + 1];
+        System.arraycopy(username, 0, pwd, 0, username.length);
+        System.arraycopy(split, 0, pwd, username.length, split.length);
+        System.arraycopy(password, 0, pwd, username.length + split.length, password.length);
+        String pw = DigestUtils.md5Hex(pwd);
+        return pw;
     }
 
     @Override
@@ -67,5 +79,10 @@ public class UserServicImpl implements UserService {
     @Override
     public UserPrivacy findByUsername(String username) {
         return userPrivacyDao.findByUsername(username);
+    }
+
+    @Override
+    public long count() {
+        return userDao.count();
     }
 }

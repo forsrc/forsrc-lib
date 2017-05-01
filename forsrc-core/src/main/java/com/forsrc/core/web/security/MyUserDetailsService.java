@@ -1,8 +1,8 @@
 package com.forsrc.core.web.security;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +13,8 @@ import com.forsrc.pojo.Role;
 import com.forsrc.pojo.UserPrivacy;
 
 public class MyUserDetailsService implements UserDetailsService {
+
+    private static final Map<Long, Role> MAP_ROLES = new ConcurrentHashMap<>(10);
 
     @Autowired
     private SecurityService securityService;
@@ -44,11 +46,16 @@ public class MyUserDetailsService implements UserDetailsService {
     }
 
     private Map<Long, Role> getRoles() {
-        Map<Long, Role> map = new HashMap<>();
-        List<Role> roles = securityService.getRoles();
-        for (Role role : roles) {
-            map.put(role.getId(), role);
+        if (MAP_ROLES.isEmpty()) {
+            synchronized (MAP_ROLES) {
+                if (MAP_ROLES.isEmpty()) {
+                    List<Role> roles = securityService.getRoles();
+                    for (Role role : roles) {
+                        MAP_ROLES.put(role.getId(), role);
+                    }
+                }
+            }
         }
-        return map;
+        return MAP_ROLES;
     }
 }

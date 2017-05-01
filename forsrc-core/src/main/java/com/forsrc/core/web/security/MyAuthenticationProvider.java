@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class MyAuthenticationProvider implements AuthenticationProvider {
 
@@ -25,8 +26,9 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException(String.format("Null password for: %s", username));
         }
         UserDetails userDetails = myUserDetailsService.loadUserByUsername(username);
-        String md5 = DigestUtils.md5Hex(String.format("%s/%s", username, password));
-        if (!md5.equals(userDetails.getPassword())) {
+        String md5 = getPassword(username.getBytes(), password.getBytes());
+        boolean match = new BCryptPasswordEncoder().matches(md5, userDetails.getPassword());
+        if (!match) {
             throw new BadCredentialsException(String.format("Invalid password for: %s", username));
         }
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
@@ -36,5 +38,15 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         return true;
+    }
+
+    private String getPassword(byte[] username, byte[] password) {
+        byte[] split = "/".getBytes();
+        byte[] pwd = new byte[username.length + split.length + password.length + 1];
+        System.arraycopy(username, 0, pwd, 0, username.length);
+        System.arraycopy(split, 0, pwd, username.length, split.length);
+        System.arraycopy(password, 0, pwd, username.length + split.length, password.length);
+        String pw = DigestUtils.md5Hex(pwd);
+        return pw;
     }
 }

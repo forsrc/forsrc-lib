@@ -15,11 +15,14 @@ import com.forsrc.pojo.UserPrivacy;
 @Service
 public interface UserService {
 
+    @Transactional(transactionManager = "transactionManager", propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+    long count();
+
     @Transactional(transactionManager = "transactionManager", value = "transactionManager", propagation = Propagation.REQUIRED, readOnly = false)
     void save(User user);
 
     @Transactional(transactionManager = "transactionManager", value = "transactionManager", propagation = Propagation.REQUIRED, readOnly = false)
-    void save(User user, char[] password);
+    void save(User user, byte[] password);
 
     @Transactional(transactionManager = "transactionManager", propagation = Propagation.REQUIRED, readOnly = false)
     void delete(User user);
