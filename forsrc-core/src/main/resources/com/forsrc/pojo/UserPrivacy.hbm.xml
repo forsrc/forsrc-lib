@@ -21,7 +21,7 @@
         </property>
 
         <property name="password" type="java.lang.String" update="false">
-            <column name="password" not-null="true" default="'EdbQzHVPKsmmwIOtmJOHJg=='" length="30"/>
+            <column name="password" not-null="true" default="" length="200"/>
         </property>
 
         <property name="createOn" type="java.util.Date" update="false" insert="false" generated="insert" access="field">
@@ -73,8 +73,8 @@
     <sql-query name="sql_user_privacy_init" read-only="false">
         <![CDATA[
             INSERT INTO t_user_privacy (id, user_id, username, password, version, status) VALUES (1, 1, 'admin', '43774362f02a1f598f5f4a78bea10219', 0, 1);
-            INSERT INTO t_user_privacy (id, user_id, username, password, version, status) VALUES (2, 2, 'user',  '85316ec12f98340533da198c42c38a00',  0, 1);
-            INSERT INTO t_user_privacy (id, user_id, username, password, version, status) VALUES (3, 3, 'test',  '264856fe25533de5d0bf5597155070e0',  0, 1);
+            INSERT INTO t_user_privacy (id, user_id, username, password, version, status) VALUES (2, 2, 'user',  '85316ec12f98340533da198c42c38a00', 0, 1);
+            INSERT INTO t_user_privacy (id, user_id, username, password, version, status) VALUES (3, 3, 'test',  '264856fe25533de5d0bf5597155070e0', 0, 1);
          ]]>
     </sql-query>
 
