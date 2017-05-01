@@ -16,5 +16,5 @@ public interface RoleDao extends BaseDao<Role, Long> {
     @Cacheable
     List<Role> getRoles();
 
-    List<Role> findRoleNamesByUserId();
+    List<Role> findRoleNamesByUserId(Long userId);
 }
