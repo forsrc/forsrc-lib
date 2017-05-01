@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import com.forsrc.pojo.UserPrivacy;
 @Service
 public class UserServicImpl implements UserService {
 
+    private final Log logger = LogFactory.getLog(getClass());
     @Autowired
     private UserDao userDao;
 
@@ -31,7 +34,7 @@ public class UserServicImpl implements UserService {
 
     @Override
     public void save(User user, byte[] password) {
-        System.out.println(MessageFormat.format("---> has {0} users.", userDao.count()));
+        logger.info(MessageFormat.format("---> has {0} users.", userDao.count()));
         userDao.save(user);
         UserPrivacy userPrivacy = new UserPrivacy();
         userPrivacy.setUserId(user.getId());
@@ -39,7 +42,7 @@ public class UserServicImpl implements UserService {
         userPrivacy.setPassword(getPassword(username, password));
         userPrivacy.setUsername(user.getUsername());
         userPrivacyDao.save(userPrivacy);
-        System.out.println(MessageFormat.format("---> has {0} users.", userDao.count()));
+        logger.info(MessageFormat.format("---> has {0} users.", userDao.count()));
         // throw new RuntimeException("Test Transactional");
     }
 

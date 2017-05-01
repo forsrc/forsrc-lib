@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +16,8 @@ import com.forsrc.pojo.UserPrivacy;
 
 public class MyUserDetailsService implements UserDetailsService {
 
+    private final Log logger = LogFactory.getLog(getClass());
+
     private static final Map<Long, Role> MAP_ROLES = new ConcurrentHashMap<>(10);
 
     @Autowired
@@ -22,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserPrivacy user = this.getUserByUsername(username);
-        System.out.println(String.format("--> MyUserDetailsService.loadUserByUsername() --> User is : %s", username));
+        logger.info(String.format("--> MyUserDetailsService.loadUserByUsername() --> User is : %s", username));
         Map<Long, Role> roles = getRoles();
         MyUserDetails myUserDetails = new MyUserDetails(securityService, user, roles);
         return myUserDetails;
@@ -36,7 +40,7 @@ public class MyUserDetailsService implements UserDetailsService {
             user = null;
         }
         if (user == null) {
-            System.out.println(
+            logger.info(
                     String.format("--> MyUserDetailsService.loadUserByUsername() --> User is not exist: %s", username));
             throw new UsernameNotFoundException(String.format("User is not exist: %s", username));
             // throw new BadCredentialsException(String.format("User is not
