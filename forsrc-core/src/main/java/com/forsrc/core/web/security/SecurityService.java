@@ -33,4 +33,8 @@ public class SecurityService {
     List<Role> getRoles() {
         return roleService.getRoles();
     }
+
+    List<Role> findRoleNamesByUserId(Long userId) {
+        return roleService.findRoleNamesByUserId(userId);
+    }
 }

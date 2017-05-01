@@ -9,7 +9,7 @@ import com.forsrc.core.base.dao.BaseDao;
 import com.forsrc.pojo.User;
 
 @Repository
-@CacheConfig(cacheNames = "ehcache_pojp")
+@CacheConfig(cacheNames = "ehcache_pojo")
 public interface UserDao extends BaseDao<User, Long> {
 
     List<User> findByUsername(String username);

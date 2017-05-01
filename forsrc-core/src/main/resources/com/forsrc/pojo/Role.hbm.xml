@@ -63,6 +63,28 @@
          ]]>
     </sql-query>
 
+    <sql-query name="sql_role_findRoleNamesByUserId" read-only="true">
+        <![CDATA[
+             SELECT
+                    obj.id, obj.name, obj.create_on, obj.update_on, obj.version, obj.status
+             FROM
+                    t_role obj
+             INNER JOIN
+                    t_user_role ur
+             ON
+                    obj.id = ur.role_id
+             WHERE
+                    ur.user_id = :userId
+                    and
+                    ur.status = 1
+                    and
+                    obj.status = 1
+
+         ]]>
+        <query-param name="userId" type="java.lang.String"/>
+        <return alias="obj" class="com.forsrc.pojo.Role"/>
+    </sql-query>
+
     <database-object>
         <create>
         </create>

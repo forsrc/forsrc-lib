@@ -9,8 +9,10 @@ import com.forsrc.core.base.dao.BaseDao;
 import com.forsrc.pojo.UserRole;
 
 @Repository
-@CacheConfig(cacheNames = "ehcache_pojp")
+@CacheConfig(cacheNames = "ehcache_pojo")
 public interface UserRoleDao extends BaseDao<UserRole, Long> {
 
     List<UserRole> findByUserId(Long userId);
+
+    List<UserRole> findRoleNamesByUserId(Long userId);
 }

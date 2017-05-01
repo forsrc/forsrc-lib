@@ -38,12 +38,9 @@ public class MyUserDetails implements UserDetails {
 
         List<GrantedAuthority> auths = new ArrayList<>();
         // auths.add(new SimpleGrantedAuthority("ROLE_TEST"));
-        List<UserRole> userRoles = securityService.findByUserId(userPrivacy.getUserId());
-        for (UserRole userRole : userRoles) {
-            Role role = roles.get(userRole.getRoleId());
-            if (role != null) {
-                auths.add(new SimpleGrantedAuthority(role.getName()));
-            }
+        List<Role> roles = securityService.findRoleNamesByUserId(userPrivacy.getUserId());
+        for (Role role : roles) {
+            auths.add(new SimpleGrantedAuthority(role.getName()));
         }
         return auths;
     }

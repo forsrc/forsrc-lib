@@ -16,4 +16,7 @@ public interface RoleService {
 
     @Transactional(transactionManager = "transactionManager", propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     List<Role> getRoles();
+
+    @Transactional(transactionManager = "transactionManager", propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+    List<Role> findRoleNamesByUserId(Long userId);
 }

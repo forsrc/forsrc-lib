@@ -10,9 +10,11 @@ import com.forsrc.core.base.dao.BaseDao;
 import com.forsrc.pojo.Role;
 
 @Repository
-@CacheConfig(cacheNames = "ehcache_pojp")
+@CacheConfig(cacheNames = "ehcache_pojo")
 public interface RoleDao extends BaseDao<Role, Long> {
 
     @Cacheable
     List<Role> getRoles();
+
+    List<Role> findRoleNamesByUserId();
 }
