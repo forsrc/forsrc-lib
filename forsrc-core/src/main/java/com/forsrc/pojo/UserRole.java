@@ -1,8 +1,11 @@
 package com.forsrc.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.text.MessageFormat;
 import java.util.Date;
 
+@JsonIgnoreProperties(value = {"user", "role"})
 public class UserRole implements java.io.Serializable {
 
     private Long id;
@@ -12,6 +15,9 @@ public class UserRole implements java.io.Serializable {
     private Date createOn;
     private int status; // 0: delete; 1: OK; 2: NG
     private int version;
+
+    private User user;
+    private Role role;
 
     public UserRole() {
     }
@@ -74,6 +80,22 @@ public class UserRole implements java.io.Serializable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override

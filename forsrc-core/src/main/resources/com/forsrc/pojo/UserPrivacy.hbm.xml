@@ -10,8 +10,8 @@
             <generator class="increment"/>
         </id>
 
-
         <version name="version" column="version" type="integer"></version>
+
 
         <!--
         <timestamp name="updateOn" column="update_on" generated="always"></timestamp>
@@ -28,10 +28,6 @@
             <column name="create_on" default="CURRENT_TIMESTAMP" not-null="true"/>
         </property>
 
-        <property name="userId" type="java.lang.Long" update="false">
-            <column name="user_id" not-null="true" unique="true"/>
-        </property>
-
         <property name="username" type="java.lang.String" update="false">
             <column name="username" not-null="true" unique="true" length="30" index="index_user_privacy_username"/>
         </property>
@@ -39,6 +35,12 @@
         <property name="status" type="java.lang.Integer" update="false">
             <column name="status" default="1" length="1" not-null="true"/>
         </property>
+ 
+         <property name="userId" type="java.lang.Long" insert="false" update="false">
+            <column name="user_id" not-null="true" unique="true"/>
+        </property>
+        <many-to-one name="user" class="User" column="user_id" unique="true"></many-to-one>
+ 
     </class>
     <sql-query name="sql_user_privacy_update_password">
         <![CDATA[

@@ -2,6 +2,10 @@ package com.forsrc.pojo;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 /**
  * The type User.
@@ -9,6 +13,7 @@ import java.util.Date;
 // @Entity
 // @Table(name = "user")
 // @Document(coreName="collection1")
+@JsonIgnoreProperties(value = {"userPrivacy"})
 public class User implements java.io.Serializable {
 
     // Fields
@@ -26,6 +31,10 @@ public class User implements java.io.Serializable {
     private Boolean isAdmin;
     private String image;
     private int version;
+
+    private UserPrivacy userPrivacy;
+    private Set<UserRole> userRoles;
+    private Set<Role> roles;
 
     // Constructors
 
@@ -235,6 +244,34 @@ public class User implements java.io.Serializable {
      */
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public UserPrivacy getUserPrivacy() {
+        return userPrivacy;
+    }
+
+    public void setUserPrivacy(UserPrivacy userPrivacy) {
+        this.userPrivacy = userPrivacy;
+    }
+
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override

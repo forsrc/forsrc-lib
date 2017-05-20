@@ -8,22 +8,22 @@ import org.apache.solr.common.SolrException;
 
 public class SolrUtils {
 
-    public static HttpSolrClient connect(Properties properties) throws SolrException {
-
-        HttpSolrClient httpSolrClient = null;
-
-        httpSolrClient = new HttpSolrClient.Builder(properties.getProperty(SolrProperties.baseSolrUrl.getKey()))
-                .build();
-        httpSolrClient.setParser(new XMLResponseParser());
-        int timeout = 5 * 1000;
-
-        httpSolrClient.setConnectionTimeout(5 * 1000);
-        httpSolrClient.setMaxTotalConnections(10);
-        httpSolrClient.setAllowCompression(true);
-        httpSolrClient.setDefaultMaxConnectionsPerHost(100);
-        httpSolrClient.setFollowRedirects(false);
-        return httpSolrClient;
-    }
+//    public static HttpSolrClient connect(Properties properties) throws SolrException {
+//
+//        HttpSolrClient httpSolrClient = null;
+//
+//        httpSolrClient = new HttpSolrClient.Builder(properties.getProperty(SolrProperties.baseSolrUrl.getKey()))
+//                .build();
+//        httpSolrClient.setParser(new XMLResponseParser());
+//        int timeout = 5 * 1000;
+//
+//        httpSolrClient.setConnectionTimeout(5 * 1000);
+//        httpSolrClient.setMaxTotalConnections(10);
+//        httpSolrClient.setAllowCompression(true);
+//        httpSolrClient.setDefaultMaxConnectionsPerHost(100);
+//        httpSolrClient.setFollowRedirects(false);
+//        return httpSolrClient;
+//    }
 
     public enum SolrProperties {
 

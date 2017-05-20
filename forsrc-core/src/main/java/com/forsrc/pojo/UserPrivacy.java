@@ -24,6 +24,8 @@ public class UserPrivacy implements java.io.Serializable {
     private int version;
     private int status; // 0: delete; 1: OK; 2: NG
 
+    private User user;
+
     // Constructors
 
     /**
@@ -195,4 +197,17 @@ public class UserPrivacy implements java.io.Serializable {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
 }

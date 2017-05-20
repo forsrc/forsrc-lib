@@ -35,6 +35,7 @@
         <property name="status" type="java.lang.Integer" update="false">
             <column name="status" default="1" length="1" not-null="true"/>
         </property>
+
     </class>
     <sql-query name="sql_role_updateName">
         <![CDATA[
