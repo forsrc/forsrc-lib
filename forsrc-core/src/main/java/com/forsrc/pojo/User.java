@@ -34,7 +34,6 @@ public class User implements java.io.Serializable {
 
     private UserPrivacy userPrivacy;
     private Set<UserRole> userRoles;
-    private Set<Role> roles;
 
     // Constructors
 
@@ -260,14 +259,6 @@ public class User implements java.io.Serializable {
 
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     public void setStatus(int status) {

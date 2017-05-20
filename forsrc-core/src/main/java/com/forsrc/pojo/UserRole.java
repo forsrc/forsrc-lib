@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.text.MessageFormat;
 import java.util.Date;
 
-@JsonIgnoreProperties(value = {"user", "role"})
+@JsonIgnoreProperties(value = {"user"})
 public class UserRole implements java.io.Serializable {
 
     private Long id;
