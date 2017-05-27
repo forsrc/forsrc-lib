@@ -38,6 +38,8 @@ public class MyUserDetailsService implements UserDetailsService {
             user = securityService.findByUsername(username);
         } catch (RuntimeException e) {
             user = null;
+            System.err.println(e.getMessage());
+            throw new UsernameNotFoundException(e.getMessage());
         }
         if (user == null) {
             logger.info(
