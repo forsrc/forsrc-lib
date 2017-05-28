@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.forsrc.core.base.dao.impl.BaseDaoImpl;

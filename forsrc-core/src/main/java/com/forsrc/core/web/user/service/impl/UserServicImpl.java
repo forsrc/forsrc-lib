@@ -7,6 +7,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +22,8 @@ import com.forsrc.pojo.UserPrivacy;
 
 @Transactional
 @Service
+@Cacheable(key = "userServiceCache", keyGenerator = "keyGenerator")
+@CacheConfig(cacheNames = "ehcache_10m")
 public class UserServicImpl implements UserService {
 
     private final Log logger = LogFactory.getLog(getClass());
@@ -28,11 +34,13 @@ public class UserServicImpl implements UserService {
     private UserPrivacyDao userPrivacyDao;
 
     @Override
+    @CachePut()
     public void save(User user) {
         userDao.save(user);
     }
 
     @Override
+    @CachePut()
     public void save(User user, byte[] password) {
         logger.info(MessageFormat.format("---> has {0} users.", userDao.count()));
         userDao.save(user);
@@ -57,16 +65,19 @@ public class UserServicImpl implements UserService {
     }
 
     @Override
+    @CacheEvict()
     public void delete(User user) {
         userDao.delete(user);
     }
 
     @Override
+    @Cacheable()
     public User get(long id) {
         return userDao.get(id);
     }
 
     @Override
+    @Cacheable()
     public List<User> get(int start, int size) {
         // return userDao.get("select '******' as password, user.id,
         // user.username, user.email from com.forsrc.pojo.User user", null,
@@ -75,16 +86,19 @@ public class UserServicImpl implements UserService {
     }
 
     @Override
+    @CachePut()
     public void update(User user) {
         userDao.update(user);
     }
 
     @Override
+    @Cacheable()
     public UserPrivacy findByUsername(String username) {
         return userPrivacyDao.findByUsername(username);
     }
 
     @Override
+    @Cacheable()
     public long count() {
         return userDao.count();
     }

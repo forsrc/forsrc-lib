@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.forsrc.pojo.Role;
 
-@Repository
 @Transactional
 @Service
 public interface RoleService {
