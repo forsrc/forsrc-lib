@@ -14,6 +14,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.forsrc.core.base.dao.BaseDao;
+import com.forsrc.core.base.service.impl.BaseServiceImpl;
 import com.forsrc.core.web.user.dao.UserDao;
 import com.forsrc.core.web.user.dao.UserPrivacyDao;
 import com.forsrc.core.web.user.service.UserService;
@@ -22,9 +24,9 @@ import com.forsrc.pojo.UserPrivacy;
 
 @Transactional
 @Service
-@Cacheable(key = "userServiceCache", keyGenerator = "keyGenerator")
+@Cacheable(value = "userService", keyGenerator = "keyGenerator")
 @CacheConfig(cacheNames = "ehcache_10m")
-public class UserServicImpl implements UserService {
+public class UserServiceImpl extends BaseServiceImpl<User, Long> implements UserService {
 
     private final Log logger = LogFactory.getLog(getClass());
     @Autowired
@@ -35,12 +37,7 @@ public class UserServicImpl implements UserService {
 
     @Override
     @CachePut()
-    public void save(User user) {
-        userDao.save(user);
-    }
-
-    @Override
-    @CachePut()
+    @CacheEvict(value = { "list" }, allEntries = true)
     public void save(User user, byte[] password) {
         logger.info(MessageFormat.format("---> has {0} users.", userDao.count()));
         userDao.save(user);
@@ -64,42 +61,23 @@ public class UserServicImpl implements UserService {
         return pw;
     }
 
-    @Override
-    @CacheEvict()
-    public void delete(User user) {
-        userDao.delete(user);
-    }
+//    @Override
+//    @Cacheable(value = { "list" }, key = "#root.targetClass + '/' + #start + '~' + #size", condition = "#result != null")
+//    public List<User> get(int start, int size) {
+//        // return userDao.get("select '******' as password, user.id,
+//        // user.username, user.email from com.forsrc.pojo.User user", null,
+//        // start, size);
+//        return userDao.get(start, size);
+//    }
 
     @Override
-    @Cacheable()
-    public User get(long id) {
-        return userDao.get(id);
-    }
-
-    @Override
-    @Cacheable()
-    public List<User> get(int start, int size) {
-        // return userDao.get("select '******' as password, user.id,
-        // user.username, user.email from com.forsrc.pojo.User user", null,
-        // start, size);
-        return userDao.get(start, size);
-    }
-
-    @Override
-    @CachePut()
-    public void update(User user) {
-        userDao.update(user);
-    }
-
-    @Override
-    @Cacheable()
+    @Cacheable(key = "#result.getClassName() + '/' + #username", condition = "#result != null")
     public UserPrivacy findByUsername(String username) {
         return userPrivacyDao.findByUsername(username);
     }
 
     @Override
-    @Cacheable()
-    public long count() {
-        return userDao.count();
+    public BaseDao<User, Long> getBaseDao() {
+        return this.userDao;
     }
 }

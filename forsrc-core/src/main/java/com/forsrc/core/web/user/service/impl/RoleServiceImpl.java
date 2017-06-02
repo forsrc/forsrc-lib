@@ -8,28 +8,36 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.forsrc.core.base.dao.BaseDao;
+import com.forsrc.core.base.service.impl.BaseServiceImpl;
 import com.forsrc.core.web.user.dao.RoleDao;
 import com.forsrc.core.web.user.service.RoleService;
 import com.forsrc.pojo.Role;
 
 @Service
 @Transactional
-@Cacheable(key = "roleServiceCache", keyGenerator = "keyGenerator")
+@Cacheable(value = "roleService")
 @CacheConfig(cacheNames = "ehcache_10m")
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl extends BaseServiceImpl<Role, Long> implements RoleService {
 
     @Autowired
     private RoleDao roleDao;
 
     @Override
-    @Cacheable()
+    @Cacheable(value = "list", key= "#root.targetClass + '/' + 'getRoles'")
     public List<Role> getRoles() {
         return roleDao.getRoles();
     }
 
     @Override
-    @Cacheable()
+    @Cacheable(value = "list", key= "#root.targetClass + '/' + #userId")
     public List<Role> findRoleNamesByUserId(Long userId) {
         return roleDao.findRoleNamesByUserId(userId);
+    }
+
+    @Override
+    public BaseDao<Role, Long> getBaseDao() {
+
+        return this.roleDao;
     }
 }
