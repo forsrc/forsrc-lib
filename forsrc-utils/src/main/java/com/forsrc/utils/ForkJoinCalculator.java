@@ -12,7 +12,7 @@ public class ForkJoinCalculator<T, R> extends RecursiveTask<R> {
     private T[] numbers;
     private int start;
     private int end;
-    private long threshold = 1000_000;
+    private long threshold = 1000000;
 
     private ForkJoinCalculator(T[] numbers, int start, int end, SequentialCalculator<T, R> sequentialCalculator,
             ComputeCalculator<T, R> computeCalculator) {
