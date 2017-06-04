@@ -8,24 +8,20 @@ public class ForkJoinCalculator<T, R> extends RecursiveTask<R> {
     private static final long serialVersionUID = -7210784648118295671L;
 
     private SequentialCalculator<T, R> sequentialCalculator;
-    private ComputeCalculator<T, R> computeCalculator;
     private T[] numbers;
     private int start;
     private int end;
-    private long threshold = 1000000;
+    private long threshold = 1000_000;
 
-    private ForkJoinCalculator(T[] numbers, int start, int end, SequentialCalculator<T, R> sequentialCalculator,
-            ComputeCalculator<T, R> computeCalculator) {
+    private ForkJoinCalculator(T[] numbers, int start, int end, SequentialCalculator<T, R> sequentialCalculator) {
         this.numbers = numbers;
         this.start = start;
         this.end = end;
         this.sequentialCalculator = sequentialCalculator;
-        this.computeCalculator = computeCalculator;
     }
 
-    public ForkJoinCalculator(T[] numbers, SequentialCalculator<T, R> sequentialCalculator,
-            ComputeCalculator<T, R> computeCalculator) {
-        this(numbers, 0, numbers.length, sequentialCalculator, computeCalculator);
+    public ForkJoinCalculator(T[] numbers, SequentialCalculator<T, R> sequentialCalculator) {
+        this(numbers, 0, numbers.length, sequentialCalculator);
     }
 
     @Override
@@ -38,36 +34,32 @@ public class ForkJoinCalculator<T, R> extends RecursiveTask<R> {
         }
 
         ForkJoinCalculator<T, R> leftTask = new ForkJoinCalculator<T, R>(numbers, start, start + length / 2,
-                sequentialCalculator, computeCalculator);
+                sequentialCalculator);
         leftTask.fork();
 
         ForkJoinCalculator<T, R> rightTask = new ForkJoinCalculator<T, R>(numbers, start + length / 2, end,
-                sequentialCalculator, computeCalculator);
+                sequentialCalculator);
 
         R rightResult = rightTask.compute();
 
         R leftResult = leftTask.join();
 
-        return computeCalculator.compute(rightResult, leftResult);
+        return sequentialCalculator.compute(rightResult, leftResult);
     }
 
-    public R exec(T[] numbers, SequentialCalculator<T, R> sequentialCalculator,
-            ComputeCalculator<T, R> computeCalculator) {
+    public R exec(T[] numbers, SequentialCalculator<T, R> sequentialCalculator) {
         final ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return exec(forkJoinPool, numbers, sequentialCalculator, computeCalculator);
+        return exec(forkJoinPool, numbers, sequentialCalculator);
     }
 
-    public R exec(ForkJoinPool forkJoinPool, T[] numbers, SequentialCalculator<T, R> sequentialCalculator,
-            ComputeCalculator<T, R> computeCalculator) {
-        return forkJoinPool.invoke(new ForkJoinCalculator<T, R>(numbers, sequentialCalculator, computeCalculator));
-    }
-
-    public static interface ComputeCalculator<T, R> {
-        public R compute(R rightResult, R leftResult);
+    public R exec(ForkJoinPool forkJoinPool, T[] numbers, SequentialCalculator<T, R> sequentialCalculator) {
+        return forkJoinPool.invoke(new ForkJoinCalculator<T, R>(numbers, sequentialCalculator));
     }
 
     public static interface SequentialCalculator<T, R> {
         R computeSequentially(T[] numbers, int start, int end);
+
+        R compute(R rightResult, R leftResult);
     }
 
     public SequentialCalculator<T, R> getSequentialCalculator() {
@@ -76,15 +68,6 @@ public class ForkJoinCalculator<T, R> extends RecursiveTask<R> {
 
     public ForkJoinCalculator<T, R> setSequentialCalculator(SequentialCalculator<T, R> sequentialCalculator) {
         this.sequentialCalculator = sequentialCalculator;
-        return this;
-    }
-
-    public ComputeCalculator<T, R> getComputeCalculator() {
-        return computeCalculator;
-    }
-
-    public ForkJoinCalculator<T, R> setComputeCalculator(ComputeCalculator<T, R> computeCalculator) {
-        this.computeCalculator = computeCalculator;
         return this;
     }
 
