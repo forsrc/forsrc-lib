@@ -26,15 +26,15 @@ public class SecurityService {
         return userService.findByUsername(username);
     }
 
-    List<UserRole> findByUserId(Long userId) {
+    public List<UserRole> findByUserId(Long userId) {
         return userRoleService.findByUserId(userId);
     }
 
-    List<Role> getRoles() {
+    public List<Role> getRoles() {
         return roleService.getRoles();
     }
 
-    List<Role> findRoleNamesByUserId(Long userId) {
+    public List<Role> findRoleNamesByUserId(Long userId) {
         return roleService.findRoleNamesByUserId(userId);
     }
 }
