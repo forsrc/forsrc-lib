@@ -1,7 +1,6 @@
 package com.forsrc.core.web.user.service.impl;
 
 import java.text.MessageFormat;
-import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
@@ -24,7 +23,7 @@ import com.forsrc.pojo.UserPrivacy;
 
 @Transactional
 @Service
-@Cacheable(value = "userService", keyGenerator = "keyGenerator")
+@Cacheable(cacheNames = "ehcache_10m")
 @CacheConfig(cacheNames = "ehcache_10m")
 public class UserServiceImpl extends BaseServiceImpl<User, Long> implements UserService {
 
@@ -79,5 +78,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
     @Override
     public BaseDao<User, Long> getBaseDao() {
         return this.userDao;
+    }
+
+    @Override
+    public void cacheClear() {
+        logger.info("call --> cacheClear()");
     }
 }

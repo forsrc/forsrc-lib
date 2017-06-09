@@ -24,13 +24,13 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Long> implements Role
     private RoleDao roleDao;
 
     @Override
-    @Cacheable(value = "list", key= "#root.targetClass + '/' + 'getRoles'")
+    @Cacheable(value = "list", key = "#root.targetClass + '/' + 'getRoles'")
     public List<Role> getRoles() {
         return roleDao.getRoles();
     }
 
     @Override
-    @Cacheable(value = "list", key= "#root.targetClass + '/' + #userId")
+    @Cacheable(value = "list", key = "#root.targetClass + '/' + #userId")
     public List<Role> findRoleNamesByUserId(Long userId) {
         return roleDao.findRoleNamesByUserId(userId);
     }

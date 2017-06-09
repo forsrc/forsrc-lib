@@ -31,7 +31,8 @@ public abstract class BaseServiceImpl<E, PK extends Serializable> implements Bas
 
     @Override
     // @CacheEvict(key = "#e.id", value = {"baseService/list", "baseService"})
-    @Caching(evict = { @CacheEvict(key = "#root.targetClass + '/' + #e.id"), @CacheEvict(value = "list", allEntries = true) })
+    @Caching(evict = { @CacheEvict(key = "#root.targetClass + '/' + #e.id"),
+            @CacheEvict(value = "list", allEntries = true) })
     public void delete(E e) {
         getBaseDao().delete(e);
     }
@@ -43,13 +44,13 @@ public abstract class BaseServiceImpl<E, PK extends Serializable> implements Bas
     }
 
     @Override
-    @Cacheable(value = {"list"}, key = "#root.targetClass + '/' + #start + '~' + #size")
+    @Cacheable(value = { "list" }, key = "#root.targetClass + '/' + #start + '~' + #size")
     public List<E> get(int start, int size) {
         return getBaseDao().get(start, size);
     }
 
     @Override
-    @Cacheable(value = "list", key = "#cls.getName() + '/T/' + #start + '~' + #size")
+    @Cacheable(value = { "list" }, key = "#cls + '/T/' + #start + '~' + #size")
     public <T> List<T> get(Class<T> cls, int start, int size) {
         return getBaseDao().get(cls, start, size);
     }
@@ -68,7 +69,7 @@ public abstract class BaseServiceImpl<E, PK extends Serializable> implements Bas
     }
 
     @Override
-    @Cacheable(value = { "list" }, key = "#cls.getName() + '/T/' + 'count'")
+    @Cacheable(value = { "list" }, key = "#cls + '/T/' + 'count'")
     public <T> long count(Class<T> cls) {
         return getBaseDao().count(cls);
     }

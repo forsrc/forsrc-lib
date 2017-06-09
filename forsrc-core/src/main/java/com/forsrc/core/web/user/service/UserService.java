@@ -1,7 +1,5 @@
 package com.forsrc.core.web.user.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,4 +17,6 @@ public interface UserService extends BaseService<User, Long>{
 
     @Transactional(transactionManager = "transactionManager", propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     UserPrivacy findByUsername(String username);
+
+    void cacheClear();
 }
