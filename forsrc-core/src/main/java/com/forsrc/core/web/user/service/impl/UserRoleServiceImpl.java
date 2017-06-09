@@ -16,7 +16,7 @@ import com.forsrc.pojo.UserRole;
 
 @Service
 @Transactional
-@Cacheable(value = "userRoleService")
+@Cacheable(cacheNames = "ehcache_10m")
 @CacheConfig(cacheNames = "ehcache_10m")
 public class UserRoleServiceImpl extends BaseServiceImpl<UserRole, Long> implements UserRoleService {
 

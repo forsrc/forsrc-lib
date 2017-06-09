@@ -16,7 +16,7 @@ import com.forsrc.pojo.Role;
 
 @Service
 @Transactional
-@Cacheable(value = "roleService")
+@Cacheable(cacheNames = "ehcache_10m")
 @CacheConfig(cacheNames = "ehcache_10m")
 public class RoleServiceImpl extends BaseServiceImpl<Role, Long> implements RoleService {
 
