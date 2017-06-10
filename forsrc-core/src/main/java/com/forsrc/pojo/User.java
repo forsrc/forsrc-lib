@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -70,14 +71,14 @@ public class User implements java.io.Serializable {
     @Version
     private int version;
 
-    @OneToMany(targetEntity = UserPrivacy.class)
+    @ManyToOne(targetEntity = UserPrivacy.class)
     @OrderBy("role_id ASC")
-    @JoinColumn(name = "id", unique = true)
+    @JoinColumn(name = "id", unique = true, insertable = false, updatable = false)
     private UserPrivacy userPrivacy;
 
     @OneToMany(targetEntity = UserRole.class)
     @OrderBy("role_id ASC")
-    @JoinColumn(name = "id", unique = true)
+    @JoinColumn(name = "id", insertable = false, updatable = false)
     private Set<UserRole> userRoles;
 
     // Constructors

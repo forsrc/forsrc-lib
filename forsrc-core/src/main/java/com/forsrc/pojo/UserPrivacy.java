@@ -59,7 +59,7 @@ public class UserPrivacy implements java.io.Serializable {
     private int status; // 0: delete; 1: OK; 2: NG
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", unique = true, insertable = false, updatable = false)
     private User user;
 
     // Constructors

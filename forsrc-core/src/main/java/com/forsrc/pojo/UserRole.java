@@ -30,10 +30,10 @@ public class UserRole implements java.io.Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id", insertable = false, updatable = false, nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "role_id", insertable = false, updatable = false, nullable = false)
+    @Column(name = "role_id", insertable = false)
     private Long roleId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -52,11 +52,11 @@ public class UserRole implements java.io.Serializable {
     private int status; // 0: delete; 1: OK; 2: NG
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", unique = true, insertable = false, updatable = false)
     private User user;
 
     @ManyToOne(targetEntity = Role.class)
-    @JoinColumn(name = "role_id", unique = true)
+    @JoinColumn(name = "role_id", unique = true, insertable = false, updatable = false)
     private Role role;
 
     public UserRole() {
