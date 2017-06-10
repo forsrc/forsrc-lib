@@ -4,8 +4,22 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The type User.
@@ -13,26 +27,57 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 // @Entity
 // @Table(name = "user")
 // @Document(coreName="collection1")
-@JsonIgnoreProperties(value = {"userPrivacy"})
+@JsonIgnoreProperties(value = { "userPrivacy" })
+@Entity
+@Table(name = "t_user", indexes = {
+        @Index(name = "index_user_privacy_username", columnList = "username") }, uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "username" }) })
 public class User implements java.io.Serializable {
 
+    private static final long serialVersionUID = 6262590663128115986L;
+
     // Fields
-    // @Id
-    // @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
-    // @Temporal(javax.persistence.TemporalType.DATE)
-    private Date updateOn;
-    // @Temporal(javax.persistence.TemporalType.DATE)
-    private Date createOn;
+
     // @Indexed(solrType="text_general")
+    @Column(name = "username", unique = true, length = 200, nullable = false)
     private String username;
+
+    @Column(name = "email", unique = true, length = 200, nullable = true)
     private String email;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_on", insertable = true, updatable = false, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    private Date createOn;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_on", insertable = false, updatable = true, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    private Date updateOn;
+
+    @Column(name = "status", length = 1, nullable = false, columnDefinition = "INT DEFAULT 1")
     private int status; // 0: delete; 1: OK; 2: NG
-    private Boolean isAdmin;
+
+    @Column(name = "is_admin", length = 1, nullable = false, columnDefinition = "INT DEFAULT 0")
+    private boolean isAdmin;
+
+    @Column(name = "image", length = 500, nullable = false, columnDefinition = "VARCHAR(500) DEFAULT ''")
     private String image;
+
+    @Column(name = "version")
+    @Version
     private int version;
 
     private UserPrivacy userPrivacy;
+    // <set name="userRoles" cascade="save-update, delete" lazy="false">
+    // <key column="id"></key>
+    // <one-to-many class="UserRole"/>
+    // </set>
+    @OneToMany(targetEntity = UserRole.class)
+    @OrderBy("role_id ASC")
+    @JoinColumn(name = "id", unique = true)
     private Set<UserRole> userRoles;
 
     // Constructors
@@ -117,7 +162,7 @@ public class User implements java.io.Serializable {
      *
      * @return the boolean
      */
-    public Boolean isAdmin() {
+    public boolean isAdmin() {
         return isAdmin;
     }
 
@@ -146,7 +191,7 @@ public class User implements java.io.Serializable {
      * @param admin
      *            the admin
      */
-    public void setAdmin(Boolean admin) {
+    public void setAdmin(boolean admin) {
         this.isAdmin = admin;
     }
 
@@ -155,7 +200,7 @@ public class User implements java.io.Serializable {
      *
      * @return the is admin
      */
-    public Boolean getIsAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
@@ -165,7 +210,7 @@ public class User implements java.io.Serializable {
      * @param admin
      *            the admin
      */
-    public void setIsAdmin(Boolean admin) {
+    public void setIsAdmin(boolean admin) {
         this.isAdmin = admin;
     }
 

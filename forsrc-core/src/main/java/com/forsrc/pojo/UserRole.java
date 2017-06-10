@@ -3,18 +3,51 @@ package com.forsrc.pojo;
 import java.text.MessageFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value = {"user"})
+@JsonIgnoreProperties(value = { "user" })
+@Entity
+@Table(name = "t_user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
 public class UserRole implements java.io.Serializable {
 
+    private static final long serialVersionUID = 3841772774323550118L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(name = "role_id", nullable = false)
     private Long roleId;
-    private Date updateOn;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_on", insertable = true, updatable = false, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
     private Date createOn;
-    private int status; // 0: delete; 1: OK; 2: NG
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "update_on", insertable = false, updatable = true, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    private Date updateOn;
+
+    @Column(name = "version")
+    @Version
     private int version;
+
+    @Column(name = "status", length = 1, nullable = false, columnDefinition = "INT DEFAULT 1")
+    private int status; // 0: delete; 1: OK; 2: NG
 
     private User user;
     private Role role;
