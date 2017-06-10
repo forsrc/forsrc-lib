@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value = { "userPrivacy" })
 @Entity
 @Table(name = "t_user", indexes = {
-        @Index(name = "index_user_privacy_username", columnList = "username") }, uniqueConstraints = {
+        @Index(name = "index_user_username", columnList = "username") }, uniqueConstraints = {
                 @UniqueConstraint(columnNames = { "username" }) })
 public class User implements java.io.Serializable {
 

@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,10 +30,10 @@ public class UserRole implements java.io.Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", insertable = false, updatable = false, nullable = false)
     private Long userId;
 
-    @Column(name = "role_id", nullable = false)
+    @Column(name = "role_id", insertable = false, updatable = false, nullable = false)
     private Long roleId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,7 +51,12 @@ public class UserRole implements java.io.Serializable {
     @Column(name = "status", length = 1, nullable = false, columnDefinition = "INT DEFAULT 1")
     private int status; // 0: delete; 1: OK; 2: NG
 
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
+
+    @ManyToOne(targetEntity = Role.class)
+    @JoinColumn(name = "role_id", unique = true)
     private Role role;
 
     public UserRole() {

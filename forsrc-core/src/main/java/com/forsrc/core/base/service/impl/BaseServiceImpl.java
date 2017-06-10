@@ -25,8 +25,8 @@ public abstract class BaseServiceImpl<E, PK extends Serializable> implements Bas
     @Override
     @CachePut(key = "#root.targetClass + '/' + #e.id")
     @CacheEvict(value = { "list" }, allEntries = true)
-    public void save(E e) {
-        getBaseDao().save(e);
+    public <S extends E> S save(S entity) {
+        return getBaseDao().save(entity);
     }
 
     @Override

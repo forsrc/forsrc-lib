@@ -10,33 +10,48 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.data.jpa.provider.PersistenceProvider;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.stereotype.Repository;
 
 import com.forsrc.core.base.dao.BaseDao;
 
 @Repository
-public abstract class BaseDaoImpl<E, PK extends Serializable> implements BaseDao<E, PK> {
+public abstract class BaseDaoImpl<E, PK extends Serializable> extends MySimpleJpaRepository<E, PK>
+        implements BaseDao<E, PK> {
+
+    public BaseDaoImpl() {
+    }
+
+    public BaseDaoImpl(Class<E> domainClass, EntityManager em) {
+        super(domainClass, em);
+    }
 
     @PersistenceContext
     protected EntityManager entityManager;
 
     @Override
-    public void save(E e) {
-        entityManager.persist(e);
+    public <S extends E> S save(S entity) {
+        // entityManager.persist(entity);
+        // return entity;
+        return super.save(entity);
     }
 
     @Override
-    public void delete(E e) {
-        if (entityManager.contains(e)) {
-            entityManager.remove(e);
-            return;
-        }
-        entityManager.remove(entityManager.merge(e));
+    public void delete(E entity) {
+        // if (entityManager.contains(e)) {
+        // entityManager.remove(e);
+        // return;
+        // }
+        // entityManager.remove(entityManager.merge(e));
+        super.delete(entity);
     }
 
     @Override
     public E get(PK pk) {
-        return entityManager.find(getEntityClass(), pk);
+        //return entityManager.find(getEntityClass(), pk);
+        return super.findOne(pk);
     }
 
     @Override
@@ -67,8 +82,9 @@ public abstract class BaseDaoImpl<E, PK extends Serializable> implements BaseDao
     }
 
     @Override
-    public void update(E e) {
-        entityManager.merge(e);
+    public void update(E entity) {
+        entityManager.merge(entity);
+        super.save(entity);
     }
 
     @Override
@@ -150,4 +166,20 @@ public abstract class BaseDaoImpl<E, PK extends Serializable> implements BaseDao
         }
         return cls.getName();
     }
+
+    @Override
+    public JpaEntityInformation<E, ?> getJpaEntityInformation() {
+        return JpaEntityInformationSupport.getEntityInformation(getEntityClass(), this.entityManager);
+    }
+
+    @Override
+    public EntityManager getJpaEntityManager() {
+        return this.entityManager;
+    }
+
+    @Override
+    public PersistenceProvider getPersistenceProvider() {
+        return PersistenceProvider.fromEntityManager(this.entityManager);
+    }
+
 }

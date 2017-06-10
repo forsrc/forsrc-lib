@@ -9,17 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public interface BaseService<E, PK extends Serializable> {
+public interface BaseService<E, PK extends Serializable>{
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    void save(E e);
+    <S extends E> S save(S entity);
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    void delete(E e);
+    void delete(E entity);
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     E get(PK pk);
-
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     List<E> get(int start, int size);
@@ -28,7 +27,7 @@ public interface BaseService<E, PK extends Serializable> {
     <T> List<T> get(Class<T> cls, int start, int size);
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    void update(E e);
+    void update(E entity);
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     long count();
