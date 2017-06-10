@@ -70,11 +70,11 @@ public class User implements java.io.Serializable {
     @Version
     private int version;
 
+    @OneToMany(targetEntity = UserPrivacy.class)
+    @OrderBy("role_id ASC")
+    @JoinColumn(name = "id", unique = true)
     private UserPrivacy userPrivacy;
-    // <set name="userRoles" cascade="save-update, delete" lazy="false">
-    // <key column="id"></key>
-    // <one-to-many class="UserRole"/>
-    // </set>
+
     @OneToMany(targetEntity = UserRole.class)
     @OrderBy("role_id ASC")
     @JoinColumn(name = "id", unique = true)

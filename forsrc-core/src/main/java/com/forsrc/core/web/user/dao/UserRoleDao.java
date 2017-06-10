@@ -14,5 +14,4 @@ public interface UserRoleDao extends BaseDao<UserRole, Long> {
 
     List<UserRole> findByUserId(Long userId);
 
-    List<UserRole> findRoleNamesByUserId(Long userId);
 }

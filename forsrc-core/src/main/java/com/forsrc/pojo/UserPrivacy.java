@@ -204,7 +204,7 @@ public class UserPrivacy implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("'{'\"id\" : \"{0}\", \"password\" : \"{1}\"'}'", id, password);
+        return MessageFormat.format("'{'\"id\" : \"{0}\", '\"userId\" : \"{1}\", \"password\" : \"{2}\"'}'", id, userId, password);
     }
 
     public Long getUserId() {

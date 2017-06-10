@@ -31,8 +31,8 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Long> implements Role
 
     @Override
     @Cacheable(value = "list", key = "#root.targetClass + '/' + #userId")
-    public List<Role> findRoleNamesByUserId(Long userId) {
-        return roleDao.findRoleNamesByUserId(userId);
+    public List<Role> findByUserId(Long userId) {
+        return roleDao.findByUserId(userId);
     }
 
     @Override

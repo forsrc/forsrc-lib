@@ -17,5 +17,5 @@ public interface RoleService extends BaseService<Role, Long>{
     List<Role> getRoles();
 
     @Transactional(transactionManager = "transactionManager", propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-    List<Role> findRoleNamesByUserId(Long userId);
+    List<Role> findByUserId(Long userId);
 }

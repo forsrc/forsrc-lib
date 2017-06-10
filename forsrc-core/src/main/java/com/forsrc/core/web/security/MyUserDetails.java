@@ -39,14 +39,14 @@ public class MyUserDetails implements UserDetails {
 
         List<GrantedAuthority> auths = new ArrayList<>();
         // auths.add(new SimpleGrantedAuthority("ROLE_TEST"));
-//        List<Role> roles = securityService.findRoleNamesByUserId(userPrivacy.getUserId());
-//        for (Role role : roles) {
-//            auths.add(new SimpleGrantedAuthority(role.getName()));
-//        }
-        Set<UserRole> userRoles = userPrivacy.getUser().getUserRoles();
-        for (UserRole userRole : userRoles) {
-            auths.add(new SimpleGrantedAuthority(userRole.getRole().getName()));
+        List<Role> roles = securityService.findRolesByUserId(userPrivacy.getUserId());
+        for (Role role : roles) {
+            auths.add(new SimpleGrantedAuthority(role.getName()));
         }
+//        Set<UserRole> userRoles = userPrivacy.getUser().getUserRoles();
+//        for (UserRole userRole : userRoles) {
+//            auths.add(new SimpleGrantedAuthority(userRole.getRole().getName()));
+//        }
 
         return auths;
     }

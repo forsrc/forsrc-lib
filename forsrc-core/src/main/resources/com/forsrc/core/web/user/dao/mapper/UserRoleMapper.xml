@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forsrc.core.web.user.dao.mapper.UserRoleMapper">
+
+    <resultMap id="userRoleMap" type="com.forsrc.pojo.UserRole">
+        <id property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="roleId" column="role_id" />
+        <result property="createOn" column="create_on" />
+        <result property="updateOn" column="update_on" />
+        <result property="status" column="status" />
+        <result property="version" column="version" />
+    </resultMap>
+
+    <select id="findByUserId" resultType="com.forsrc.pojo.UserRole" resultMap="userRoleMap">
+        select * from t_user_role where user_id = #{userId}
+    </select>
+
+</mapper>
