@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +16,7 @@ import com.forsrc.pojo.UserPrivacy;
 
 public class MyUserDetailsService implements UserDetailsService {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    protected static final Logger LOGGER = LoggerFactory.getLogger(MyUserDetailsService.class);
 
     private static final Map<Long, Role> MAP_ROLES = new ConcurrentHashMap<>(10);
 
@@ -26,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserPrivacy user = this.getUserByUsername(username);
-        logger.info(String.format("--> MyUserDetailsService.loadUserByUsername() --> User is : %s", username));
+        LOGGER.info(String.format("--> MyUserDetailsService.loadUserByUsername() --> User is : %s", username));
         Map<Long, Role> roles = getRoles();
         MyUserDetails myUserDetails = new MyUserDetails(securityService, user, roles);
         return myUserDetails;
@@ -38,11 +38,11 @@ public class MyUserDetailsService implements UserDetailsService {
             user = securityService.findByUsername(username);
         } catch (RuntimeException e) {
             user = null;
-            System.err.println(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
             throw new UsernameNotFoundException(e.getMessage());
         }
         if (user == null) {
-            logger.info(
+            LOGGER.warn(
                     String.format("--> MyUserDetailsService.loadUserByUsername() --> User is not exist: %s", username));
             throw new UsernameNotFoundException(String.format("User is not exist: %s", username));
             // throw new BadCredentialsException(String.format("User is not

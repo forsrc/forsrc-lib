@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BaseDao<E, PK extends Serializable> extends JpaRepository<E, PK> {
+
+    static final Logger LOGGER = LoggerFactory.getLogger(BaseDao.class);
 
     int SIZE_MAX = 100;
 

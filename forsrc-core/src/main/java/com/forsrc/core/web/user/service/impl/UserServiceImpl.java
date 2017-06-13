@@ -1,10 +1,8 @@
 package com.forsrc.core.web.user.service.impl;
 
-import java.text.MessageFormat;
-
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,7 +25,8 @@ import com.forsrc.pojo.UserPrivacy;
 @CacheConfig(cacheNames = "ehcache_10m")
 public class UserServiceImpl extends BaseServiceImpl<User, Long> implements UserService {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    
     @Autowired
     private UserDao userDao;
 
@@ -38,7 +37,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
     @CachePut()
     @CacheEvict(value = { "list" }, allEntries = true)
     public void save(User user, byte[] password) {
-        logger.info(MessageFormat.format("---> has {0} users.", userDao.count()));
+        LOGGER.info("---> has {} users.", userDao.count());
         userDao.save(user);
         UserPrivacy userPrivacy = new UserPrivacy();
         userPrivacy.setUserId(user.getId());
@@ -46,7 +45,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
         userPrivacy.setPassword(getPassword(username, password));
         userPrivacy.setUsername(user.getUsername());
         userPrivacyDao.save(userPrivacy);
-        logger.info(MessageFormat.format("---> has {0} users.", userDao.count()));
+        LOGGER.info("---> has {0} users.", userDao.count());
         // throw new RuntimeException("Test Transactional");
     }
 
@@ -82,6 +81,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 
     @Override
     public void cacheClear() {
-        logger.info("call --> cacheClear()");
+        LOGGER.info("call --> cacheClear()");
     }
 }

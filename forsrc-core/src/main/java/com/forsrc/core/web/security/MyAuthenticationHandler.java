@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,7 +29,7 @@ import com.forsrc.pojo.User;
 public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSuccessHandler
         implements AuthenticationFailureHandler, LogoutHandler {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    protected static final Logger LOGGER = LoggerFactory.getLogger(MyAuthenticationHandler.class);
 
     RequestCache requestCache = new HttpSessionRequestCache();
     @Autowired
@@ -45,7 +47,7 @@ public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSucc
             User user = userService.get(myUserDetails.getUserPrivacy().getUserId());
             session.setAttribute("USER", user);
         }
-        logger.info(String.format("--> onAuthenticationSuccess(): %s", sc.getAuthentication().getName()));
+        LOGGER.info("--> onAuthenticationSuccess(): {}", sc.getAuthentication().getName());
 
         // clearAuthenticationAttributes(request);
 
@@ -67,7 +69,7 @@ public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSucc
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException ae) throws IOException, ServletException {
         SecurityContext sc = SecurityContextHolder.getContext();
-        logger.info(String.format("--> onAuthenticationFailure(): %s", sc.getAuthentication().getName()));
+        LOGGER.info("--> onAuthenticationFailure(): {}", sc.getAuthentication().getName());
         SecurityContextHolder.clearContext();
     }
 
@@ -80,7 +82,7 @@ public class MyAuthenticationHandler extends SavedRequestAwareAuthenticationSucc
         if (sc.getAuthentication() == null) {
             return;
         }
-        logger.info(String.format("--> logout(): %s", sc.getAuthentication().getName()));
+        LOGGER.info("--> logout(): {}", sc.getAuthentication().getName());
         SecurityContextHolder.clearContext();
         clearAuthenticationAttributes(request);
     }

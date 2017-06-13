@@ -162,6 +162,7 @@ public abstract class BaseDaoImpl<E, PK extends Serializable> extends MySimpleJp
     protected String getEntityClassName() {
         Class<E> cls = getEntityClass();
         if (cls == null) {
+            LOGGER.error("BaseDaoImpl.getEntityClass() not implemented yet.");
             throw new UnsupportedOperationException("BaseDaoImpl.getEntityClass() not implemented yet.");
         }
         return cls.getName();
