@@ -32,11 +32,11 @@ public class Role implements java.io.Serializable {
     private Long parentId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_on", insertable = true, updatable = false, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createOn;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_on", insertable = false, updatable = true, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "update_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updateOn;
 
     @Column(name = "status", length = 1, nullable = false, columnDefinition = "INT DEFAULT 1")
@@ -111,6 +111,6 @@ public class Role implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("'{'\"id\" : \"{0}\", \"userId\" : \"{1}\"'}'", id, name);
+        return MessageFormat.format("'{'\"id\" : \"{0}\", \"name\" : \"{1}\"'}'", id, name);
     }
 }

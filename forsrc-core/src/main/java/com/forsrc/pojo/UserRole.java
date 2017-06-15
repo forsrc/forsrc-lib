@@ -4,7 +4,9 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +22,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(value = { "user" })
 @Entity
-@Table(name = "t_user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
+//@formatter:off
+@Table(
+        name = "t_user_role",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "user_id", "role_id" })
+        }
+)
+//@formatter:on
 public class UserRole implements java.io.Serializable {
 
     private static final long serialVersionUID = 3841772774323550118L;
@@ -33,15 +42,15 @@ public class UserRole implements java.io.Serializable {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "role_id", insertable = false)
+    @Column(name = "role_id", nullable = false)
     private Long roleId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_on", insertable = true, updatable = false, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createOn;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_on", insertable = false, updatable = true, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "update_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updateOn;
 
     @Column(name = "version")
@@ -52,11 +61,21 @@ public class UserRole implements java.io.Serializable {
     private int status; // 0: delete; 1: OK; 2: NG
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", unique = true, insertable = false, updatable = false)
+    //@formatter:off
+     @JoinColumn(name = "user_id", referencedColumnName = "id",
+             unique = true, insertable = false, updatable = false,
+             foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)
+     )
+    //@formatter:on
     private User user;
 
     @ManyToOne(targetEntity = Role.class)
-    @JoinColumn(name = "role_id", unique = true, insertable = false, updatable = false)
+    //@formatter:off
+    @JoinColumn(name = "role_id", referencedColumnName = "id", 
+            unique = true, insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "none")
+    )
+    //@formatter:on
     private Role role;
 
     public UserRole() {
@@ -140,7 +159,7 @@ public class UserRole implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("'{'\"id\" : \"{0}\", \"userId\" : \"{1}\",\"roleId\" : \"{2}\"'}'", id, userId,
+        return MessageFormat.format("'{'\"id\" : \"{0}\", \"userId\" : \"{1}\", \"roleId\" : \"{2}\"'}'", id, userId,
                 roleId);
     }
 

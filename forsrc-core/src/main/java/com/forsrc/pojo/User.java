@@ -6,12 +6,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -30,9 +30,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 // @Document(coreName="collection1")
 @JsonIgnoreProperties(value = { "userPrivacy" })
 @Entity
-@Table(name = "t_user", indexes = {
-        @Index(name = "index_user_username", columnList = "username") }, uniqueConstraints = {
-                @UniqueConstraint(columnNames = { "username" }) })
+// @formatter:off
+@Table(name = "t_user",
+        indexes = {
+                @Index(name = "index_user_username", columnList = "username") 
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "username" })
+        }
+)
+// @formatter:on
 public class User implements java.io.Serializable {
 
     private static final long serialVersionUID = 6262590663128115986L;
@@ -51,11 +58,11 @@ public class User implements java.io.Serializable {
     private String email;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_on", insertable = true, updatable = false, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createOn;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_on", insertable = false, updatable = true, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "update_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updateOn;
 
     @Column(name = "status", length = 1, nullable = false, columnDefinition = "INT DEFAULT 1")
@@ -65,20 +72,21 @@ public class User implements java.io.Serializable {
     private boolean isAdmin;
 
     @Column(name = "image", length = 500, nullable = false, columnDefinition = "VARCHAR(500) DEFAULT ''")
-    private String image;
+
+    private String image = "";
 
     @Column(name = "version")
     @Version
     private int version;
 
-    @ManyToOne(targetEntity = UserPrivacy.class)
-    @OrderBy("role_id ASC")
-    @JoinColumn(name = "id", unique = true, insertable = false, updatable = false)
-    private UserPrivacy userPrivacy;
-
     @OneToMany(targetEntity = UserRole.class)
     @OrderBy("role_id ASC")
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    // @formatter:off
+    @JoinColumn(name = "user_id", referencedColumnName = "id",
+            insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "none")
+    )
+    // @formatter:on
     private Set<UserRole> userRoles;
 
     // Constructors
@@ -289,14 +297,6 @@ public class User implements java.io.Serializable {
      */
     public void setVersion(int version) {
         this.version = version;
-    }
-
-    public UserPrivacy getUserPrivacy() {
-        return userPrivacy;
-    }
-
-    public void setUserPrivacy(UserPrivacy userPrivacy) {
-        this.userPrivacy = userPrivacy;
     }
 
     public Set<UserRole> getUserRoles() {

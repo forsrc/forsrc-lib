@@ -5,11 +5,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,9 +24,17 @@ import javax.persistence.Version;
  */
 
 @Entity
-@Table(name = "t_user_privacy", indexes = {
-        @Index(name = "index_user_privacy_username", columnList = "username") }, uniqueConstraints = {
-                @UniqueConstraint(columnNames = { "username" }) })
+// @formatter:off
+@Table(
+        name = "t_user_privacy",
+        indexes = {
+                @Index(name = "index_user_privacy_username", columnList = "username")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "username" })
+        }
+)
+// @formatter:on
 public class UserPrivacy implements java.io.Serializable {
 
     private static final long serialVersionUID = 2623443497934460034L;
@@ -44,11 +54,11 @@ public class UserPrivacy implements java.io.Serializable {
     private String password;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_on", insertable = true, updatable = false, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createOn;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_on", insertable = false, updatable = true, nullable = false, columnDefinition = "DATE DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "update_on", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updateOn;
 
     @Column(name = "version")
@@ -59,7 +69,14 @@ public class UserPrivacy implements java.io.Serializable {
     private int status; // 0: delete; 1: OK; 2: NG
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", unique = true, insertable = false, updatable = false)
+    //@formatter:off
+    @JoinColumns({
+        @JoinColumn(name = "user_id", referencedColumnName = "id",
+                unique = true, insertable = false, updatable = false,
+                foreignKey = @ForeignKey(name = "none")
+        )
+    })
+    //@formatter:on
     private User user;
 
     // Constructors
