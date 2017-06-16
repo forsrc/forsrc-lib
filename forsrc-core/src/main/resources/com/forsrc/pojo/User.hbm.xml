@@ -47,7 +47,7 @@
             <column name="image" length="300" />
         </property>
 
-        <one-to-one name="userPrivacy" class="UserPrivacy" property-ref="user" cascade="none"></one-to-one>
+        <!-- <one-to-one name="userPrivacy" class="UserPrivacy" property-ref="user" cascade="none"></one-to-one> -->
 
         <set name="userRoles" cascade="save-update, delete" lazy="false">
              <key column="id"></key>

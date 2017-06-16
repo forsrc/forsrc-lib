@@ -25,8 +25,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         UserPrivacy user = this.getUserByUsername(username);
-        LOGGER.info(String.format("--> MyUserDetailsService.loadUserByUsername() --> User is : %s", username));
+        LOGGER.info("--> MyUserDetailsService.loadUserByUsername() --> User is : {} ({})", username, user);
         Map<Long, Role> roles = getRoles();
         MyUserDetails myUserDetails = new MyUserDetails(securityService, user, roles);
         return myUserDetails;
@@ -42,8 +43,7 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(e.getMessage());
         }
         if (user == null) {
-            LOGGER.warn(
-                    String.format("--> MyUserDetailsService.loadUserByUsername() --> User is not exist: %s", username));
+            LOGGER.warn("--> MyUserDetailsService.getUserByUsername() --> User is not exist: {}", username);
             throw new UsernameNotFoundException(String.format("User is not exist: %s", username));
             // throw new BadCredentialsException(String.format("User is not
             // exist: %s", username));
