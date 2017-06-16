@@ -3,8 +3,6 @@ package com.forsrc.core.web.security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.forsrc.pojo.Role;
 import com.forsrc.pojo.UserPrivacy;
-import com.forsrc.pojo.UserRole;
 
 public class MyUserDetails implements UserDetails {
 
@@ -24,13 +21,11 @@ public class MyUserDetails implements UserDetails {
     private static final long serialVersionUID = -4063306962694515085L;
 
     @Autowired
-    private SecurityService securityService;
+    private transient SecurityService securityService;
     private UserPrivacy userPrivacy;
-    private Map<Long, Role> roles;
 
-    public MyUserDetails(SecurityService securityService, UserPrivacy userPrivacy, Map<Long, Role> roles) {
+    public MyUserDetails(SecurityService securityService, UserPrivacy userPrivacy) {
         this.securityService = securityService;
-        this.roles = roles;
         this.userPrivacy = userPrivacy;
     }
 
