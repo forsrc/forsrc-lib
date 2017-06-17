@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
+import org.codehaus.jackson.type.JavaType;
 
 /**
  * The type Json utils.
@@ -123,7 +121,7 @@ public class JsonUtils {
         if (session != null) {
             sb.append("[").append(session).append("]").append("\n");
         }
-        Iterator<String> it = jsonNode.fieldNames();
+        Iterator<String> it = jsonNode.getFieldNames();
         while (it.hasNext()) {
             String key = it.next();
 
