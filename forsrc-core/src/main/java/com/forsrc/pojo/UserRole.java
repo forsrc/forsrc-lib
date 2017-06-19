@@ -21,8 +21,9 @@ import javax.persistence.Version;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(value = { "user" })
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = { "user" })
 @Entity
-//@formatter:off
+//@fome":"admin","email":"admin@forsrc.com","createOn":1497508846046,"updateOn":1497508846046,"status":1,"isAdmin":true,"image":"","version":0,"userRoles":[{"id":1,"userId":1,"roleId":1,"createOn":1497508846230,"updateOn":1497508846230,"version":0,"status":1,"role":{"id":1,"name":"ROLE_ADMIN","parentId":null,"createOn":1497508846215,"updateOn":1497508846215,"status":1,"version":0}}],"admin":true}rmatter:off
 @Table(
         name = "t_user_role",
         uniqueConstraints = {
@@ -60,17 +61,17 @@ public class UserRole implements java.io.Serializable {
     @Column(name = "status", length = 1, nullable = false, columnDefinition = "INT DEFAULT 1")
     private int status; // 0: delete; 1: OK; 2: NG
 
-    @ManyToOne(targetEntity = User.class)
     //@formatter:off
-     @JoinColumn(name = "user_id", referencedColumnName = "id",
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_id", referencedColumnName = "id",
              unique = true, insertable = false, updatable = false,
              foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)
-     )
+    )
     //@formatter:on
     private User user;
 
-    @ManyToOne(targetEntity = Role.class)
     //@formatter:off
+    @ManyToOne(targetEntity = Role.class)
     @JoinColumn(name = "role_id", referencedColumnName = "id", 
             unique = true, insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "none")
