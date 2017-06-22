@@ -8,9 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.JavaType;
-
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forsrc.utils.MyBeanUtils;
 
 /**
@@ -58,7 +57,7 @@ public class JacksonUtils {
     public static <E> E toBean(Class<E> clazz, String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT_DEF));
-        objectMapper.getDeserializationConfig().withDateFormat(new SimpleDateFormat(DATE_FORMAT_DEF));
+        objectMapper.getDeserializationConfig().with(new SimpleDateFormat(DATE_FORMAT_DEF));
         return objectMapper.readValue(json, clazz);
     }
 
@@ -110,7 +109,7 @@ public class JacksonUtils {
     public static <E> List<Map<String, Object>> toList(Class<E> clazz, String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT_DEF));
-        objectMapper.getDeserializationConfig().withDateFormat(new SimpleDateFormat(DATE_FORMAT_DEF));
+        objectMapper.getDeserializationConfig().with(new SimpleDateFormat(DATE_FORMAT_DEF));
         JavaType javaType = objectMapper.getTypeFactory().constructType(List.class, clazz);
         List<Map<String, Object>> list = objectMapper.readValue(json, javaType);
 
@@ -137,7 +136,7 @@ public class JacksonUtils {
     public static <K, V> Map<K, V> asMap(Class<K> k, Class<V> v, String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT_DEF));
-        objectMapper.getDeserializationConfig().withDateFormat(new SimpleDateFormat(DATE_FORMAT_DEF));
+        objectMapper.getDeserializationConfig().with(new SimpleDateFormat(DATE_FORMAT_DEF));
         JavaType javaType = objectMapper.getTypeFactory().constructMapType(Map.class, k, v);
         return objectMapper.readValue(json, javaType);
     }

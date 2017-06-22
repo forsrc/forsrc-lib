@@ -18,10 +18,10 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @JsonIgnoreProperties(value = { "user" })
-@com.fasterxml.jackson.annotation.JsonIgnoreProperties(value = { "user" })
 @Entity
 //@fome":"admin","email":"admin@forsrc.com","createOn":1497508846046,"updateOn":1497508846046,"status":1,"isAdmin":true,"image":"","version":0,"userRoles":[{"id":1,"userId":1,"roleId":1,"createOn":1497508846230,"updateOn":1497508846230,"version":0,"status":1,"role":{"id":1,"name":"ROLE_ADMIN","parentId":null,"createOn":1497508846215,"updateOn":1497508846215,"status":1,"version":0}}],"admin":true}rmatter:off
 @Table(
