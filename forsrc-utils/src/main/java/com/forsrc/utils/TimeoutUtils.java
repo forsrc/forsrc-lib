@@ -85,12 +85,13 @@ public class TimeoutUtils {
         public abstract T handle();
 
         public boolean isInterrupted() {
-            try {
+            /* try {
                 TimeUnit.MICROSECONDS.sleep(1);
                 return false;
             } catch (InterruptedException e) {
                 return true;
-            }
+            } */
+            return Thread.currentThread().interrupted();
         }
     }
 
