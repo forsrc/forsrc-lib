@@ -91,7 +91,7 @@ public class TimeoutUtils {
             } catch (InterruptedException e) {
                 return true;
             } */
-            return Thread.currentThread().interrupted();
+            return Thread.currentThread().isInterrupted();
         }
     }
 
