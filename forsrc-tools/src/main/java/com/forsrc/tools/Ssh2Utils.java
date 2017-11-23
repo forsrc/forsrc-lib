@@ -71,12 +71,11 @@ public class Ssh2Utils {
         ssh.handle(new ChannelExecHandler() {
             @Override
             public void handle(ChannelExec exec) throws Exception {
-
                 exec.setOutputStream(System.out);
                 exec.setExtOutputStream(System.out);
                 exec.setInputStream(null);
                 exec.setCommand("ls");
-                exec.start();
+                exec.connect();
                 TimeUnit.SECONDS.sleep(4);
             }
         });
@@ -99,22 +98,28 @@ public class Ssh2Utils {
             session.connect();
             handler.handle(session);
         } finally {
-            if (session != null) {
+            if (session != null && session.isConnected()) {
                 session.disconnect();
             }
         }
     }
 
     public void handle(final String type, final ChannelHandler handler) throws Exception {
+        handle(type, handler, true);
+    }
+
+    public void handle(final String type, final ChannelHandler handler, boolean autoConnect) throws Exception {
         handle(new SessionHandler() {
             @Override
             public void handle(Session session) throws Exception {
                 Channel channel = session.openChannel(type);
                 try {
-                    channel.connect();
+                    if (autoConnect) {
+                        channel.connect();
+                    }
                     handler.handle(channel);
                 } finally {
-                    if (channel != null) {
+                    if (channel != null && !channel.isClosed()) {
                         channel.disconnect();
                     }
                 }
@@ -156,7 +161,7 @@ public class Ssh2Utils {
                 handler.handle(shell);
             }
 
-        });
+        }, false);
     }
 
     public Session getSession() throws JSchException {
