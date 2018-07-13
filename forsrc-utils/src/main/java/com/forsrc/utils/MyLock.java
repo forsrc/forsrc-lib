@@ -1,5 +1,7 @@
 package com.forsrc.utils;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -102,4 +104,23 @@ public class MyLock {
         void todo() throws Exception;
     }
 
+    private static final ConcurrentHashMap<Integer, Integer> LOCK = new ConcurrentHashMap<>();
+
+    public static Integer getLock(int number) {
+        Integer lock = null;
+        synchronized (LOCK) {
+            lock = LOCK //
+                    .entrySet() //
+                    .stream() //
+                    .filter(e -> e.getValue().equals(number)) //
+                    .map(Map.Entry::getKey) //
+                    .findFirst() //
+                    .orElse(null); //
+            if (lock == null) {
+                lock = new Integer(number);
+                LOCK.putIfAbsent(lock, number);
+            }
+        }
+        return lock;
+    }
 }
