@@ -20,8 +20,12 @@ public class JdbcUtils {
     private static final ThreadLocal<DataSource> THREADLOCAL_DATASOURCE = new ThreadLocal<DataSource>();
     private static final ThreadLocal<Connection> THREADLOCAL_CONNECTION = new ThreadLocal<Connection>();
 
+    public JdbcUtils(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
+
     public static List<Map<String, Object>> list(final Connection connection, final String sql,
-            final Object... parameters) throws SQLException {
+                                                 final Object... parameters) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         if (parameters != null && parameters.length > 0) {
             for (int i = 0; i < parameters.length; i++) {
@@ -48,7 +52,7 @@ public class JdbcUtils {
     }
 
     public static void call(final Connection connection, final String sql, final Object[] parameters,
-            final HandlerResultSet handlerResultSet) throws SQLException {
+                            final HandlerResultSet handlerResultSet) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -85,6 +89,7 @@ public class JdbcUtils {
     }
 
     public static DataSource getDataSource(String driverName, String url, String user, String password) {
+        // tomcat-juli.jar
         PoolProperties p = new PoolProperties();
         p.setUrl(url);
         p.setDriverClassName(driverName);
@@ -190,4 +195,19 @@ public class JdbcUtils {
         void handle(Connection connection) throws SQLException;
     }
 
+    /*
+    public static void main(String[] args) throws SQLException {
+        // tomcat-juli.jar
+        DataSource dataSource = JdbcUtils.getDataSource("com.mysql.jdbc.Driver", "jdbc:mysql://localhost:3306/test", "root", "root");
+
+        JdbcUtils jdbcUtils = new JdbcUtils(dataSource);
+        List<Map<String, Object>> list = jdbcUtils.list("show tables", null);
+        for (Map<String, Object> map : list) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                System.out.println(entry);
+            }
+        }
+        jdbcUtils.close();
+    }
+    */
 }
