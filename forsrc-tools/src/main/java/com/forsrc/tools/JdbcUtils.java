@@ -127,7 +127,7 @@ public class JdbcUtils {
         Connection connection = THREADLOCAL_CONNECTION.get();
         if (connection == null || connection.isClosed()) {
             synchronized (JdbcUtils.class) {
-                if (connection == null) {
+                if (connection == null || connection.isClosed()) {
                     connection = THREADLOCAL_DATASOURCE.get().getConnection();
                     THREADLOCAL_CONNECTION.set(connection);
                 }
@@ -141,7 +141,7 @@ public class JdbcUtils {
         Connection connection = THREADLOCAL_CONNECTION.get();
         if (connection == null || connection.isClosed()) {
             synchronized (JdbcUtils.class) {
-                if (connection == null) {
+                if (connection == null || connection.isClosed()) {
                     connection = DriverManager.getConnection(url, user, password);
                     THREADLOCAL_CONNECTION.set(connection);
                 }
